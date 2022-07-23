@@ -6,13 +6,17 @@ import morrow.rest.exception.ServerException;
 import morrow.rest.request.Request;
 
 public class Server {
+
+    public Server() {
+        // TODO: load validators and endpoints
+    }
+
     public Response serve(Request request) {
         try {
             validate(request);
             var c = createController(request);
             c.beforeAction();
-            var response = c.action();
-            return response;
+            return c.action();
         } catch (ClientException | ServerException e) {
             e.track();
             return e.response();
@@ -25,7 +29,7 @@ public class Server {
     }
 
     private Controller createController(Request request) {
-        return Controller.forEndpoint(request.path()).apply(request);
+        return Endpoint.lookup(request.path()).controller(request);
     }
 
 

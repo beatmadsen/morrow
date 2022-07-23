@@ -4,12 +4,12 @@ import org.tinylog.Logger;
 
 public class Tracker {
 
-    public static void success(MetaData metaData) {
-        Logger.debug("Successfully processed request");
-    }
-
     public record MetaData() {
 
+    }
+
+    public static void success(MetaData metaData) {
+        Logger.debug("Successfully processed request");
     }
 
     public static void clientException(MetaData md, Exception e) {
