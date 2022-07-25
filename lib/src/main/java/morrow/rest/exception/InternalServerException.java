@@ -1,5 +1,6 @@
 package morrow.rest.exception;
 
+import morrow.Tracker;
 import morrow.rest.Response;
 
 public class InternalServerException extends ServerException {
@@ -11,5 +12,10 @@ public class InternalServerException extends ServerException {
     @Override
     public Response response() {
         return null;
+    }
+
+    @Override
+    public void track() {
+        Tracker.serverException(new Tracker.MetaData(), this);
     }
 }

@@ -1,5 +1,6 @@
 package morrow.rest;
 
+import morrow.rest.endpoint.Endpoint;
 import morrow.rest.exception.ClientException;
 import morrow.rest.exception.InternalServerException;
 import morrow.rest.exception.ServerException;

@@ -1,16 +1,17 @@
 ---
 # Only resources in this framework! No RPC!
-- path: vehicles/cars
-  controller: com.example.myapp.controller.CarsController
-  actions:
-    - getById
-    - findMany
-    - create
-    - updateById
-    - deleteById
-  sub-resources:
-    - path: parts
-      controller: com.example.myapp.controller.PartsController
-      actions:
-        - getById
-        - create
+endpoints:
+  - path: vehicles/cars
+    controller: com.example.myapp.controller.CarsController
+    actions:
+      - getById
+      - findMany
+      - create
+      - updateById
+      - deleteById
+    sub-resources:
+      - path: parts
+        controller: com.example.myapp.controller.PartsController
+        actions:
+          - getById
+          - create

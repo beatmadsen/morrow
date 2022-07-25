@@ -48,12 +48,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.yaml:snakeyaml:1.26'
-    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-
-
     api 'org.tinylog:tinylog-api:2.3.2'
+
+    implementation 'org.yaml:snakeyaml:1.26'
+    implementation 'org.apache.commons:commons-text:1.9'
     implementation 'org.tinylog:tinylog-impl:2.3.2'
+
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
 
     // Use JUnit Jupiter for testing.
