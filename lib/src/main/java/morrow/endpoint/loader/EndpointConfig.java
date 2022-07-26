@@ -1,12 +1,12 @@
-package morrow.endpoint;
+package morrow.endpoint.loader;
 
 import java.util.List;
 
-public class EndpointDescriptor {
+public class EndpointConfig {
     private String path, controller;
 
     private List<String> actions;
-    private List<EndpointDescriptor> subResources;
+    private List<EndpointConfig> subResources;
 
     public String getPath() {
         return path;
@@ -24,11 +24,11 @@ public class EndpointDescriptor {
         this.controller = controller;
     }
 
-    public List<EndpointDescriptor> getSubResources() {
+    public List<EndpointConfig> getSubResources() {
         return subResources;
     }
 
-    public void setSubResources(List<EndpointDescriptor> subResources) {
+    public void setSubResources(List<EndpointConfig> subResources) {
         this.subResources = subResources;
     }
 

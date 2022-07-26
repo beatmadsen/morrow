@@ -1,4 +1,4 @@
-package morrow.endpoint;
+package morrow.endpoint.loader;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,25 +7,25 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class EndpointLoaderTest {
+class DescriptorLoaderTest {
 
-    private EndpointLoader endpointLoader;
+    private DescriptorLoader descriptorLoader;
 
     @BeforeEach
     void setUp() {
-        endpointLoader = new EndpointLoader();
+        descriptorLoader = new DescriptorLoader();
     }
 
     @Test
     void shouldBeAbleToDeserialize() {
-        List<EndpointDescriptor> ed = endpointLoader.loadEndpoints();
+        List<EndpointConfig> ed = descriptorLoader.loadEndpoints();
         assertEquals(1, ed.size());
     }
 
 
     @Test
     void shouldFindController() {
-        List<EndpointDescriptor> eds = endpointLoader.loadEndpoints();
+        List<EndpointConfig> eds = descriptorLoader.loadEndpoints();
         assertEquals("com.example.myapp.controller.CarsController", eds.get(0).getController());
     }
 }

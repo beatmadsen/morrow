@@ -1,4 +1,4 @@
-package morrow.endpoint;
+package morrow.endpoint.loader;
 
 import org.apache.commons.text.CaseUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -8,21 +8,21 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 import java.util.List;
 
-public class EndpointLoader {
+public class DescriptorLoader {
 
     public static class Wrapper {
-        private List<EndpointDescriptor> endpoints;
+        private List<EndpointConfig> endpoints;
 
-        public List<EndpointDescriptor> getEndpoints() {
+        public List<EndpointConfig> getEndpoints() {
             return endpoints;
         }
 
-        public void setEndpoints(List<EndpointDescriptor> endpoints) {
+        public void setEndpoints(List<EndpointConfig> endpoints) {
             this.endpoints = endpoints;
         }
     }
 
-    public List<EndpointDescriptor> loadEndpoints() {
+    public List<EndpointConfig> loadEndpoints() {
         var c = new Constructor(Wrapper.class);
         c.setPropertyUtils(new CamelCasePropertyUtils());
         var yaml = new Yaml(c);
