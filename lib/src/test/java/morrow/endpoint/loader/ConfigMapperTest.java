@@ -18,7 +18,7 @@ class ConfigMapperTest {
     }
 
     @Test
-    void shouldMapMainResource() {
+    void shouldMapMainResource() throws InvalidConfigurationException {
         var endpointConfig = new EndpointConfig();
         endpointConfig.setActions(List.of("getById"));
         endpointConfig.setController("org.other.controller.EggsController");
