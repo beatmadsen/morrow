@@ -5,7 +5,9 @@ import morrow.rest.Controller;
 import morrow.rest.Method;
 
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConfigMapper {
@@ -79,8 +81,8 @@ public class ConfigMapper {
         return Pattern.compile(newPrefix);
     }
 
-    private List<Action> mapActions(List<String> actions) {
-        return actions.stream().map(this::mapAction).toList();
+    private Set<Action> mapActions(List<String> actions) {
+        return actions.stream().map(this::mapAction).collect(Collectors.toSet());
     }
 
     private Action mapAction(String a) {
@@ -94,8 +96,8 @@ public class ConfigMapper {
         };
     }
 
-    private List<Method> mapMethods(List<Action> allowedActions) {
-        return allowedActions.stream().map(Action::method).toList();
+    private Set<Method> mapMethods(Set<Action> allowedActions) {
+        return allowedActions.stream().flatMap(action -> action.allowedMethods().stream()).collect(Collectors.toSet());
     }
 
 

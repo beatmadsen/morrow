@@ -34,6 +34,11 @@ class ConfigMapperTest {
 
     @Test
     void shouldMapSubResource() {
+        /*
+         TODO:
+          descriptor should have pairs of (Method + path regex)
+          that indicate to which incoming requests the endpoint applies
+        */
 
     }
 

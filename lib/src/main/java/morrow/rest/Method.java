@@ -1,5 +1,5 @@
 package morrow.rest;
 
 public enum Method {
-    GET
+    POST, PATCH, DELETE, PUT, GET
 }
