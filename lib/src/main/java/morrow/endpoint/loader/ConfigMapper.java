@@ -14,10 +14,23 @@ public class ConfigMapper {
 
     }
 
+    private static class InvalidConfigurationRuntimeException extends RuntimeException {
+        public InvalidConfigurationRuntimeException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public InvalidConfigurationRuntimeException(String message) {
+            super(message);
+        }
+
+        public InvalidConfigurationRuntimeException(Throwable cause) {
+            super(cause);
+        }
+    }
+
     public List<EndpointDescriptor> map(EndpointConfig endpointConfig) throws InvalidConfigurationException {
         try {
-            PathNode root = buildTree(endpointConfig);
-
+            var root = buildTree(endpointConfig);
             return traverseTree(root);
         } catch (InvalidConfigurationRuntimeException r) {
             throw new InvalidConfigurationException(r.getMessage(), r);
@@ -50,21 +63,16 @@ public class ConfigMapper {
     @SuppressWarnings("unchecked")
     private Class<? extends Controller> mapController(String controller) {
         try {
-            return (Class<? extends Controller>) Class.forName(controller);
-        } catch (Exception e) {
-            throw new InvalidConfigurationRuntimeException(e);
+            Class<?> aClass = Class.forName(controller);
+            if (!Controller.class.isAssignableFrom(aClass)) {
+                throw new InvalidConfigurationRuntimeException("Found invalid controller implementation in class '" + controller + "'");
+            }
+            return (Class<? extends Controller>) aClass;
+        } catch (ClassNotFoundException e) {
+            throw new InvalidConfigurationRuntimeException("Could not find controller class '" + controller + "'", e);
         }
     }
 
-    private static class InvalidConfigurationRuntimeException extends RuntimeException {
-        public InvalidConfigurationRuntimeException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public InvalidConfigurationRuntimeException(Throwable cause) {
-            super(cause);
-        }
-    }
 
     private Pattern mapPattern(String newPrefix) {
         // TODO
@@ -76,11 +84,14 @@ public class ConfigMapper {
     }
 
     private Action mapAction(String a) {
-        try {
-            return Action.valueOf(a.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidConfigurationRuntimeException("Unknown action: '" + a + "'", e);
-        }
+        return switch (a) {
+            case "getById" -> Action.GET_BY_ID;
+            case "findMany" -> Action.FIND_MANY;
+            case "create" -> Action.CREATE;
+            case "updateById" -> Action.UPDATE_BY_ID;
+            case "deleteById" -> Action.DELETE_BY_ID;
+            default -> throw new InvalidConfigurationRuntimeException("Unknown action: '" + a + "'");
+        };
     }
 
     private List<Method> mapMethods(List<Action> allowedActions) {

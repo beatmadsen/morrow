@@ -8,7 +8,7 @@ public enum Action {
         public Method method() {
             return Method.GET;
         }
-    };
+    }, FIND_MANY, CREATE, UPDATE_BY_ID, DELETE_BY_ID;
 
     public abstract Method method();
 }
