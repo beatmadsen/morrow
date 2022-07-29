@@ -1,6 +1,8 @@
 package morrow.endpoint.loader;
 
 import morrow.endpoint.Action;
+import morrow.endpoint.loader.config.ConfigMapper;
+import morrow.endpoint.loader.config.EndpointConfig;
 import morrow.rest.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

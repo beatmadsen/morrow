@@ -1,4 +1,4 @@
-package morrow.endpoint.loader;
+package morrow.endpoint.loader.config;
 
 import java.util.List;
 

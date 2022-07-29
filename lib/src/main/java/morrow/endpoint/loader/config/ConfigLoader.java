@@ -1,4 +1,4 @@
-package morrow.endpoint.loader;
+package morrow.endpoint.loader.config;
 
 import org.apache.commons.text.CaseUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -8,7 +8,7 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 import java.util.List;
 
-public class DescriptorLoader {
+public class ConfigLoader {
 
     public static class Wrapper {
         private List<EndpointConfig> endpoints;

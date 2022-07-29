@@ -1,7 +1,10 @@
-package morrow.endpoint.loader;
+package morrow.endpoint.loader.config;
 
 import morrow.endpoint.Action;
 import morrow.endpoint.ResourceSegment;
+import morrow.endpoint.loader.EndpointDescriptor;
+import morrow.endpoint.loader.InvalidConfigurationException;
+import morrow.endpoint.loader.LoaderException;
 import morrow.endpoint.loader.matcher.RouteMatcher;
 import morrow.rest.Controller;
 import morrow.rest.Method;
@@ -18,25 +21,11 @@ public class ConfigMapper {
 
     }
 
-    private static class InvalidConfigurationRuntimeException extends RuntimeException {
-        public InvalidConfigurationRuntimeException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public InvalidConfigurationRuntimeException(String message) {
-            super(message);
-        }
-
-        public InvalidConfigurationRuntimeException(Throwable cause) {
-            super(cause);
-        }
-    }
-
     public List<EndpointDescriptor> map(EndpointConfig endpointConfig) throws InvalidConfigurationException {
         try {
             var root = buildTree(endpointConfig);
             return traverseTree(root);
-        } catch (InvalidConfigurationRuntimeException r) {
+        } catch (LoaderException r) {
             throw new InvalidConfigurationException(r.getMessage(), r);
         }
 
@@ -69,11 +58,11 @@ public class ConfigMapper {
         try {
             Class<?> aClass = Class.forName(controller);
             if (!Controller.class.isAssignableFrom(aClass)) {
-                throw new InvalidConfigurationRuntimeException("Found invalid controller implementation in class '" + controller + "'");
+                throw new ConfigException("Found invalid controller implementation in class '" + controller + "'");
             }
             return (Class<? extends Controller>) aClass;
         } catch (ClassNotFoundException e) {
-            throw new InvalidConfigurationRuntimeException("Could not find controller class '" + controller + "'", e);
+            throw new ConfigException("Could not find controller class '" + controller + "'", e);
         }
     }
 
@@ -88,7 +77,7 @@ public class ConfigMapper {
             case "create" -> Action.CREATE;
             case "updateById" -> Action.UPDATE_BY_ID;
             case "deleteById" -> Action.DELETE_BY_ID;
-            default -> throw new InvalidConfigurationRuntimeException("Unknown action: '" + a + "'");
+            default -> throw new ConfigException("Unknown action: '" + a + "'");
         };
     }
 

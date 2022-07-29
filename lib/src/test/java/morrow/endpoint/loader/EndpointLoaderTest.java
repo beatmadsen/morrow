@@ -1,5 +1,7 @@
 package morrow.endpoint.loader;
 
+import morrow.endpoint.loader.config.ConfigLoader;
+import morrow.endpoint.loader.config.ConfigMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,13 +12,13 @@ class EndpointLoaderTest {
     private EndpointLoader endpointLoader;
 //    private DescriptorLoader descriptorLoader;
 
-    private static class TestDescriptorLoader extends DescriptorLoader {
+    private static class TestConfigLoader extends ConfigLoader {
 
     }
 
     @BeforeEach
     void setUp() {
-        endpointLoader = new EndpointLoader(new TestDescriptorLoader(), new ConfigMapper());
+        endpointLoader = new EndpointLoader(new TestConfigLoader(), new ConfigMapper());
     }
 
     @Test
