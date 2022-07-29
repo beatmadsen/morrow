@@ -1,30 +1,22 @@
 package morrow.endpoint.loader.config;
 
 import morrow.endpoint.Action;
-import morrow.endpoint.ResourceSegment;
 import morrow.endpoint.loader.EndpointDescriptor;
 import morrow.endpoint.loader.InvalidConfigurationException;
 import morrow.endpoint.loader.LoaderException;
-import morrow.endpoint.loader.matcher.RouteMatcher;
 import morrow.rest.Controller;
 import morrow.rest.Method;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ConfigMapper {
 
-    private record ResourceNode(List<ResourceSegment> relativeRouteFromParent, List<ResourceNode> children,
-                                EndpointConfig config) {
-
-    }
-
     public List<EndpointDescriptor> map(EndpointConfig endpointConfig) throws InvalidConfigurationException {
         try {
-            var root = buildTree(endpointConfig);
-            return traverseTree(root);
+            var tree = ResourceTree.from(endpointConfig);
+            return traverseTree(tree);
         } catch (LoaderException r) {
             throw new InvalidConfigurationException(r.getMessage(), r);
         }
@@ -32,26 +24,17 @@ public class ConfigMapper {
 
     }
 
-    private List<EndpointDescriptor> traverseTree(ResourceNode root) {
-        return traverseTree(root, List.of()).toList();
+    private List<EndpointDescriptor> traverseTree(ResourceTree tree) {
+        throw new RuntimeException("TODO");
     }
 
-    private Stream<EndpointDescriptor> traverseTree(ResourceNode root, List<ResourceSegment> routePrefix) {
-        var newPrefix = Stream.concat(routePrefix.stream(), root.relativeRouteFromParent().stream()).toList();
-        var descriptor = createDescriptor(root, newPrefix);
-
-        var ds = Stream.of(descriptor);
-        var cs = root.children().stream().flatMap(c -> traverseTree(c, newPrefix));
-
-        return Stream.concat(ds, cs);
-    }
-
-    private EndpointDescriptor createDescriptor(ResourceNode root, List<ResourceSegment> routePrefix) {
-        var config = root.config();
-        Class<? extends Controller> controllerClass = mapController(config.getController());
-        var allowedActions = mapActions(config.getActions());
-        return new EndpointDescriptor(RouteMatcher.of(routePrefix, allowedActions), controllerClass, mapMethods(allowedActions), allowedActions);
-    }
+//
+//    private EndpointDescriptor createDescriptor(ResourceNode root, List<ResourceSegment> routePrefix) {
+//        var config = root.config();
+//        Class<? extends Controller> controllerClass = mapController(config.getController());
+//        var allowedActions = mapActions(config.getActions());
+//        return new EndpointDescriptor(RouteMatcher.of(routePrefix, allowedActions), controllerClass, mapMethods(allowedActions), allowedActions);
+//    }
 
     @SuppressWarnings("unchecked")
     private Class<? extends Controller> mapController(String controller) {
@@ -85,15 +68,4 @@ public class ConfigMapper {
         return allowedActions.stream().flatMap(action -> action.allowedMethods().stream()).collect(Collectors.toSet());
     }
 
-
-    private ResourceNode buildTree(EndpointConfig config) {
-        var subResources = config.getSubResources();
-        Stream<EndpointConfig> configs = subResources == null ? Stream.of() : subResources.stream();
-        var children = configs.map(this::buildTree).toList();
-        return new ResourceNode(asSegments(config.getPath()), children, config);
-    }
-
-    private List<ResourceSegment> asSegments(String path) {
-        throw new RuntimeException("not yet done");
-    }
 }

@@ -1,6 +1,7 @@
 package morrow.endpoint.loader.matcher;
 
 import morrow.endpoint.PathSegment;
+import morrow.endpoint.UncategorisedSegment;
 import morrow.rest.Method;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class EndpointMatcher implements RouteMatcher {
     }
 
     @Override
-    public boolean matches(List<PathSegment> pathSegments, Method method) {
+    public boolean matches(List<UncategorisedSegment> pathSegments, Method method) {
         return actionMatchers.stream().anyMatch(a -> a.matches(pathSegments, method));
     }
 }

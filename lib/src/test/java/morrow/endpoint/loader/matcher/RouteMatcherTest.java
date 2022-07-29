@@ -1,5 +1,6 @@
 package morrow.endpoint.loader.matcher;
 
+import morrow.endpoint.ResourceSegment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,5 +13,11 @@ class RouteMatcherTest {
     @Test
     void emptyInputsShouldBePointless() {
         assertThrows(MatcherException.class, () -> RouteMatcher.of(List.of(), Set.of()));
+    }
+
+    @Test
+    void test2() {
+        var routePrefix = List.of(new ResourceSegment("cars"));
+        var matcher = RouteMatcher.of(routePrefix, Set.of());
     }
 }

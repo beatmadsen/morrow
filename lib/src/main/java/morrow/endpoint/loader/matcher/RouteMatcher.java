@@ -3,6 +3,7 @@ package morrow.endpoint.loader.matcher;
 import morrow.endpoint.Action;
 import morrow.endpoint.PathSegment;
 import morrow.endpoint.ResourceSegment;
+import morrow.endpoint.UncategorisedSegment;
 import morrow.rest.Method;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public interface RouteMatcher {
         throw new RuntimeException("not done yet");
     }
 
-    static private String describe(List<ResourceSegment> routePrefix) {
+    private static String describe(List<ResourceSegment> routePrefix) {
         return routePrefix.isEmpty() ?
                 "(root)" :
                 routePrefix.stream().map(ResourceSegment::toString).collect(Collectors.joining());
     }
 
-    boolean matches(List<PathSegment> pathSegments, Method method);
+    boolean matches(List<UncategorisedSegment> pathSegments, Method method);
 
 
 }
