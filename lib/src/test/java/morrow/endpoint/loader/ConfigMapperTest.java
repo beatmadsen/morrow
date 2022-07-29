@@ -1,6 +1,7 @@
 package morrow.endpoint.loader;
 
 import morrow.endpoint.Action;
+import morrow.rest.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,7 @@ class ConfigMapperTest {
         List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
         var e = eds.get(0);
         assertIterableEquals(List.of(Action.GET_BY_ID), e.allowedActions());
+        assertIterableEquals(List.of(Method.GET), e.allowedMethods());
     }
 
     @Test

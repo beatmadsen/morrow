@@ -1,18 +1,20 @@
 package morrow.endpoint.loader;
 
 import morrow.endpoint.Action;
+import morrow.endpoint.ResourceSegment;
+import morrow.endpoint.loader.matcher.RouteMatcher;
 import morrow.rest.Controller;
 import morrow.rest.Method;
 
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConfigMapper {
 
-    private record PathNode(String path, List<PathNode> children, EndpointConfig config) {
+    private record ResourceNode(List<ResourceSegment> relativeRouteFromParent, List<ResourceNode> children,
+                                EndpointConfig config) {
 
     }
 
@@ -41,12 +43,12 @@ public class ConfigMapper {
 
     }
 
-    private List<EndpointDescriptor> traverseTree(PathNode root) {
-        return traverseTree(root, "").toList();
+    private List<EndpointDescriptor> traverseTree(ResourceNode root) {
+        return traverseTree(root, List.of()).toList();
     }
 
-    private Stream<EndpointDescriptor> traverseTree(PathNode root, String pathPrefix) {
-        var newPrefix = pathPrefix + root.path();
+    private Stream<EndpointDescriptor> traverseTree(ResourceNode root, List<ResourceSegment> routePrefix) {
+        var newPrefix = Stream.concat(routePrefix.stream(), root.relativeRouteFromParent().stream()).toList();
         var descriptor = createDescriptor(root, newPrefix);
 
         var ds = Stream.of(descriptor);
@@ -55,11 +57,11 @@ public class ConfigMapper {
         return Stream.concat(ds, cs);
     }
 
-    private EndpointDescriptor createDescriptor(PathNode root, String newPrefix) {
+    private EndpointDescriptor createDescriptor(ResourceNode root, List<ResourceSegment> routePrefix) {
         var config = root.config();
         Class<? extends Controller> controllerClass = mapController(config.getController());
         var allowedActions = mapActions(config.getActions());
-        return new EndpointDescriptor(mapPattern(newPrefix), controllerClass, mapMethods(allowedActions), allowedActions);
+        return new EndpointDescriptor(RouteMatcher.of(routePrefix, allowedActions), controllerClass, mapMethods(allowedActions), allowedActions);
     }
 
     @SuppressWarnings("unchecked")
@@ -73,12 +75,6 @@ public class ConfigMapper {
         } catch (ClassNotFoundException e) {
             throw new InvalidConfigurationRuntimeException("Could not find controller class '" + controller + "'", e);
         }
-    }
-
-
-    private Pattern mapPattern(String newPrefix) {
-        // TODO
-        return Pattern.compile(newPrefix);
     }
 
     private Set<Action> mapActions(List<String> actions) {
@@ -101,10 +97,14 @@ public class ConfigMapper {
     }
 
 
-    private PathNode buildTree(EndpointConfig config) {
+    private ResourceNode buildTree(EndpointConfig config) {
         var subResources = config.getSubResources();
         Stream<EndpointConfig> configs = subResources == null ? Stream.of() : subResources.stream();
         var children = configs.map(this::buildTree).toList();
-        return new PathNode(config.getPath(), children, config);
+        return new ResourceNode(asSegments(config.getPath()), children, config);
+    }
+
+    private List<ResourceSegment> asSegments(String path) {
+        throw new RuntimeException("not yet done");
     }
 }
