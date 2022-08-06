@@ -39,7 +39,12 @@ public class ResourceTree {
     }
 
     public static ResourceTree from(EndpointConfig config) {
+        validate(config);
         return new ResourceTree(map(config));
+    }
+
+    private static void validate(EndpointConfig config) {
+
     }
 
     private record ResourceNode(
