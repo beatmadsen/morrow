@@ -13,4 +13,9 @@ public class ParameterSegment extends PathSegment {
     public boolean matches(UncategorisedSegment reqSegment) {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "<parameter>";
+    }
 }

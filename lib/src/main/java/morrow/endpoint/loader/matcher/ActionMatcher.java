@@ -20,23 +20,13 @@ public class ActionMatcher implements RouteMatcher {
     }
 
     public static ActionMatcher from(List<PathSegment> routePrefix, Action a) {
-
-        /*
-         TODO:
-           we know the prefix and the allowed actions
-           we can create a set of action matchers
-           and in turn an endpoint matcher
-           complication 1:
-             resource part of prefix will be ignored for some actions (shallow resource routes)
-           complication 2:
-             infer path parameter location
-        */
-        return new ActionMatcher(specificationFrom(routePrefix, a), a);
+        var specification = specificationFrom(routePrefix, a);
+        return new ActionMatcher(specification, a);
     }
 
     private static List<PathSegment> specificationFrom(List<PathSegment> routePrefix, Action a) {
 
-        return a.hasShallowPath() ? shallowSpecification(routePrefix, a) : deepSpecification(routePrefix);
+        return a.hasShallowPath() ? shallowSpecification(routePrefix) : deepSpecification(routePrefix);
     }
 
     /**
@@ -57,9 +47,31 @@ public class ActionMatcher implements RouteMatcher {
         return result.stream().toList();
     }
 
-    private static List<PathSegment> shallowSpecification(List<PathSegment> routePrefix, Action a) {
-        // TODO: only take final namespaces + resource, add parameter (idea: action always takes param if it's shallow)
-        return null;
+    /**
+     * namespace(s)/resource/parameter
+     */
+    private static List<PathSegment> shallowSpecification(List<PathSegment> routePrefix) {
+        var result = new LinkedList<PathSegment>();
+        result.addFirst(new ParameterSegment());
+        var iter = routePrefix.listIterator(routePrefix.size());
+        var doneWithResource = false;
+        while (iter.hasPrevious()) {
+            var item = iter.previous();
+            if (doneWithResource) {
+                if (item.isNamespace()) {
+                    result.addFirst(item);
+                } else {
+                    break;
+                }
+            } else {
+                if (!item.isResource()) {
+                    throw new RuntimeException("Wrong!");
+                }
+                result.addFirst(item);
+                doneWithResource = true;
+            }
+        }
+        return result.stream().toList();
     }
 
     @Override
@@ -82,6 +94,5 @@ public class ActionMatcher implements RouteMatcher {
             }
         }
         return true;
-
     }
 }

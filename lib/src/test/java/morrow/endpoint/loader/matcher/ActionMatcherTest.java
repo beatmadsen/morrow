@@ -17,10 +17,9 @@ class ActionMatcherTest {
     }
 
     @Test
-    void createRequestWithCorrectPathMatches() {
+    void createRequestWithCorrectDeepPathMatches() {
 
         var requestPath = List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("parent"), new UncategorisedSegment("42"), new UncategorisedSegment("child"));
-//        var specification = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ParameterSegment(), new ResourceSegment("child"));
         var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ResourceSegment("child"));
         var matcher = ActionMatcher.from(prefix, Action.CREATE);
         var result = matcher.matches(requestPath, Method.POST);
@@ -28,7 +27,27 @@ class ActionMatcherTest {
     }
 
     @Test
-    void createRequestWithIncorrectPathDoesNotMatch() {
+    void createRequestWithCorrectShallowPathMatches() {
+
+        var requestPath = List.of(new UncategorisedSegment("child_ns"), new UncategorisedSegment("child"), new UncategorisedSegment("42"));
+        var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new NamespaceSegment("child_ns"), new ResourceSegment("child"));
+        var matcher = ActionMatcher.from(prefix, Action.GET_BY_ID);
+        var result = matcher.matches(requestPath, Method.GET);
+        assertTrue(result);
+    }
+
+    @Test
+    void createRequestWithIncorrectShallowPathDoesNotMatch() {
+
+        var requestPath = List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("parent"), new UncategorisedSegment("child_ns"), new UncategorisedSegment("child"));
+        var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new NamespaceSegment("child_ns"), new ResourceSegment("child"));
+        var matcher = ActionMatcher.from(prefix, Action.GET_BY_ID);
+        var result = matcher.matches(requestPath, Method.GET);
+        assertFalse(result);
+    }
+
+    @Test
+    void createRequestWithIncorrectDeepPathDoesNotMatch() {
 
         var requestPath = List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("parent"), new UncategorisedSegment("child"));
         var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ResourceSegment("child"));
