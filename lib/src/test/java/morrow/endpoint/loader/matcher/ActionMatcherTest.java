@@ -20,8 +20,9 @@ class ActionMatcherTest {
     void createRequestWithCorrectPathMatches() {
 
         var requestPath = List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("parent"), new UncategorisedSegment("42"), new UncategorisedSegment("child"));
-        var specification = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ParameterSegment(), new ResourceSegment("child"));
-        var matcher = new ActionMatcher(specification, Action.CREATE);
+//        var specification = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ParameterSegment(), new ResourceSegment("child"));
+        var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ResourceSegment("child"));
+        var matcher = ActionMatcher.from(prefix, Action.CREATE);
         var result = matcher.matches(requestPath, Method.POST);
         assertTrue(result);
     }
@@ -30,8 +31,8 @@ class ActionMatcherTest {
     void createRequestWithIncorrectPathDoesNotMatch() {
 
         var requestPath = List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("parent"), new UncategorisedSegment("child"));
-        var specification = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ParameterSegment(), new ResourceSegment("child"));
-        var matcher = new ActionMatcher(specification, Action.CREATE);
+        var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new ResourceSegment("child"));
+        var matcher = ActionMatcher.from(prefix, Action.CREATE);
         var result = matcher.matches(requestPath, Method.POST);
         assertFalse(result);
     }

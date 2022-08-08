@@ -12,7 +12,7 @@ public class ActionMatcher implements RouteMatcher {
     private final List<PathSegment> specification;
     private final Action action;
 
-    public ActionMatcher(List<PathSegment> specification, Action action) {
+    private ActionMatcher(List<PathSegment> specification, Action action) {
         this.specification = specification;
         this.action = action;
     }
