@@ -5,6 +5,7 @@ import morrow.endpoint.Action;
 import morrow.endpoint.loader.EndpointDescriptor;
 import morrow.endpoint.loader.InvalidConfigurationException;
 import morrow.endpoint.loader.LoaderException;
+import morrow.endpoint.loader.matcher.EndpointMatcher;
 import morrow.rest.Controller;
 import morrow.rest.Method;
 
@@ -41,8 +42,21 @@ public class ConfigMapper {
     }
 
     private List<EndpointDescriptor> traverseTree(ResourceTree tree) {
-        throw new RuntimeException("TODO");
+        return map(tree.traverseTree());
     }
+
+    private List<EndpointDescriptor> map(List<IndexedConfig> configs) {
+        return configs.stream().map(c -> {
+            EndpointMatcher m = createMatcher(c);
+            var actions = mapActions(c.config().getActions());
+            return new EndpointDescriptor(m, mapController(c.config().getController()), mapMethods(actions), actions);
+        }).toList();
+    }
+
+    private EndpointMatcher createMatcher(IndexedConfig c) {
+        return null;
+    }
+
 
 //
 //    private EndpointDescriptor createDescriptor(ResourceNode root, List<ResourceSegment> routePrefix) {
@@ -65,7 +79,7 @@ public class ConfigMapper {
         }
     }
 
-    private Set<Action> mapActions(List<String> actions) {
+    private Set<Action> mapActions(Set<String> actions) {
         return actions.stream().map(this::mapAction).collect(Collectors.toSet());
     }
 

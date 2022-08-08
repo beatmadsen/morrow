@@ -19,7 +19,7 @@ public class ConfigLoader {
         return w.getEndpoints();
     }
 
-    private static class Wrapper {
+    public static class Wrapper {
         private List<EndpointConfig> endpoints;
 
         public List<EndpointConfig> getEndpoints() {

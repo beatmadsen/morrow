@@ -1,6 +1,5 @@
 package morrow.endpoint.loader.matcher;
 
-import morrow.endpoint.PathSegment;
 import morrow.endpoint.UncategorisedSegment;
 import morrow.rest.Method;
 
