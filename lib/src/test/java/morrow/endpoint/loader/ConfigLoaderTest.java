@@ -21,12 +21,12 @@ class ConfigLoaderTest {
     @Test
     void shouldBeAbleToDeserialize() {
         List<EndpointConfig> ed = configLoader.loadEndpoints();
-        assertEquals(1, ed.size());
+        assertEquals(2, ed.size());
     }
 
 
     @Test
-    void shouldFindController() {
+    void shouldFindController() throws InvalidConfigurationException {
         List<EndpointConfig> eds = configLoader.loadEndpoints();
         assertEquals("com.example.myapp.controller.CarsController", eds.get(0).getController());
     }

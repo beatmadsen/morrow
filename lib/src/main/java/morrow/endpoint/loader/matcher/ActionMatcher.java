@@ -9,7 +9,6 @@ import morrow.rest.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class ActionMatcher implements RouteMatcher {
 

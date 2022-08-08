@@ -1,8 +1,6 @@
 package morrow.endpoint.loader;
 
 import morrow.config.Validation;
-import morrow.endpoint.loader.config.ConfigLoader;
-import morrow.endpoint.loader.config.ConfigMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,20 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EndpointLoaderTest {
 
     private EndpointLoader endpointLoader;
-//    private DescriptorLoader descriptorLoader;
 
-    private static class TestConfigLoader extends ConfigLoader {
-
-    }
 
     @BeforeEach
     void setUp() {
-        endpointLoader = new EndpointLoader(new TestConfigLoader(), new ConfigMapper(new Validation(null)));
+        endpointLoader = new EndpointLoader(new Validation(null));
     }
 
-//    @Test
-//    void shouldBeAbleToX() {
-//
-//        assertEquals(1, 2);
-//    }
+    @Test
+    void loadEndpoints() throws InvalidConfigurationException {
+        var descriptors = endpointLoader.loadEndpoints();
+        assertEquals(5, descriptors.size());
+    }
 }

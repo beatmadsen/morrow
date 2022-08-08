@@ -10,8 +10,24 @@ endpoints:
       - updateById
       - deleteById
     sub-resources:
-      - path: parts
+      - path: orders
+        controller: com.example.myapp.controller.OrdersController
+        actions:
+          - getById
+          - create
+      - path: parts/small_parts
         controller: com.example.myapp.controller.PartsController
         actions:
           - getById
           - create
+        sub-resources:
+          - path: orders
+            controller: com.example.myapp.controller.OrdersController
+            actions:
+              - getById
+              - create
+              - findMany
+  - path: orders
+    controller: com.example.myapp.controller.OrdersController
+    actions:
+      - getById

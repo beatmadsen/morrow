@@ -6,17 +6,34 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
+import java.io.InputStream;
 import java.util.List;
 
 public class ConfigLoader {
 
     public List<EndpointConfig> loadEndpoints() {
-        var c = new Constructor(Wrapper.class);
-        c.setPropertyUtils(new CamelCasePropertyUtils());
-        var yaml = new Yaml(c);
+        InputStream inputStream = endpointConfigFile();
+        return parse(inputStream);
+    }
+
+    private static List<EndpointConfig> parse(InputStream inputStream) {
+        try {
+            var c = new Constructor(Wrapper.class);
+            c.setPropertyUtils(new CamelCasePropertyUtils());
+            var yaml = new Yaml(c);
+            Wrapper w = yaml.load(inputStream);
+            return w.getEndpoints();
+        } catch (Exception e) {
+            throw new ConfigException("Could not parse endpoints.yml", e);
+        }
+    }
+
+    private InputStream endpointConfigFile() {
         var inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.yml");
-        Wrapper w = yaml.load(inputStream);
-        return w.getEndpoints();
+        if (inputStream == null) {
+            throw new ConfigException("Could not locate endpoints.yml");
+        }
+        return inputStream;
     }
 
     public static class Wrapper {

@@ -46,7 +46,7 @@ class ConfigMapperTest {
         var endpointConfig = new EndpointConfig();
         endpointConfig.setActions(Set.of("getById"));
         endpointConfig.setController("org.other.controller.EggsController");
-        assertThrows(InvalidConfigurationException.class, () -> configMapper.map(endpointConfig));
+        assertThrows(LoaderException.class, () -> configMapper.map(endpointConfig));
     }
 
     @Test
@@ -56,11 +56,11 @@ class ConfigMapperTest {
         endpointConfig.setController("org.other.controller.EggsController");
         endpointConfig.setPath("/56$/");
 
-        assertThrows(InvalidConfigurationException.class, () -> configMapper.map(endpointConfig));
+        assertThrows(LoaderException.class, () -> configMapper.map(endpointConfig));
     }
 
     @Test
-    void shouldMapSubResource() throws InvalidConfigurationException {
+    void shouldMapSubResource() {
         var subResource = new EndpointConfig();
         subResource.setPath("ns2/child");
         subResource.setActions(Set.of("updateById", "findMany"));
