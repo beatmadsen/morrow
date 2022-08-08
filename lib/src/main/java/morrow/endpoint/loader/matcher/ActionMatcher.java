@@ -9,15 +9,15 @@ import java.util.List;
 
 public class ActionMatcher implements RouteMatcher {
 
-    private final List<PathSegment> pathSegments;
-    private final Method method;
+    private final List<PathSegment> specification;
+    private final Action action;
 
-    public ActionMatcher(List<PathSegment> pathSegments, Method method) {
-        this.pathSegments = pathSegments;
-        this.method = method;
+    public ActionMatcher(List<PathSegment> specification, Action action) {
+        this.specification = specification;
+        this.action = action;
     }
 
-    public static List<ActionMatcher> allFrom(List<PathSegment> routePrefix, Action a) {
+    public static ActionMatcher from(List<PathSegment> routePrefix, Action a) {
 
         /*
          TODO:
@@ -29,12 +29,16 @@ public class ActionMatcher implements RouteMatcher {
            complication 2:
              infer path parameter location
         */
-        return a.allowedMethods().stream().map(m -> new ActionMatcher(List.of(), m)).toList();
+        return new ActionMatcher(specificationFrom(routePrefix, a), a);
+    }
+
+    private static List<PathSegment> specificationFrom(List<PathSegment> routePrefix, Action a) {
+        return List.of();
     }
 
     @Override
     public boolean matches(List<UncategorisedSegment> pathSegments, Method method) {
-        return this.method == method && pathIsMatch(pathSegments);
+        return action.allowedMethods().contains(method) && pathIsMatch(pathSegments);
     }
 
     private boolean pathIsMatch(List<UncategorisedSegment> pathSegments) {

@@ -16,7 +16,7 @@ public class EndpointMatcher implements RouteMatcher {
             throw new MatcherException("Need at least one allowed action for resource " + describe(routePrefix));
         }
         var ams = allowedActions.stream()
-                .flatMap(a -> ActionMatcher.allFrom(routePrefix, a).stream())
+                .map(a -> ActionMatcher.from(routePrefix, a))
                 .toList();
         return new EndpointMatcher(ams);
     }
