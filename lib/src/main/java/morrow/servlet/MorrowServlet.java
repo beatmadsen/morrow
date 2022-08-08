@@ -1,10 +1,11 @@
-package morrow;
+package morrow.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import morrow.MorrowApplication;
 import morrow.rest.request.Path;
 import morrow.rest.request.Request;
 

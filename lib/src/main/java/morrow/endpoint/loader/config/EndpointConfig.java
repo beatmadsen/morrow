@@ -1,11 +1,22 @@
 package morrow.endpoint.loader.config;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import java.util.List;
+import java.util.Set;
 
 public class EndpointConfig {
-    private String path, controller;
+    @NotBlank
+    @Pattern(regexp = "/?[a-zA-Z\\-_]+(/[a-zA-z\\-_]+)*/?")
+    private String path;
+    @NotNull
+    private String controller;
 
-    private List<String> actions;
+    @NotEmpty
+    private Set<String> actions;
     private List<EndpointConfig> subResources;
 
     public String getPath() {
@@ -32,11 +43,11 @@ public class EndpointConfig {
         this.subResources = subResources;
     }
 
-    public List<String> getActions() {
+    public Set<String> getActions() {
         return actions;
     }
 
-    public void setActions(List<String> actions) {
+    public void setActions(Set<String> actions) {
         this.actions = actions;
     }
 }

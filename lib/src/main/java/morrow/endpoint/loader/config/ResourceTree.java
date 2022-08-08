@@ -38,13 +38,12 @@ public class ResourceTree {
         return new ResourceNode(asSegments(config.getPath()), children, config);
     }
 
+    /**
+     * Build resource tree from input.
+     * Assumes valid input.
+     */
     public static ResourceTree from(EndpointConfig config) {
-        validate(config);
         return new ResourceTree(map(config));
-    }
-
-    private static void validate(EndpointConfig config) {
-
     }
 
     private record ResourceNode(

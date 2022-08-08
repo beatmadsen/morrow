@@ -1,6 +1,7 @@
 package morrow;
 
 import morrow.config.SingletonStore;
+import morrow.config.Validation;
 import morrow.rest.Response;
 import morrow.rest.request.Request;
 
@@ -14,7 +15,7 @@ public class MorrowApplication {
     }
 
     private void loadSingletons() {
-        singletonStore.put(new MyValidation(singletonStore));
+        singletonStore.put(new Validation(singletonStore));
     }
 
     public Response serve(Request request) {

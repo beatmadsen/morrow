@@ -1,5 +1,6 @@
 package morrow.endpoint.loader.config;
 
+import morrow.config.Validation;
 import morrow.endpoint.Action;
 import morrow.endpoint.loader.EndpointDescriptor;
 import morrow.endpoint.loader.InvalidConfigurationException;
@@ -13,14 +14,29 @@ import java.util.stream.Collectors;
 
 public class ConfigMapper {
 
+    private final Validation validation;
+
+    public ConfigMapper(Validation validation) {
+        this.validation = validation;
+    }
+
     public List<EndpointDescriptor> map(EndpointConfig endpointConfig) throws InvalidConfigurationException {
         try {
+            validate(endpointConfig);
             var tree = ResourceTree.from(endpointConfig);
             return traverseTree(tree);
         } catch (LoaderException r) {
             throw new InvalidConfigurationException(r.getMessage(), r);
         }
 
+
+    }
+
+    private void validate(EndpointConfig endpointConfig) {
+        var violations = validation.validator().validate(endpointConfig);
+        if (!violations.isEmpty()) {
+            throw new ValidationException(violations);
+        }
 
     }
 

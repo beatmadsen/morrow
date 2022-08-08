@@ -1,5 +1,6 @@
 package morrow.endpoint.loader;
 
+import morrow.config.Validation;
 import morrow.endpoint.loader.config.ConfigLoader;
 import morrow.endpoint.loader.config.ConfigMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ class EndpointLoaderTest {
 
     @BeforeEach
     void setUp() {
-        endpointLoader = new EndpointLoader(new TestConfigLoader(), new ConfigMapper());
+        endpointLoader = new EndpointLoader(new TestConfigLoader(), new ConfigMapper(new Validation(null)));
     }
 
     @Test

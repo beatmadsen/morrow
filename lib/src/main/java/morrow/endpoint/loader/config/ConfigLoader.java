@@ -10,7 +10,16 @@ import java.util.List;
 
 public class ConfigLoader {
 
-    public static class Wrapper {
+    public List<EndpointConfig> loadEndpoints() {
+        var c = new Constructor(Wrapper.class);
+        c.setPropertyUtils(new CamelCasePropertyUtils());
+        var yaml = new Yaml(c);
+        var inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.yml");
+        Wrapper w = yaml.load(inputStream);
+        return w.getEndpoints();
+    }
+
+    private static class Wrapper {
         private List<EndpointConfig> endpoints;
 
         public List<EndpointConfig> getEndpoints() {
@@ -22,18 +31,10 @@ public class ConfigLoader {
         }
     }
 
-    public List<EndpointConfig> loadEndpoints() {
-        var c = new Constructor(Wrapper.class);
-        c.setPropertyUtils(new CamelCasePropertyUtils());
-        var yaml = new Yaml(c);
-        var inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.yml");
-        Wrapper w = yaml.load(inputStream);
-        return w.getEndpoints();
-    }
 
     private static class CamelCasePropertyUtils extends PropertyUtils {
         @Override
-        public Property getProperty(Class<? extends Object> type, String name) {
+        public Property getProperty(Class<?> type, String name) {
             return super.getProperty(type, toCamelCase(name));
         }
 
