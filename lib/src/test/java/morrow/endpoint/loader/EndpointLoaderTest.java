@@ -22,9 +22,9 @@ class EndpointLoaderTest {
         endpointLoader = new EndpointLoader(new TestConfigLoader(), new ConfigMapper(new Validation(null)));
     }
 
-    @Test
-    void shouldBeAbleToX() {
-
-        assertEquals(1, 2);
-    }
+//    @Test
+//    void shouldBeAbleToX() {
+//
+//        assertEquals(1, 2);
+//    }
 }
