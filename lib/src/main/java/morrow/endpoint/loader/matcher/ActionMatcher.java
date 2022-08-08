@@ -8,6 +8,8 @@ import morrow.rest.Method;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class ActionMatcher implements RouteMatcher {
 
@@ -30,7 +32,10 @@ public class ActionMatcher implements RouteMatcher {
     }
 
     /**
-     * namespace(s)/resource/parameter/namespace(s)/resource/parameter/.../namespace(s)/resource
+     * <code>lvl1_namespace(s)/lvl1_resource/parameter/lvl2_namespace(s)/lvl2_resource/parameter/.../lvlN_namespace(s)/lvlN_resource</code>
+     * <p>
+     * Example: <br>
+     * <code>the_garage/cars/42/parts/small_parts/doors/3/handles</code>
      */
     private static List<PathSegment> deepSpecification(List<PathSegment> routePrefix) {
         var result = new LinkedList<PathSegment>();
@@ -48,30 +53,15 @@ public class ActionMatcher implements RouteMatcher {
     }
 
     /**
-     * namespace(s)/resource/parameter
+     * <code>lvl1_namespace(s)/lvl2_namespace(s)/.../lvlN_namespace(s)/lvlN_resource/parameter</code>
+     * <p>
+     * Example: <br>
+     * <code>the_garage/parts/small_parts/handles/1</code>
      */
     private static List<PathSegment> shallowSpecification(List<PathSegment> routePrefix) {
-        var result = new LinkedList<PathSegment>();
-        result.addFirst(new ParameterSegment());
-        var iter = routePrefix.listIterator(routePrefix.size());
-        var doneWithResource = false;
-        while (iter.hasPrevious()) {
-            var item = iter.previous();
-            if (doneWithResource) {
-                if (item.isNamespace()) {
-                    result.addFirst(item);
-                } else {
-                    break;
-                }
-            } else {
-                if (!item.isResource()) {
-                    throw new RuntimeException("Wrong!");
-                }
-                result.addFirst(item);
-                doneWithResource = true;
-            }
-        }
-        return result.stream().toList();
+        var namespaces = routePrefix.stream().filter(PathSegment::isNamespace);
+        var resourceAndParam = Stream.of(routePrefix.get(routePrefix.size() - 1), new ParameterSegment());
+        return Stream.concat(namespaces, resourceAndParam).toList();
     }
 
     @Override

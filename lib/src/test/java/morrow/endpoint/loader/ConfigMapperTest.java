@@ -46,9 +46,7 @@ class ConfigMapperTest {
         var endpointConfig = new EndpointConfig();
         endpointConfig.setActions(Set.of("getById"));
         endpointConfig.setController("org.other.controller.EggsController");
-        assertThrows(InvalidConfigurationException.class, () -> {
-            configMapper.map(endpointConfig);
-        });
+        assertThrows(InvalidConfigurationException.class, () -> configMapper.map(endpointConfig));
     }
 
     @Test
@@ -56,11 +54,9 @@ class ConfigMapperTest {
         var endpointConfig = new EndpointConfig();
         endpointConfig.setActions(Set.of("getById"));
         endpointConfig.setController("org.other.controller.EggsController");
-        endpointConfig.setPath("/56/");
+        endpointConfig.setPath("/56$/");
 
-        assertThrows(InvalidConfigurationException.class, () -> {
-            configMapper.map(endpointConfig);
-        });
+        assertThrows(InvalidConfigurationException.class, () -> configMapper.map(endpointConfig));
     }
 
     @Test
@@ -86,8 +82,8 @@ class ConfigMapperTest {
         assertEquals(Set.of(Action.UPDATE_BY_ID, Action.FIND_MANY), e.allowedActions());
         assertEquals(Set.of(Method.PUT, Method.PATCH, Method.GET), e.allowedMethods());
 
-        // TODO: namespace semantics for sub-resources
         var updateByIdSegments = List.of(
+                new UncategorisedSegment("ns1"),
                 new UncategorisedSegment("ns2"),
                 new UncategorisedSegment("child"),
                 new UncategorisedSegment("456")
@@ -102,7 +98,6 @@ class ConfigMapperTest {
                 new UncategorisedSegment("child")
         );
         assertTrue(e.routeMatcher().matches(findManySegments, Method.GET));
-
 
 
     }

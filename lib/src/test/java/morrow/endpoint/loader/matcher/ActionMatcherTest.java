@@ -29,8 +29,18 @@ class ActionMatcherTest {
     @Test
     void createRequestWithCorrectShallowPathMatches() {
 
-        var requestPath = List.of(new UncategorisedSegment("child_ns"), new UncategorisedSegment("child"), new UncategorisedSegment("42"));
-        var prefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("parent"), new NamespaceSegment("child_ns"), new ResourceSegment("child"));
+        var requestPath = List.of(
+                new UncategorisedSegment("namespace"),
+                new UncategorisedSegment("child_ns"),
+                new UncategorisedSegment("child"),
+                new UncategorisedSegment("42")
+        );
+        var prefix = List.of(
+                new NamespaceSegment("namespace"),
+                new ResourceSegment("parent"),
+                new NamespaceSegment("child_ns"),
+                new ResourceSegment("child")
+        );
         var matcher = ActionMatcher.from(prefix, Action.GET_BY_ID);
         var result = matcher.matches(requestPath, Method.GET);
         assertTrue(result);
