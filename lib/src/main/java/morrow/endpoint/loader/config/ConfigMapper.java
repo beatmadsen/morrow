@@ -53,15 +53,6 @@ public class ConfigMapper {
         }).toList();
     }
 
-
-//
-//    private EndpointDescriptor createDescriptor(ResourceNode root, List<ResourceSegment> routePrefix) {
-//        var config = root.config();
-//        Class<? extends Controller> controllerClass = mapController(config.getController());
-//        var allowedActions = mapActions(config.getActions());
-//        return new EndpointDescriptor(RouteMatcher.of(routePrefix, allowedActions), controllerClass, mapMethods(allowedActions), allowedActions);
-//    }
-
     @SuppressWarnings("unchecked")
     private Class<? extends Controller> mapController(String controller) {
         try {

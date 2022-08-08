@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class EndpointConfig {
     @NotBlank
-    @Pattern(regexp = "/?[a-zA-Z\\-_]+(/[a-zA-z\\-_]+)*/?")
+    @Pattern(regexp = "/?[a-zA-Z0-9\\-_]+(/[a-zA-z0-9\\-_]+)*/?")
     private String path;
     @NotNull
     private String controller;
