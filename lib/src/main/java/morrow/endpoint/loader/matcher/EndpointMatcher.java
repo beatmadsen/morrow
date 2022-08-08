@@ -34,7 +34,7 @@ public class EndpointMatcher implements RouteMatcher {
     }
 
     @Override
-    public boolean matches(List<UncategorisedSegment> pathSegments, Method method) {
-        return actionMatchers.stream().anyMatch(a -> a.matches(pathSegments, method));
+    public boolean matches(List<UncategorisedSegment> requestSegments, Method method) {
+        return actionMatchers.stream().anyMatch(a -> a.matches(requestSegments, method));
     }
 }

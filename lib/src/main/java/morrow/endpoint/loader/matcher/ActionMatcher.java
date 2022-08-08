@@ -37,12 +37,35 @@ public class ActionMatcher implements RouteMatcher {
     }
 
     @Override
-    public boolean matches(List<UncategorisedSegment> pathSegments, Method method) {
-        return action.allowedMethods().contains(method) && pathIsMatch(pathSegments);
+    public boolean matches(List<UncategorisedSegment> requestSegments, Method method) {
+        return action.allowedMethods().contains(method) && pathIsMatch(requestSegments);
     }
 
-    private boolean pathIsMatch(List<UncategorisedSegment> pathSegments) {
-        // TODO
+    private boolean pathIsMatch(List<UncategorisedSegment> requestSegments) {
+//        return action.hasShallowPath() ? shallowMatch(pathSegments) : deepMatch(pathSegments);
+
+        if (requestSegments.size() != specification.size()) {
+            return false;
+        }
+        var reqIt = requestSegments.iterator();
+        var specIt = specification.iterator();
+
+        while (reqIt.hasNext()) {
+            var reqSegment = reqIt.next();
+            var specSegment = specIt.next();
+            if (!specSegment.matches(reqSegment)) {
+                return false;
+            }
+        }
         return true;
+
+    }
+
+    private boolean deepMatch(List<UncategorisedSegment> pathSegments) {
+        return false;
+    }
+
+    private boolean shallowMatch(List<UncategorisedSegment> pathSegments) {
+        return false;
     }
 }

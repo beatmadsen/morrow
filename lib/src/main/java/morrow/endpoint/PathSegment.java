@@ -2,7 +2,7 @@ package morrow.endpoint;
 
 public abstract class PathSegment {
 
-    private final String value;
+    protected final String value;
 
     public PathSegment(String value) {
         this.value = value;
@@ -18,5 +18,9 @@ public abstract class PathSegment {
 
     public String toString() {
         return value;
+    }
+
+    public boolean matches(UncategorisedSegment reqSegment) {
+        return value.equals(reqSegment.value);
     }
 }

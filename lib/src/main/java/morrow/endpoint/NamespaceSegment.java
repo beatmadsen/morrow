@@ -10,4 +10,5 @@ public class NamespaceSegment extends PathSegment {
     public boolean isNamespace() {
         return true;
     }
+
 }

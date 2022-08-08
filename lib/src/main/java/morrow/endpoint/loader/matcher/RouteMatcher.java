@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RouteMatcher {
 
-    boolean matches(List<UncategorisedSegment> pathSegments, Method method);
+    boolean matches(List<UncategorisedSegment> requestSegments, Method method);
 
 
 }
