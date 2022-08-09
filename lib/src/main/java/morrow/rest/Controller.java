@@ -1,6 +1,7 @@
 package morrow.rest;
 
 import morrow.Tracker;
+import morrow.config.SingletonStore;
 import morrow.endpoint.Action;
 import morrow.rest.exception.ClientException;
 
@@ -10,7 +11,7 @@ public abstract class Controller {
         this.state = state;
     }
 
-    public record State(Action action) {
+    public record State(Action action, SingletonStore singletonStore) {
 
     }
 

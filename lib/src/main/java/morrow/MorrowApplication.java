@@ -5,21 +5,24 @@ import morrow.config.Validation;
 import morrow.endpoint.EndpointDescriptor;
 import morrow.endpoint.loader.EndpointLoader;
 import morrow.endpoint.loader.InvalidConfigurationException;
-import morrow.endpoint.routing.Router;
 import morrow.rest.Response;
+import morrow.rest.Server;
 import morrow.rest.request.Request;
 
 import java.util.List;
 
 public class MorrowApplication {
     private final SingletonStore singletonStore;
-    private final Router router;
+    private final Server server;
 
 
     public MorrowApplication() throws InvalidConfigurationException {
         singletonStore = new SingletonStore();
         loadSingletons();
-        router = new Router(loadEndpoints());
+        var endpointDescriptors = loadEndpoints();
+
+
+        server = new Server(endpointDescriptors, singletonStore);
     }
 
     private void loadSingletons() {
@@ -30,8 +33,10 @@ public class MorrowApplication {
         return EndpointLoader.loadEndpoints(singletonStore.get(Validation.class));
     }
 
+
     public Response serve(Request request) {
-        return new Response();
+
+        return server.serve(request);
     }
 
     public void onShutdown() {

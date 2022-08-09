@@ -1,5 +1,6 @@
 package morrow.endpoint.routing;
 
+import morrow.config.SingletonStore;
 import morrow.endpoint.EndpointDescriptor;
 import morrow.rest.Controller;
 import morrow.rest.exception.ClientException;
@@ -10,26 +11,16 @@ import java.util.List;
 public class Router {
 
     private final List<EndpointDescriptor> descriptors;
+    private final ControllerFactory controllerFactory;
 
-    public Router(List<EndpointDescriptor> descriptors) {
+    public Router(List<EndpointDescriptor> descriptors, SingletonStore singletonStore) {
         this.descriptors = descriptors;
+        controllerFactory = new ControllerFactory(singletonStore);
     }
 
     public Controller route(Request request) throws ClientException {
         var descriptor = findDescriptor(request);
-
-        return instantiateController(request, descriptor);
-
-    }
-
-    private static Controller instantiateController(Request request, EndpointDescriptor descriptor) {
-        try {
-            return descriptor.controllerClass()
-                    .getDeclaredConstructor(Controller.State.class)
-                    .newInstance(state(descriptor, request));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return controllerFactory.controller(descriptor, request);
     }
 
     private EndpointDescriptor findDescriptor(Request request) throws NoRouteException {
@@ -39,11 +30,6 @@ public class Router {
                     throw new IllegalStateException("Multiple routes match request: " + a + ", " + b);
                 })
                 .orElseThrow(() -> new NoRouteException(request));
-    }
-
-    private static Controller.State state(EndpointDescriptor descriptor, Request request) {
-        var action = descriptor.routeMatcher().inferAction(request).orElseThrow();
-        return new Controller.State(action);
     }
 
     private static boolean matches(EndpointDescriptor descriptor, Request request) {
