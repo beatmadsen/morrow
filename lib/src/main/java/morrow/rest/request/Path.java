@@ -1,4 +1,8 @@
 package morrow.rest.request;
 
-public class Path {
+import morrow.path.UncategorisedSegment;
+
+import java.util.List;
+
+public record Path(List<UncategorisedSegment> segments) {
 }

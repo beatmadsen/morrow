@@ -5,6 +5,11 @@ import morrow.rest.Response;
 import morrow.rest.exception.ClientException;
 
 public class PartsController extends Controller {
+
+    protected PartsController(State state) {
+        super(state);
+    }
+
     @Override
     public void beforeAction() throws ClientException {
 

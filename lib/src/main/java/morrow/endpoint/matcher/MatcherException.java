@@ -1,4 +1,4 @@
-package morrow.endpoint.loader.matcher;
+package morrow.endpoint.matcher;
 
 import morrow.endpoint.loader.LoaderException;
 

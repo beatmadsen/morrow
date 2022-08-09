@@ -1,13 +1,15 @@
-package morrow.endpoint.loader.matcher;
+package morrow.endpoint.matcher;
 
 import morrow.endpoint.Action;
-import morrow.endpoint.ParameterSegment;
-import morrow.endpoint.PathSegment;
-import morrow.endpoint.UncategorisedSegment;
+import morrow.path.ParameterSegment;
+import morrow.path.PathSegment;
+import morrow.path.UncategorisedSegment;
 import morrow.rest.Method;
+import morrow.rest.request.Request;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ActionMatcher implements RouteMatcher {
@@ -66,6 +68,11 @@ public class ActionMatcher implements RouteMatcher {
     @Override
     public boolean matches(List<UncategorisedSegment> requestSegments, Method method) {
         return action.allowedMethods().contains(method) && pathIsMatch(requestSegments);
+    }
+
+    @Override
+    public Optional<Action> inferAction(Request request) {
+        return matches(request.path().segments(), request.method()) ? Optional.of(action) : Optional.empty();
     }
 
     private boolean pathIsMatch(List<UncategorisedSegment> requestSegments) {

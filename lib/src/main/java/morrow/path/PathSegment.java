@@ -1,4 +1,4 @@
-package morrow.endpoint;
+package morrow.path;
 
 public abstract class PathSegment {
 

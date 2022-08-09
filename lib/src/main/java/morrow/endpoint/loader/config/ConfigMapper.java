@@ -2,8 +2,8 @@ package morrow.endpoint.loader.config;
 
 import morrow.config.Validation;
 import morrow.endpoint.Action;
-import morrow.endpoint.loader.EndpointDescriptor;
-import morrow.endpoint.loader.matcher.EndpointMatcher;
+import morrow.endpoint.EndpointDescriptor;
+import morrow.endpoint.matcher.EndpointMatcher;
 import morrow.rest.Controller;
 import morrow.rest.Method;
 

@@ -1,7 +1,6 @@
-package morrow.endpoint.loader;
+package morrow.endpoint;
 
-import morrow.endpoint.Action;
-import morrow.endpoint.loader.matcher.RouteMatcher;
+import morrow.endpoint.matcher.RouteMatcher;
 import morrow.rest.Controller;
 import morrow.rest.Method;
 

@@ -1,6 +1,6 @@
 package morrow.endpoint.loader.config;
 
-import morrow.endpoint.PathSegment;
+import morrow.path.PathSegment;
 
 import java.util.List;
 import java.util.stream.Stream;

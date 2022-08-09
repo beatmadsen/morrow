@@ -1,17 +1,24 @@
 package morrow.endpoint.loader.matcher;
 
 import morrow.endpoint.Action;
-import morrow.endpoint.PathSegment;
-import morrow.endpoint.ResourceSegment;
-import morrow.endpoint.UncategorisedSegment;
+import morrow.endpoint.matcher.EndpointMatcher;
+import morrow.endpoint.matcher.MatcherException;
+import morrow.path.NamespaceSegment;
+import morrow.path.PathSegment;
+import morrow.path.ResourceSegment;
+import morrow.path.UncategorisedSegment;
 import morrow.rest.Method;
+import morrow.rest.request.Path;
+import morrow.rest.request.Request;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EndpointMatcherTest {
 
@@ -26,5 +33,38 @@ class EndpointMatcherTest {
         var matcher = EndpointMatcher.from(routePrefix, Set.of(Action.CREATE, Action.FIND_MANY));
         var result = matcher.matches(List.of(new UncategorisedSegment("cars")), Method.POST);
         assertTrue(result);
+    }
+
+    @BeforeEach
+    void setUp() {
+    }
+
+    @Test
+    void shouldInferFindManyActionFromGetRequest() {
+        var request = new Request(new Path(List.of(new UncategorisedSegment("cars"))), Method.GET);
+        List<PathSegment> routePrefix = List.of(new ResourceSegment("cars"));
+        var matcher = EndpointMatcher.from(routePrefix, Set.of(Action.CREATE, Action.FIND_MANY));
+        var action = matcher.inferAction(request).orElseThrow();
+        assertEquals(Action.FIND_MANY, action);
+    }
+
+    @Test
+    void shouldInferUpdateByIdActionFromPatchRequest() {
+        var request = new Request(new Path(List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("ships"), new UncategorisedSegment("46"))), Method.PATCH);
+        List<PathSegment> routePrefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("ships"));
+        var allActions = Arrays.stream(Action.values()).collect(Collectors.toSet());
+        var matcher = EndpointMatcher.from(routePrefix, allActions);
+        var action = matcher.inferAction(request).orElseThrow();
+        assertEquals(Action.UPDATE_BY_ID, action);
+    }
+
+    @Test
+    void shouldFailToInferUpdateByIdActionFromPatchRequestWithMissingParameter() {
+        var request = new Request(new Path(List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("ships"))), Method.PATCH);
+        List<PathSegment> routePrefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("ships"));
+        var allActions = Arrays.stream(Action.values()).collect(Collectors.toSet());
+        var matcher = EndpointMatcher.from(routePrefix, allActions);
+        var action = matcher.inferAction(request);
+        assertTrue(action.isEmpty());
     }
 }

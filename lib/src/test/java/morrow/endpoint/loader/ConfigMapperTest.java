@@ -2,7 +2,8 @@ package morrow.endpoint.loader;
 
 import morrow.config.Validation;
 import morrow.endpoint.Action;
-import morrow.endpoint.UncategorisedSegment;
+import morrow.endpoint.EndpointDescriptor;
+import morrow.path.UncategorisedSegment;
 import morrow.endpoint.loader.config.ConfigMapper;
 import morrow.endpoint.loader.config.EndpointConfig;
 import morrow.rest.Method;

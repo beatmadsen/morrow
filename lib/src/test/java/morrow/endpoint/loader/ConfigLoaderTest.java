@@ -20,14 +20,14 @@ class ConfigLoaderTest {
 
     @Test
     void shouldBeAbleToDeserialize() {
-        List<EndpointConfig> ed = configLoader.loadEndpoints();
+        List<EndpointConfig> ed = configLoader.loadEndpointFile();
         assertEquals(2, ed.size());
     }
 
 
     @Test
     void shouldFindController() throws InvalidConfigurationException {
-        List<EndpointConfig> eds = configLoader.loadEndpoints();
+        List<EndpointConfig> eds = configLoader.loadEndpointFile();
         assertEquals("com.example.myapp.controller.CarsController", eds.get(0).getController());
     }
 }

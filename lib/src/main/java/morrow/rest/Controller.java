@@ -1,9 +1,20 @@
 package morrow.rest;
 
 import morrow.Tracker;
+import morrow.endpoint.Action;
 import morrow.rest.exception.ClientException;
 
 public abstract class Controller {
+
+    protected Controller(State state) {
+        this.state = state;
+    }
+
+    public record State(Action action) {
+
+    }
+
+    protected final State state;
 
     public abstract void beforeAction() throws ClientException;
 

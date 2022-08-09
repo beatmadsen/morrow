@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ConfigLoader {
 
-    public List<EndpointConfig> loadEndpoints() {
-        InputStream inputStream = endpointConfigFile();
+    public List<EndpointConfig> loadEndpointFile() {
+        InputStream inputStream = endpointFile();
         return parse(inputStream);
     }
 
@@ -28,7 +28,7 @@ public class ConfigLoader {
         }
     }
 
-    private InputStream endpointConfigFile() {
+    private InputStream endpointFile() {
         var inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.yml");
         if (inputStream == null) {
             throw new ConfigException("Could not locate endpoints.yml");

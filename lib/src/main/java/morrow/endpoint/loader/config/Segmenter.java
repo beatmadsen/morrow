@@ -1,8 +1,8 @@
 package morrow.endpoint.loader.config;
 
-import morrow.endpoint.NamespaceSegment;
-import morrow.endpoint.PathSegment;
-import morrow.endpoint.ResourceSegment;
+import morrow.path.NamespaceSegment;
+import morrow.path.PathSegment;
+import morrow.path.ResourceSegment;
 
 import java.util.*;
 import java.util.stream.Collectors;

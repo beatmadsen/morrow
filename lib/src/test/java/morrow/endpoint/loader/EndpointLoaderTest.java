@@ -8,17 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EndpointLoaderTest {
 
-    private EndpointLoader endpointLoader;
+    private Validation validation;
 
 
     @BeforeEach
     void setUp() {
-        endpointLoader = new EndpointLoader(new Validation(null));
+        validation = new Validation(null);
     }
 
     @Test
     void loadEndpoints() throws InvalidConfigurationException {
-        var descriptors = endpointLoader.loadEndpoints();
+        var descriptors = EndpointLoader.loadEndpoints(validation);
         assertEquals(5, descriptors.size());
     }
 }
