@@ -19,7 +19,7 @@ public class ResponseMutator {
         out.setContentType(response.mediaType().contentTypeHeaderValue());
         out.setStatus(response.statusCode().numericValue());
 
-        writeBody(new ByteArrayInputStream("{\"status\": \"ok\"}".getBytes()));
+        writeBody(response.body().stream());
 
     }
 
