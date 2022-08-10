@@ -1,6 +1,6 @@
 package morrow.endpoint.loader;
 
-import morrow.config.Validation;
+import morrow.config.SingletonStore;
 import morrow.endpoint.EndpointDescriptor;
 import morrow.endpoint.loader.config.ConfigLoader;
 import morrow.endpoint.loader.config.ConfigMapper;
@@ -13,13 +13,13 @@ public class EndpointLoader {
     private final ConfigLoader configLoader;
     private final ConfigMapper configMapper;
 
-    private EndpointLoader(Validation validation) {
+    private EndpointLoader(SingletonStore singletonStore) {
         configLoader = new ConfigLoader();
-        configMapper = new ConfigMapper(validation);
+        configMapper = new ConfigMapper(singletonStore);
     }
 
-    public static List<EndpointDescriptor> loadEndpoints(Validation validation) throws InvalidConfigurationException {
-        return new EndpointLoader(validation).loadEndpoints();
+    public static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws InvalidConfigurationException {
+        return new EndpointLoader(singletonStore).loadEndpoints();
     }
 
 

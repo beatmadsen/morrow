@@ -30,7 +30,7 @@ public class MorrowApplication {
     }
 
     private List<EndpointDescriptor> loadEndpoints() throws InvalidConfigurationException {
-        return EndpointLoader.loadEndpoints(singletonStore.get(Validation.class));
+        return EndpointLoader.loadEndpoints(singletonStore);
     }
 
 

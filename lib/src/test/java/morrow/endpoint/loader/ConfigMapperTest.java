@@ -1,15 +1,14 @@
 package morrow.endpoint.loader;
 
+import morrow.config.SingletonStore;
 import morrow.config.Validation;
-import morrow.endpoint.Action;
 import morrow.endpoint.EndpointDescriptor;
-import morrow.path.UncategorisedSegment;
 import morrow.endpoint.loader.config.ConfigMapper;
 import morrow.endpoint.loader.config.EndpointConfig;
+import morrow.path.UncategorisedSegment;
 import morrow.rest.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.other.controller.YokesController;
 
 import java.util.List;
 import java.util.Set;
@@ -22,24 +21,25 @@ class ConfigMapperTest {
 
     @BeforeEach
     void setUp() {
-        configMapper = new ConfigMapper(new Validation(null));
+        SingletonStore singletonStore = new SingletonStore();
+        singletonStore.put(new Validation(null));
+        configMapper = new ConfigMapper(singletonStore);
     }
 
     @Test
-    void shouldMapMainResource() throws InvalidConfigurationException {
+    void shouldMapMainResource() {
         var endpointConfig = new EndpointConfig();
         endpointConfig.setActions(Set.of("getById", "create"));
         endpointConfig.setController("org.other.controller.EggsController");
         endpointConfig.setPath("my-prefix/my_resource");
         List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
         var e = eds.get(0);
-        assertEquals(Set.of(Action.GET_BY_ID, Action.CREATE), e.allowedActions());
-        assertEquals(Set.of(Method.GET, Method.POST), e.allowedMethods());
-
+        assertTrue(e.isMethodAllowed(Method.GET));
+        assertTrue(e.isMethodAllowed(Method.POST));
         var getByIdSegments = List.of(new UncategorisedSegment("my-prefix"), new UncategorisedSegment("my_resource"), new UncategorisedSegment("42"));
-        assertTrue(e.routeMatcher().matches(getByIdSegments, Method.GET));
+        assertTrue(e.matchesRoute(getByIdSegments, Method.GET));
         var createSegments = List.of(new UncategorisedSegment("my-prefix"), new UncategorisedSegment("my_resource"));
-        assertTrue(e.routeMatcher().matches(createSegments, Method.POST));
+        assertTrue(e.matchesRoute(createSegments, Method.POST));
     }
 
     @Test
@@ -75,13 +75,11 @@ class ConfigMapperTest {
 
         List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
         assertEquals(2, eds.size());
-        var e = eds.stream()
-                .filter(ed -> ed.controllerClass() == YokesController.class)
-                .findFirst()
-                .orElseThrow();
+        var e = eds.get(1);
 
-        assertEquals(Set.of(Action.UPDATE_BY_ID, Action.FIND_MANY), e.allowedActions());
-        assertEquals(Set.of(Method.PUT, Method.PATCH, Method.GET), e.allowedMethods());
+        assertTrue(e.isMethodAllowed(Method.GET));
+        assertTrue(e.isMethodAllowed(Method.PUT));
+        assertTrue(e.isMethodAllowed(Method.PATCH));
 
         var updateByIdSegments = List.of(
                 new UncategorisedSegment("ns1"),
@@ -89,7 +87,7 @@ class ConfigMapperTest {
                 new UncategorisedSegment("child"),
                 new UncategorisedSegment("456")
         );
-        assertTrue(e.routeMatcher().matches(updateByIdSegments, Method.PUT));
+        assertTrue(e.matchesRoute(updateByIdSegments, Method.PUT));
 
         var findManySegments = List.of(
                 new UncategorisedSegment("ns1"),
@@ -98,7 +96,7 @@ class ConfigMapperTest {
                 new UncategorisedSegment("ns2"),
                 new UncategorisedSegment("child")
         );
-        assertTrue(e.routeMatcher().matches(findManySegments, Method.GET));
+        assertTrue(e.matchesRoute(findManySegments, Method.GET));
 
 
     }

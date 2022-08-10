@@ -1,11 +1,11 @@
 package morrow.endpoint.loader.config;
 
+import morrow.config.SingletonStore;
 import morrow.config.Validation;
 import morrow.endpoint.Action;
 import morrow.endpoint.EndpointDescriptor;
 import morrow.endpoint.matcher.EndpointMatcher;
 import morrow.rest.Controller;
-import morrow.rest.Method;
 
 import java.util.List;
 import java.util.Set;
@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class ConfigMapper {
 
-    private final Validation validation;
+    private final SingletonStore singletonStore;
 
-    public ConfigMapper(Validation validation) {
-        this.validation = validation;
+    public ConfigMapper(SingletonStore singletonStore) {
+        this.singletonStore = singletonStore;
     }
 
     public List<EndpointDescriptor> map(EndpointConfig endpointConfig) {
@@ -28,7 +28,8 @@ public class ConfigMapper {
     }
 
     private void validate(EndpointConfig endpointConfig) {
-        var violations = validation.validator().validate(endpointConfig);
+        var validator = singletonStore.get(Validation.class).validator();
+        var violations = validator.validate(endpointConfig);
         if (!violations.isEmpty()) {
             throw new ValidationException(violations);
         }
@@ -43,7 +44,7 @@ public class ConfigMapper {
         return configs.stream().map(c -> {
             var actions = mapActions(c.config().getActions());
             EndpointMatcher m = EndpointMatcher.from(c.index(), actions);
-            return new EndpointDescriptor(m, mapController(c.config().getController()), mapMethods(actions), actions);
+            return new EndpointDescriptor(singletonStore, m, mapController(c.config().getController()), actions);
         }).toList();
     }
 
@@ -73,10 +74,6 @@ public class ConfigMapper {
             case "deleteById" -> Action.DELETE_BY_ID;
             default -> throw new ConfigException("Unknown action: '" + a + "'");
         };
-    }
-
-    private Set<Method> mapMethods(Set<Action> allowedActions) {
-        return allowedActions.stream().flatMap(action -> action.allowedMethods().stream()).collect(Collectors.toSet());
     }
 
 }

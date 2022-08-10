@@ -17,7 +17,7 @@ public class Server {
     private final Validation validation;
 
     public Server(List<EndpointDescriptor> endpointDescriptors, SingletonStore singletonStore) {
-        router = new Router(endpointDescriptors, singletonStore);
+        router = new Router(endpointDescriptors);
         validation = singletonStore.get(Validation.class);
     }
 
