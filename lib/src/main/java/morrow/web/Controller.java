@@ -20,9 +20,15 @@ public abstract class Controller {
     public abstract void beforeAction() throws ClientException;
 
     public Response action() {
-        var response = new Response();
+        var response = switch (state.action()) {
+            case GET_BY_ID -> getById();
+            case FIND_MANY -> findMany();
+            case CREATE -> create();
+            case UPDATE_BY_ID -> updateById();
+            case DELETE_BY_ID -> deleteById();
+        };
         // TODO - route to correct action implementation
-        Tracker.success(new Tracker.MetaData());
+        Tracker.actionComplete(new Tracker.MetaData());
         return response;
     }
 

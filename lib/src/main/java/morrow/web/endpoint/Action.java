@@ -1,6 +1,6 @@
 package morrow.web.endpoint;
 
-import morrow.web.Method;
+import morrow.web.request.Method;
 
 import java.util.List;
 

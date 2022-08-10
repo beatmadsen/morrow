@@ -1,6 +1,5 @@
 package morrow.web.endpoint.loader.matcher;
 
-import morrow.web.Method;
 import morrow.web.endpoint.Action;
 import morrow.web.endpoint.matcher.EndpointMatcher;
 import morrow.web.endpoint.matcher.MatcherException;
@@ -8,6 +7,7 @@ import morrow.web.path.NamespaceSegment;
 import morrow.web.path.PathSegment;
 import morrow.web.path.ResourceSegment;
 import morrow.web.path.UncategorisedSegment;
+import morrow.web.request.Method;
 import morrow.web.request.Path;
 import morrow.web.request.Request;
 import org.junit.jupiter.api.BeforeEach;

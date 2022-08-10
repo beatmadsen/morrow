@@ -8,7 +8,7 @@ public class Tracker {
 
     }
 
-    public static void success(MetaData metaData) {
+    public static void actionComplete(MetaData metaData) {
         Logger.debug("Successfully processed request");
     }
 

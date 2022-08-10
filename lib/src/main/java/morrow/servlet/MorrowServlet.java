@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import morrow.MorrowApplication;
-import morrow.web.Method;
 import morrow.web.endpoint.loader.InvalidConfigurationException;
+import morrow.web.request.Method;
 import morrow.web.request.Path;
 import morrow.web.request.Request;
 
@@ -27,11 +27,8 @@ public class MorrowServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        var out = application.serve(map(req));
-
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print("{\"status\": \"ok\"}");
+        var response = application.serve(map(req));
+        new ResponseMutator(resp).write(response);
 
     }
 

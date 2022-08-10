@@ -1,11 +1,11 @@
 package morrow.web.endpoint.loader.matcher;
 
-import morrow.web.Method;
 import morrow.web.endpoint.Action;
 import morrow.web.endpoint.matcher.ActionMatcher;
 import morrow.web.path.NamespaceSegment;
 import morrow.web.path.ResourceSegment;
 import morrow.web.path.UncategorisedSegment;
+import morrow.web.request.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

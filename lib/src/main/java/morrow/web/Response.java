@@ -1,4 +1,6 @@
 package morrow.web;
 
-public record Response() {
+import morrow.web.protocol.MediaType;
+
+public record Response(MediaType mediaType) {
 }

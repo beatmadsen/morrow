@@ -2,9 +2,9 @@ package morrow.web.endpoint;
 
 import morrow.config.SingletonStore;
 import morrow.web.Controller;
-import morrow.web.Method;
 import morrow.web.endpoint.matcher.RouteMatcher;
 import morrow.web.path.UncategorisedSegment;
+import morrow.web.request.Method;
 import morrow.web.request.Request;
 
 import java.util.List;

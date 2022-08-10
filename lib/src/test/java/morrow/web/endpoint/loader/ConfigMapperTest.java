@@ -2,11 +2,11 @@ package morrow.web.endpoint.loader;
 
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
-import morrow.web.Method;
 import morrow.web.endpoint.EndpointDescriptor;
 import morrow.web.endpoint.loader.config.ConfigMapper;
 import morrow.web.endpoint.loader.config.EndpointConfig;
 import morrow.web.path.UncategorisedSegment;
+import morrow.web.request.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
