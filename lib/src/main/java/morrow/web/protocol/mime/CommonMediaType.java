@@ -1,4 +1,4 @@
-package morrow.web.protocol;
+package morrow.web.protocol.mime;
 
 import java.util.Map;
 
@@ -6,34 +6,30 @@ public enum CommonMediaType implements MediaType {
     JSON_UTF8(Type.APPLICATION, Subtype.JSON, Map.of("charset", "UTF-8")),
     PLAIN_TEXT_UTF8(Type.TEXT, Subtype.PLAIN, Map.of("charset", "UTF-8"));
 
-    private final MediaType delegate;
+
+    private final Type type;
+    private final Subtype subtype;
+    private final Map<String, String> parameters;
 
     CommonMediaType(Type type, Subtype subtype, Map<String, String> parameters) {
-        this.delegate = MediaType.freeHand(type.toString(), subtype.toString(), parameters);
+        this.type = type;
+        this.subtype = subtype;
+        this.parameters = parameters;
     }
 
     @Override
     public String contentTypeHeaderValue() {
-        return delegate.contentTypeHeaderValue();
+        return MediaType.freeHand(type.toString(), subtype.toString(), parameters).contentTypeHeaderValue();
     }
 
-    private enum Type {
-        APPLICATION, TEXT;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-
+    @Override
+    public Type type() {
+        return type;
     }
 
-    private enum Subtype {
-        JSON, PLAIN;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-
+    @Override
+    public Subtype subtype() {
+        return subtype;
     }
+
 }

@@ -1,5 +1,6 @@
 package morrow.web.protocol;
 
+import morrow.web.protocol.mime.CommonMediaType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

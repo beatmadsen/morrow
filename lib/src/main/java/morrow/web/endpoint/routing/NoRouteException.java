@@ -1,7 +1,7 @@
 package morrow.web.endpoint.routing;
 
 import morrow.web.exception.ClientException;
-import morrow.web.protocol.CommonMediaType;
+import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.body.Body;
 import morrow.web.request.Request;
 import morrow.web.response.Response;

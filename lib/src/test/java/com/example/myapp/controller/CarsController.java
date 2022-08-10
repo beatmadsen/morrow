@@ -1,8 +1,7 @@
 package com.example.myapp.controller;
 
 import morrow.web.Controller;
-import morrow.web.exception.ClientException;
-import morrow.web.protocol.CommonMediaType;
+import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.body.Body;
 import morrow.web.response.Response;
 import morrow.web.response.status.CommonStatusCode;
@@ -12,12 +11,6 @@ public class CarsController extends Controller {
     public CarsController(State state) {
         super(state);
     }
-
-    @Override
-    public void beforeAction() throws ClientException {
-
-    }
-
     @Override
     protected Response getById() {
         return null;

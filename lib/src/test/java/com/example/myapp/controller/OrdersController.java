@@ -11,11 +11,6 @@ public class OrdersController extends Controller {
     }
 
     @Override
-    public void beforeAction() throws ClientException {
-
-    }
-
-    @Override
     protected Response getById() {
         return null;
     }

@@ -26,8 +26,7 @@ public class Server {
         try {
             validate(request);
             var c = createController(request);
-            c.beforeAction();
-            return c.action();
+            return c.beforeAction().orElse(c.action());
         } catch (ClientException | ServerException e) {
             e.track();
             return e.response();

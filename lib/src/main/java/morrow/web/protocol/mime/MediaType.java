@@ -1,19 +1,37 @@
-package morrow.web.protocol;
+package morrow.web.protocol.mime;
 
 import java.util.Map;
 
 public interface MediaType {
 
     static MediaType freeHand(String type, String subtype, Map<String, String> parameters) {
-        return () -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(type).append('/').append(subtype);
-            for (Map.Entry<String, String> e : parameters.entrySet()) {
-                sb.append(';').append(e.getKey().toLowerCase()).append('=').append(e.getValue());
-            }
-            return sb.toString();
-        };
+        return new FreeHandMediaType(type, subtype, parameters);
     }
 
     String contentTypeHeaderValue();
+
+    Type type();
+
+    Subtype subtype();
+
+    enum Type {
+        APPLICATION, TEXT;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+
+    }
+
+    enum Subtype {
+        JSON, PLAIN;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+
+    }
+
 }
