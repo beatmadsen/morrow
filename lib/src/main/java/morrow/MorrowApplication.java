@@ -2,12 +2,12 @@ package morrow;
 
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
-import morrow.endpoint.EndpointDescriptor;
-import morrow.endpoint.loader.EndpointLoader;
-import morrow.endpoint.loader.InvalidConfigurationException;
-import morrow.rest.Response;
-import morrow.rest.Server;
-import morrow.rest.request.Request;
+import morrow.web.Response;
+import morrow.web.Server;
+import morrow.web.endpoint.EndpointDescriptor;
+import morrow.web.endpoint.loader.EndpointLoader;
+import morrow.web.endpoint.loader.InvalidConfigurationException;
+import morrow.web.request.Request;
 
 import java.util.List;
 

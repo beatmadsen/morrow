@@ -1,8 +1,8 @@
 package com.example.myapp.controller;
 
-import morrow.rest.Controller;
-import morrow.rest.Response;
-import morrow.rest.exception.ClientException;
+import morrow.web.Controller;
+import morrow.web.Response;
+import morrow.web.exception.ClientException;
 
 public class PartsController extends Controller {
 

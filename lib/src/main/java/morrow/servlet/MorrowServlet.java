@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import morrow.MorrowApplication;
-import morrow.endpoint.loader.InvalidConfigurationException;
-import morrow.rest.Method;
-import morrow.rest.request.Path;
-import morrow.rest.request.Request;
+import morrow.web.Method;
+import morrow.web.endpoint.loader.InvalidConfigurationException;
+import morrow.web.request.Path;
+import morrow.web.request.Request;
 
 import java.io.IOException;
 import java.util.List;
