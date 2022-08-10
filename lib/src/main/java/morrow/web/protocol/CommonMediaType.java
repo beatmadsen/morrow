@@ -2,18 +2,19 @@ package morrow.web.protocol;
 
 import java.util.Map;
 
-public enum StandardMediaType implements MediaType {
+public enum CommonMediaType implements MediaType {
     JSON_UTF8(Type.APPLICATION, Subtype.JSON, Map.of("charset", "UTF-8")),
     PLAIN_TEXT_UTF8(Type.TEXT, Subtype.PLAIN, Map.of("charset", "UTF-8"));
 
+    private final MediaType delegate;
 
-    private final Type type;
-    private final Subtype subtype;
-    private final Map<String, String> parameters;
+    CommonMediaType(Type type, Subtype subtype, Map<String, String> parameters) {
+        this.delegate = MediaType.freeHand(type.toString(), subtype.toString(), parameters);
+    }
 
     @Override
     public String contentTypeHeaderValue() {
-        return MediaType.freeForm(type.toString(), subtype.toString(), parameters).contentTypeHeaderValue();
+        return delegate.contentTypeHeaderValue();
     }
 
     private enum Type {
@@ -23,6 +24,7 @@ public enum StandardMediaType implements MediaType {
         public String toString() {
             return name().toLowerCase();
         }
+
     }
 
     private enum Subtype {
@@ -32,11 +34,6 @@ public enum StandardMediaType implements MediaType {
         public String toString() {
             return name().toLowerCase();
         }
-    }
 
-    StandardMediaType(Type type, Subtype subtype, Map<String, String> parameters) {
-        this.type = type;
-        this.subtype = subtype;
-        this.parameters = parameters;
     }
 }

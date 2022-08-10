@@ -1,9 +1,10 @@
 package morrow.web.endpoint.routing;
 
-import morrow.web.Response;
 import morrow.web.exception.ClientException;
-import morrow.web.protocol.StandardMediaType;
+import morrow.web.protocol.CommonMediaType;
 import morrow.web.request.Request;
+import morrow.web.response.CommonStatusCode;
+import morrow.web.response.Response;
 
 class NoRouteException extends ClientException {
     public NoRouteException(Request request) {
@@ -13,6 +14,6 @@ class NoRouteException extends ClientException {
     @Override
     public Response response() {
         // TODO: create 404 hook for custom response
-        return new Response(StandardMediaType.PLAIN_TEXT_UTF8);
+        return new Response(CommonMediaType.PLAIN_TEXT_UTF8, CommonStatusCode.NOT_FOUND);
     }
 }

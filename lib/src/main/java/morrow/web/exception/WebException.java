@@ -1,6 +1,6 @@
 package morrow.web.exception;
 
-import morrow.web.Response;
+import morrow.web.response.Response;
 
 public interface WebException {
     Response response();

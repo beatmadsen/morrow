@@ -1,7 +1,7 @@
 package morrow.web.exception;
 
 import morrow.Tracker;
-import morrow.web.Response;
+import morrow.web.response.Response;
 
 public class InternalServerException extends ServerException {
 

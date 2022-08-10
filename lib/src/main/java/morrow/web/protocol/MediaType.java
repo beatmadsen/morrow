@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface MediaType {
 
-    static MediaType freeForm(String type, String subtype, Map<String, String> parameters) {
+    static MediaType freeHand(String type, String subtype, Map<String, String> parameters) {
         return () -> {
             StringBuilder sb = new StringBuilder();
             sb.append(type).append('/').append(subtype);

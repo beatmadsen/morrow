@@ -1,7 +1,7 @@
 package morrow.servlet;
 
 import jakarta.servlet.http.HttpServletResponse;
-import morrow.web.Response;
+import morrow.web.response.Response;
 
 import java.io.IOException;
 
