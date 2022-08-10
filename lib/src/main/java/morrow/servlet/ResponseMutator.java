@@ -3,7 +3,9 @@ package morrow.servlet;
 import jakarta.servlet.http.HttpServletResponse;
 import morrow.web.response.Response;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ResponseMutator {
     private final HttpServletResponse out;
@@ -15,8 +17,23 @@ public class ResponseMutator {
     public void write(Response response) throws IOException {
 
         out.setContentType(response.mediaType().contentTypeHeaderValue());
-        out.setStatus(HttpServletResponse.SC_OK);
-        out.getWriter().print("{\"status\": \"ok\"}");
+        out.setStatus(response.statusCode().numericValue());
+
+        writeBody(new ByteArrayInputStream("{\"status\": \"ok\"}".getBytes()));
+
+    }
+
+    private void writeBody(InputStream body) throws IOException {
+        try (
+                var inputStream = body;
+                var outputStream = out.getOutputStream()
+        ) {
+            var buffer = new byte[8192];
+            int n;
+            while (-1 != (n = inputStream.read(buffer))) {
+                outputStream.write(buffer, 0, n);
+            }
+        }
     }
 
 }

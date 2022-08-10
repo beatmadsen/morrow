@@ -3,7 +3,7 @@ package morrow.web.endpoint.routing;
 import morrow.web.exception.ClientException;
 import morrow.web.protocol.CommonMediaType;
 import morrow.web.request.Request;
-import morrow.web.response.CommonStatusCode;
+import morrow.web.response.status.CommonStatusCode;
 import morrow.web.response.Response;
 
 class NoRouteException extends ClientException {

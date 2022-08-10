@@ -1,4 +1,4 @@
-package morrow.web.response;
+package morrow.web.response.status;
 
 public enum CommonStatusCode implements StatusCode {
     /* 2xx */
@@ -29,7 +29,7 @@ public enum CommonStatusCode implements StatusCode {
     private final StatusCode delegate;
 
     CommonStatusCode(int code) {
-        this.delegate = new FreeHandStatusCode(code);
+        this.delegate = StatusCode.freeHand(code);
     }
 
     @Override
