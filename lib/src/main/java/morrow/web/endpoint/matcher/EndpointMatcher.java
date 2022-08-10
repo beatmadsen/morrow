@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
 
 public class EndpointMatcher implements RouteMatcher {
 
+    private final List<ActionMatcher> actionMatchers;
+
+    private EndpointMatcher(List<ActionMatcher> actionMatchers) {
+        this.actionMatchers = actionMatchers;
+    }
+
     public static EndpointMatcher from(List<PathSegment> routePrefix, Set<Action> allowedActions) {
         if (allowedActions.isEmpty()) {
             throw new MatcherException("Need at least one allowed action for resource " + describe(routePrefix));
@@ -27,12 +33,6 @@ public class EndpointMatcher implements RouteMatcher {
         return routePrefix.isEmpty() ?
                 "(root)" :
                 routePrefix.stream().map(PathSegment::toString).collect(Collectors.joining());
-    }
-
-    private final List<ActionMatcher> actionMatchers;
-
-    private EndpointMatcher(List<ActionMatcher> actionMatchers) {
-        this.actionMatchers = actionMatchers;
     }
 
     @Override

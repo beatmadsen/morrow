@@ -6,7 +6,7 @@ import morrow.web.response.Response;
 
 public class PartsController extends Controller {
 
-    protected PartsController(State state) {
+    public PartsController(State state) {
         super(state);
     }
 

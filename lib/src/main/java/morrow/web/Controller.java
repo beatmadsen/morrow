@@ -8,15 +8,11 @@ import morrow.web.response.Response;
 
 public abstract class Controller {
 
-    protected Controller(State state) {
+    protected final State state;
+
+    public Controller(State state) {
         this.state = state;
     }
-
-    public record State(Action action, SingletonStore singletonStore) {
-
-    }
-
-    protected final State state;
 
     public abstract void beforeAction() throws ClientException;
 
@@ -33,10 +29,10 @@ public abstract class Controller {
         return response;
     }
 
-    // path and query params etc available as controller state
-
     // show - GET /path/id
     protected abstract Response getById();
+
+    // path and query params etc available as controller state
 
     // list - GET /path?x=42&y=hat
     protected abstract Response findMany();
@@ -49,4 +45,8 @@ public abstract class Controller {
 
     // destroy - DELETE /path/id
     protected abstract Response deleteById();
+
+    public record State(Action action, SingletonStore singletonStore) {
+
+    }
 }

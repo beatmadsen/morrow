@@ -10,12 +10,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 class Segmenter {
-    public List<PathSegment> asSegments(String path) {
-        var parts = parts(path);
-        var reverseSegments = reverseAndMap(parts);
-        return stream(reverseSegments.descendingIterator()).toList();
-    }
-
     private static <T> Stream<T> stream(Iterator<T> iterator) {
         Iterable<T> iterable = () -> iterator;
         return StreamSupport.stream(iterable.spliterator(), false);
@@ -29,6 +23,12 @@ class Segmenter {
         return Arrays.stream(path.split("/"))
                 .filter(part -> !part.equals(""))
                 .collect(Collectors.toCollection(ArrayDeque::new));
+    }
+
+    public List<PathSegment> asSegments(String path) {
+        var parts = parts(path);
+        var reverseSegments = reverseAndMap(parts);
+        return stream(reverseSegments.descendingIterator()).toList();
     }
 
     private static class PathSegmentReverseIterator implements Iterator<PathSegment> {

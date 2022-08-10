@@ -15,6 +15,11 @@ public class Router {
         this.descriptors = descriptors;
     }
 
+    private static boolean matches(EndpointDescriptor descriptor, Request request) {
+        return descriptor.isMethodAllowed(request.method()) &&
+                descriptor.matchesRoute(request.path().segments(), request.method());
+    }
+
     public Controller route(Request request) throws ClientException {
         var descriptor = findDescriptor(request);
         return descriptor.controller(request);
@@ -27,11 +32,6 @@ public class Router {
                     throw new IllegalStateException("Multiple routes match request: " + a + ", " + b);
                 })
                 .orElseThrow(() -> new NoRouteException(request));
-    }
-
-    private static boolean matches(EndpointDescriptor descriptor, Request request) {
-        return descriptor.isMethodAllowed(request.method()) &&
-                descriptor.matchesRoute(request.path().segments(), request.method());
     }
 
 }

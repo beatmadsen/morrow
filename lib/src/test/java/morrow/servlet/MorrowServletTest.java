@@ -16,16 +16,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MorrowServletTest {
     @Test
-    void startServlet() throws Exception {
+    void visitMissingEndpoint() throws Exception {
         Server server = new Server(8080);
         ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(MorrowServlet.class, "");
+        servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
         server.setHandler(servletHandler);
         server.start();
 
         HttpClient client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080"))
+                .uri(URI.create("http://localhost:8080/missing"))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals("{\"status\": \"not found\"}", httpResponse.body());
+
+
+    }
+
+    @Test
+    void visitExistingEndpoint() throws Exception {
+        Server server = new Server(8080);
+        ServletHandler servletHandler = new ServletHandler();
+        servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
+        server.setHandler(servletHandler);
+        server.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/vehicles/cars"))
                 .header("Accept", "application/json")
                 .GET()
                 .build();

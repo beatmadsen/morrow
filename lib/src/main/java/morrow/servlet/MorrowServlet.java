@@ -7,12 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import morrow.MorrowApplication;
 import morrow.web.endpoint.loader.InvalidConfigurationException;
+import morrow.web.path.UncategorisedSegment;
 import morrow.web.request.Method;
 import morrow.web.request.Path;
 import morrow.web.request.Request;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 
 @WebServlet(urlPatterns = "")
 public class MorrowServlet extends HttpServlet {
@@ -23,6 +24,17 @@ public class MorrowServlet extends HttpServlet {
         application = new MorrowApplication();
     }
 
+    private static Request map(HttpServletRequest req) {
+
+        var method = Method.valueOf(req.getMethod().toUpperCase());
+
+        var segments = Arrays.stream(req.getPathInfo().split("/"))
+                .filter(s -> !s.isEmpty())
+                .map(UncategorisedSegment::new)
+                .toList();
+
+        return new Request(new Path(segments), method);
+    }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,10 +42,6 @@ public class MorrowServlet extends HttpServlet {
         var response = application.serve(map(req));
         new ResponseMutator(resp).write(response);
 
-    }
-
-    private static Request map(HttpServletRequest req) {
-        return new Request(new Path(List.of()), Method.GET);
     }
 
     @Override

@@ -11,11 +11,6 @@ import java.util.List;
 
 public class ConfigLoader {
 
-    public List<EndpointConfig> loadEndpointFile() {
-        InputStream inputStream = endpointFile();
-        return parse(inputStream);
-    }
-
     private static List<EndpointConfig> parse(InputStream inputStream) {
         try {
             var c = new Constructor(Wrapper.class);
@@ -26,6 +21,11 @@ public class ConfigLoader {
         } catch (Exception e) {
             throw new ConfigException("Could not parse endpoints.yml", e);
         }
+    }
+
+    public List<EndpointConfig> loadEndpointFile() {
+        InputStream inputStream = endpointFile();
+        return parse(inputStream);
     }
 
     private InputStream endpointFile() {

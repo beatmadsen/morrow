@@ -16,11 +16,6 @@ public class ResourceTree {
         return new Segmenter().asSegments(path);
     }
 
-
-    public List<IndexedConfig> traverseTree() {
-        return traverseTree(root, List.of()).toList();
-    }
-
     private static Stream<IndexedConfig> traverseTree(ResourceNode node, List<PathSegment> routePrefix) {
         var newPrefix = Stream.concat(routePrefix.stream(), node.relativeRouteFromParent().stream()).toList();
 
@@ -29,7 +24,6 @@ public class ResourceTree {
 
         return Stream.concat(ds, cs);
     }
-
 
     private static ResourceNode map(EndpointConfig config) {
         var subResources = config.getSubResources();
@@ -44,6 +38,10 @@ public class ResourceTree {
      */
     public static ResourceTree from(EndpointConfig config) {
         return new ResourceTree(map(config));
+    }
+
+    public List<IndexedConfig> traverseTree() {
+        return traverseTree(root, List.of()).toList();
     }
 
     private record ResourceNode(

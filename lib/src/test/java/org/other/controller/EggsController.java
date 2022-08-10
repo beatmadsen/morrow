@@ -6,7 +6,7 @@ import morrow.web.response.Response;
 
 public class EggsController extends Controller {
 
-    protected EggsController(State state) {
+    public EggsController(State state) {
         super(state);
     }
 

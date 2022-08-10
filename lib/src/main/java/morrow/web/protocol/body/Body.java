@@ -1,4 +1,4 @@
-package morrow.web.response.body;
+package morrow.web.protocol.body;
 
 import java.io.InputStream;
 

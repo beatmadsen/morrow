@@ -14,5 +14,6 @@ public interface MediaType {
             return sb.toString();
         };
     }
+
     String contentTypeHeaderValue();
 }

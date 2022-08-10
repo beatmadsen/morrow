@@ -6,7 +6,7 @@ import morrow.web.response.Response;
 
 public class YokesController extends Controller {
 
-    protected YokesController(State state) {
+    public YokesController(State state) {
         super(state);
     }
 

@@ -2,11 +2,14 @@ package com.example.myapp.controller;
 
 import morrow.web.Controller;
 import morrow.web.exception.ClientException;
+import morrow.web.protocol.CommonMediaType;
+import morrow.web.protocol.body.Body;
 import morrow.web.response.Response;
+import morrow.web.response.status.CommonStatusCode;
 
 public class CarsController extends Controller {
 
-    protected CarsController(State state) {
+    public CarsController(State state) {
         super(state);
     }
 
@@ -22,7 +25,11 @@ public class CarsController extends Controller {
 
     @Override
     protected Response findMany() {
-        return null;
+        return new Response(
+                CommonMediaType.JSON_UTF8,
+                CommonStatusCode.OK,
+                Body.of("{\"status\": \"ok\"}")
+        );
     }
 
     @Override
