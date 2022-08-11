@@ -4,12 +4,14 @@ import morrow.Tracker;
 import morrow.config.SingletonStore;
 import morrow.web.endpoint.Action;
 import morrow.web.exception.ClientException;
+import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
 import morrow.web.response.rendering.BodyRenderer;
 import morrow.web.response.status.CommonStatusCode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,9 +61,15 @@ public abstract class Controller {
       falling back to a default rendering/empty body
     */
     protected Response render() {
-        var body = BodyRenderer.forMediaType(state.accepts()).body(state.action(), renderState);
+        MediaType mediaType = mimeNegotiation(state.accepts());
+        var body = BodyRenderer.forMediaType(mediaType).body(state.action(), renderState);
         // TODO: more dynamic. Some actions should return 201 or 301 by default
-        return new Response(state.accepts(), CommonStatusCode.OK, body);
+        return new Response(mediaType, CommonStatusCode.OK, body);
+    }
+
+    private MediaType mimeNegotiation(List<MediaType> accepts) {
+        // TODO, see https://github.com/rails/rails/issues/9940
+        return CommonMediaType.JSON_UTF8;
     }
 
     // show - GET /path/id
@@ -81,6 +89,6 @@ public abstract class Controller {
     // destroy - DELETE /path/id
     protected abstract Response deleteById();
 
-    public record State(Action action, SingletonStore singletonStore, MediaType accepts) {
+    public record State(Action action, SingletonStore singletonStore, List<MediaType> accepts) {
     }
 }

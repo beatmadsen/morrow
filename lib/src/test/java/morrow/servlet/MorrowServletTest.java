@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MorrowServletTest {
     @Test
     void visitMissingEndpoint() throws Exception {
-        Server server = new Server(8080);
+        var port = 62117;
+        Server server = new Server(port);
         ServletHandler servletHandler = new ServletHandler();
         servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
         server.setHandler(servletHandler);
@@ -25,7 +26,7 @@ class MorrowServletTest {
 
         HttpClient client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/missing"))
+                .uri(URI.create("http://localhost:%d/missing".formatted(port)))
                 .header("Accept", "application/json")
                 .GET()
                 .build();
@@ -37,7 +38,8 @@ class MorrowServletTest {
 
     @Test
     void visitExistingEndpoint() throws Exception {
-        Server server = new Server(8080);
+        var port = 62118;
+        Server server = new Server(port);
         ServletHandler servletHandler = new ServletHandler();
         servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
         server.setHandler(servletHandler);
@@ -45,7 +47,7 @@ class MorrowServletTest {
 
         HttpClient client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/vehicles/cars"))
+                .uri(URI.create("http://localhost:%d/vehicles/cars".formatted(port)))
                 .header("Accept", "application/json")
                 .GET()
                 .build();

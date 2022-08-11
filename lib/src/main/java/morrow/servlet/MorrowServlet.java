@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @WebServlet(urlPatterns = "")
@@ -43,11 +44,19 @@ public class MorrowServlet extends HttpServlet {
     }
 
     private static List<MediaType> mapAcceptHeaders(Enumeration<String> headerValues) {
-        Iterable<String> x = headerValues::asIterator;
+        Iterable<String> vs = headerValues::asIterator;
         // TODO: handle special values like "*/*, type/*, subtype/type1+type2"
 
-        // TODO: HERE
-        StreamSupport.stream(x.spliterator(), false).map(s -> )
+        return StreamSupport.stream(vs.spliterator(), false).map(s -> {
+            var split1 = s.split(";");
+            var params = Arrays.stream(split1)
+                    .skip(1)
+                    .map(ps -> ps.split("="))
+                    .collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
+            var mediaType = split1[0];
+            var split2 = mediaType.split("/");
+            return MediaType.freeHand(split2[0], split2[1], params);
+        }).toList();
     }
 
     @Override
