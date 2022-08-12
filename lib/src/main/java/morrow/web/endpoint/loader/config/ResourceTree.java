@@ -26,10 +26,10 @@ public class ResourceTree {
     }
 
     private static ResourceNode map(EndpointConfig config) {
-        var subResources = config.getSubResources();
+        var subResources = config.subResources();
         Stream<EndpointConfig> configs = subResources == null ? Stream.of() : subResources.stream();
         var children = configs.map(ResourceTree::map).toList();
-        return new ResourceNode(asSegments(config.getPath()), children, config);
+        return new ResourceNode(asSegments(config.path()), children, config);
     }
 
     /**

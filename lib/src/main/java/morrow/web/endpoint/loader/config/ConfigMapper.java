@@ -42,9 +42,9 @@ public class ConfigMapper {
 
     private List<EndpointDescriptor> map(List<IndexedConfig> configs) {
         return configs.stream().map(c -> {
-            var actions = mapActions(c.config().getActions());
+            var actions = mapActions(c.config().actions());
             EndpointMatcher m = EndpointMatcher.from(c.index(), actions);
-            return new EndpointDescriptor(singletonStore, m, mapController(c.config().getController()), actions);
+            return new EndpointDescriptor(singletonStore, m, mapController(c.config().controller()), actions);
         }).toList();
     }
 

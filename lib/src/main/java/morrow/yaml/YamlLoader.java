@@ -4,16 +4,18 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 public class YamlLoader<T> {
 
     private final Yaml yaml;
 
-    public static <U> YamlLoader<U> yielding(Class<U> outputType) {
-        return new YamlLoader<>(outputType);
+    public YamlLoader(Class<T> outputType) {
+        this(outputType, Map.of());
     }
 
-    private YamlLoader(Class<T> outputType) {
+    public YamlLoader(Class<T> outputType, Map<String, Class<?>> xs) {
         Constructor c = new Constructor(outputType);
         c.setPropertyUtils(new CamelCasePropertyUtils());
         yaml = new Yaml(c);

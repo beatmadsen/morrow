@@ -1,16 +1,33 @@
 package morrow.web.view.loader;
 
-import java.io.InputStream;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import morrow.yaml.LoadingException;
+import morrow.yaml.YamlLoader;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class ViewLoader {
 
-    private InputStream viewsFile() {
-        var inputStream = getClass().getClassLoader().getResourceAsStream("views.yml");
-        if (inputStream == null) {
-            // TODO
-            throw new RuntimeException("Could not locate views.yml");
+    public Object x() {
+        try {
+            return new YamlLoader<>(Wrapper.class).loadResource("views.yml");
+        } catch (LoadingException e) {
+            throw new RuntimeException(e);
         }
-        return inputStream;
     }
+
+    public static class Wrapper {
+        SubtypeContainer application;
+        SubtypeContainer text;
+
+    }
+
+    public static class SubtypeContainer {
+
+    }
+
 
 }

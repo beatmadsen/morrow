@@ -3,6 +3,14 @@
  */
 package morrow.servlet;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import morrow.web.view.loader.ViewLoader;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.junit.jupiter.api.Test;
@@ -11,6 +19,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -56,4 +66,46 @@ class MorrowServletTest {
 
 
     }
+//
+//
+//    public static void main(String[] args) {
+//        try {
+//            var mapper = new ObjectMapper(new YAMLFactory());
+//
+//            var is = ViewLoader.class.getClassLoader().getResourceAsStream("views.yml");
+//            var value = mapper.readValue(is, new TypeReference<Map<String, Map<String, Map<String, List<UseCase2>>>>>() {
+////            var value = mapper.readValue(is, new TypeReference<UseCase2>() {
+//            });
+//            System.out.println(value);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//
+//    public record UseCase2(@JsonProperty("model-class") String modelClass, String renderer) {}
+//
+//    @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+//    public static class UseCase {
+//        String modelClass;
+//        String renderer;
+//
+//
+//        public String getModelClass() {
+//            return modelClass;
+//        }
+//
+//        public void setModelClass(String modelClass) {
+//            this.modelClass = modelClass;
+//        }
+//
+//        public String getRenderer() {
+//            return renderer;
+//        }
+//
+//        public void setRenderer(String renderer) {
+//            this.renderer = renderer;
+//        }
+//    }
 }

@@ -26,8 +26,8 @@ class ConfigLoaderTest {
 
 
     @Test
-    void shouldFindController() throws InvalidConfigurationException {
+    void shouldFindController() {
         List<EndpointConfig> eds = configLoader.loadEndpointFile();
-        assertEquals("com.example.myapp.controller.CarsController", eds.get(0).getController());
+        assertEquals("com.example.myapp.controller.CarsController", eds.get(0).controller());
     }
 }

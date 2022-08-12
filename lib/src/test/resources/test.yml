@@ -1,0 +1,2 @@
+model-class: com.example.model.C
+renderer: com.example.renderer.c.json.MediumVerbosityRenderer

@@ -28,10 +28,8 @@ class ConfigMapperTest {
 
     @Test
     void shouldMapMainResource() {
-        var endpointConfig = new EndpointConfig();
-        endpointConfig.setActions(Set.of("getById", "create"));
-        endpointConfig.setController("org.other.controller.EggsController");
-        endpointConfig.setPath("my-prefix/my_resource");
+        var endpointConfig = new EndpointConfig("my-prefix/my_resource", "org.other.controller.EggsController", Set.of("getById", "create"), null);
+
         List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
         var e = eds.get(0);
         assertTrue(e.isMethodAllowed(Method.GET));
@@ -44,34 +42,32 @@ class ConfigMapperTest {
 
     @Test
     void shouldFailToMapIncompleteResource() {
-        var endpointConfig = new EndpointConfig();
-        endpointConfig.setActions(Set.of("getById"));
-        endpointConfig.setController("org.other.controller.EggsController");
+        var endpointConfig = new EndpointConfig(null, "org.other.controller.EggsController", Set.of("getById"), null);
         assertThrows(LoaderException.class, () -> configMapper.map(endpointConfig));
     }
 
     @Test
     void shouldFailToMapIncorrectResource() {
-        var endpointConfig = new EndpointConfig();
-        endpointConfig.setActions(Set.of("getById"));
-        endpointConfig.setController("org.other.controller.EggsController");
-        endpointConfig.setPath("/56$/");
-
+        var endpointConfig = new EndpointConfig("/56$/", "org.other.controller.EggsController", Set.of("getById"), null);
         assertThrows(LoaderException.class, () -> configMapper.map(endpointConfig));
     }
 
     @Test
     void shouldMapSubResource() {
-        var subResource = new EndpointConfig();
-        subResource.setPath("ns2/child");
-        subResource.setActions(Set.of("updateById", "findMany"));
-        subResource.setController("org.other.controller.YokesController");
 
-        var endpointConfig = new EndpointConfig();
-        endpointConfig.setActions(Set.of("getById", "create"));
-        endpointConfig.setController("org.other.controller.EggsController");
-        endpointConfig.setPath("ns1/parent");
-        endpointConfig.setSubResources(List.of(subResource));
+        var subResource = new EndpointConfig(
+                "ns2/child",
+                "org.other.controller.YokesController",
+                Set.of("updateById", "findMany"),
+                null
+        );
+
+        var endpointConfig = new EndpointConfig(
+                "ns1/parent",
+                "org.other.controller.EggsController",
+                Set.of("getById", "create"),
+                List.of(subResource)
+        );
 
         List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
         assertEquals(2, eds.size());
