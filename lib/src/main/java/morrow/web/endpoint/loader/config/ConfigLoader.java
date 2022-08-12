@@ -1,39 +1,17 @@
 package morrow.web.endpoint.loader.config;
 
-import org.apache.commons.text.CaseUtils;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.introspector.Property;
-import org.yaml.snakeyaml.introspector.PropertyUtils;
+import morrow.yaml.YamlLoader;
 
-import java.io.InputStream;
 import java.util.List;
 
 public class ConfigLoader {
 
-    private static List<EndpointConfig> parse(InputStream inputStream) {
+    public List<EndpointConfig> loadEndpointFile() {
         try {
-            var c = new Constructor(Wrapper.class);
-            c.setPropertyUtils(new CamelCasePropertyUtils());
-            var yaml = new Yaml(c);
-            Wrapper w = yaml.load(inputStream);
-            return w.getEndpoints();
+            return YamlLoader.yielding(Wrapper.class).loadResource("endpoints.yml").getEndpoints();
         } catch (Exception e) {
             throw new ConfigException("Could not parse endpoints.yml", e);
         }
-    }
-
-    public List<EndpointConfig> loadEndpointFile() {
-        InputStream inputStream = endpointFile();
-        return parse(inputStream);
-    }
-
-    private InputStream endpointFile() {
-        var inputStream = getClass().getClassLoader().getResourceAsStream("endpoints.yml");
-        if (inputStream == null) {
-            throw new ConfigException("Could not locate endpoints.yml");
-        }
-        return inputStream;
     }
 
     public static class Wrapper {
@@ -49,14 +27,4 @@ public class ConfigLoader {
     }
 
 
-    private static class CamelCasePropertyUtils extends PropertyUtils {
-        @Override
-        public Property getProperty(Class<?> type, String name) {
-            return super.getProperty(type, toCamelCase(name));
-        }
-
-        private String toCamelCase(String name) {
-            return CaseUtils.toCamelCase(name, false, '-', '_');
-        }
-    }
 }
