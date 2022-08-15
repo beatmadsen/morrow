@@ -3,6 +3,8 @@ package morrow.web.view.loader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import morrow.config.LoadHelper;
 import morrow.web.protocol.mime.MediaType;
+import morrow.web.view.Renderer;
+import morrow.web.view.routing.RendererRouter;
 import morrow.yaml.LoadingException;
 import morrow.yaml.YamlLoader;
 
@@ -16,7 +18,7 @@ public class ViewLoader {
 
     ;
 
-    public Object x() {
+    public Map<MediaType, RendererRouter> x() {
         try {
             var map = new YamlLoader<>(new TypeReference<Map<String, Map<String, Map<String, List<RenderSpec>>>>>() {
             }).loadResource("views.yml");
@@ -39,9 +41,7 @@ public class ViewLoader {
                 } catch (LoadHelper.ClassLoadException e) {
                     throw new RuntimeException(e);
                 }
-            }).peek(this::validate).map(c -> {
-                return new ViewDescriptor(c.mediaType, c.useCase, c.model, c.renderer);
-            });
+            }).peek(this::validate).map(c -> new ViewDescriptor(c.mediaType, c.useCase, c.model, c.renderer));
 
             return map;
         } catch (LoadingException e) {
@@ -67,13 +67,7 @@ public class ViewLoader {
             return false; // TODO
         }
 
-        public <I, O> Renderer<I, O> renderer(UseCaseRendererRouter router) {
-            return null; // TODO
-        }
-    }
-
-    public static class UseCaseRendererRouter {
-        public Renderer<?, ?> renderer(Object model) {
+        public <I, O> Renderer<I, O> renderer(RendererRouter router) {
             return null; // TODO
         }
     }
@@ -87,43 +81,6 @@ public class ViewLoader {
 
     public record ViewConfig(MediaType mediaType, String useCase, Class<?> model,
                              Class<? extends Renderer<?, ?>> renderer) {
-
-    }
-
-    public static abstract class Renderer<I, O> {
-
-        private final UseCaseRendererRouter router;
-
-        public Renderer(UseCaseRendererRouter router) {
-            this.router = router;
-        }
-
-        public abstract O render(I model);
-
-        /**
-         * Resolves correct renderer and applies it to input model
-         *
-         * @param rendererName a hint to resolve the correct renderer when there are multiple configured implementations
-         */
-        protected <T> T renderChild(Object model, String rendererName) {
-            throw new RuntimeException("soon");
-        }
-
-        protected <T> List<T> renderChildren(List<?> models, String rendererName) {
-            throw new RuntimeException("soon");
-        }
-
-        protected <T> List<T> renderChildren(List<?> models) {
-            return renderChildren(models, "default");
-        }
-
-        /**
-         * Resolves default renderer for model class and applies it
-         */
-        protected <T> T renderChild(Object model) {
-            return renderChild(model, "default");
-        }
-
 
     }
 
