@@ -14,6 +14,7 @@ import morrow.web.view.loader.ViewLoader;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.junit.jupiter.api.Test;
+import org.tinylog.Logger;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -66,6 +67,8 @@ class MorrowServletTest {
 
 
     }
+
+
 //
 //
 //    public static void main(String[] args) {

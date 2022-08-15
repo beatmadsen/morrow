@@ -5,31 +5,31 @@ application:
     # Use case
     default:
       - # input model
-        model-class: com.example.model.A
+        model: com.example.model.A
         # how to render the view model;
         # view models can be any type, for JSON it would probably be an annotated pojo
         # whereas for html it could be a record pointing to a template and some fields to be injected in that template.
         # View models are rendered using these configurations before they're ultimately serialized to instances of Body
         renderer: com.example.renderer.a.DefaultRenderer
-      - model-class: com.example.model.B
+      - model: com.example.model.B
         renderer: com.example.renderer.b.json.DefaultRenderer
     # Fallback to default if no special renderer defined for class in given use case
     special-case-one:
-      - model-class: com.example.model.A
+      - model: com.example.model.A
         renderer: com.example.renderer.json.SpecialARenderer1
     verbosity-1:
-      - model-class: com.example.model.C
+      - model: com.example.model.C
         renderer: com.example.renderer.c.json.LowVerbosityRenderer
     verbosity-2:
-      - model-class: com.example.model.C
+      - model: com.example.model.C
         renderer: com.example.renderer.c.json.MediumVerbosityRenderer
 
 text:
   plain:
     default:
-      - model-class: com.example.model.C
+      - model: com.example.model.C
         renderer: com.example.renderer.c.plain.DefaultRenderer
   html:
     default:
-      - model-class: com.example.model.B
+      - model: com.example.model.B
         renderer: com.example.renderer.b.html.DefaultRenderer

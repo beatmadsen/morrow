@@ -51,9 +51,7 @@ dependencies {
     api 'org.tinylog:tinylog-api:2.3.2'
     api 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
-    implementation 'org.yaml:snakeyaml:1.26'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'org.tinylog:tinylog-impl:2.3.2'

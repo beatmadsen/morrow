@@ -1,25 +1,23 @@
 package morrow.yaml;
 
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 public class YamlLoader<T> {
 
-    private final Yaml yaml;
 
-    public YamlLoader(Class<T> outputType) {
-        this(outputType, Map.of());
+    private final TypeReference<T> outputType;
+    private final ObjectMapper mapper;
+
+    public YamlLoader(TypeReference<T> typeReference) {
+
+        this.outputType = typeReference;
+        this.mapper = new ObjectMapper(new YAMLFactory());
     }
 
-    public YamlLoader(Class<T> outputType, Map<String, Class<?>> xs) {
-        Constructor c = new Constructor(outputType);
-        c.setPropertyUtils(new CamelCasePropertyUtils());
-        yaml = new Yaml(c);
-    }
 
     public T loadResource(String fileName) throws LoadingException {
         var inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
@@ -29,9 +27,10 @@ public class YamlLoader<T> {
         return read(inputStream);
     }
 
+
     private T read(InputStream inputStream) throws LoadingException {
         try {
-            return yaml.load(inputStream);
+            return mapper.readValue(inputStream, outputType);
         } catch (Exception e) {
             throw new LoadingException("Failed to load YAML from InputStream: " + e.getMessage(), e);
         }

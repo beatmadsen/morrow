@@ -8,6 +8,7 @@ import morrow.web.endpoint.loader.EndpointLoader;
 import morrow.web.endpoint.loader.InvalidConfigurationException;
 import morrow.web.request.Request;
 import morrow.web.response.Response;
+import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -30,7 +31,12 @@ public class MorrowApplication {
     }
 
     private List<EndpointDescriptor> loadEndpoints() throws InvalidConfigurationException {
-        return EndpointLoader.loadEndpoints(singletonStore);
+        try {
+            return EndpointLoader.loadEndpoints(singletonStore);
+        } catch (Exception e) {
+            Logger.error("Failed to load endpoints: "+ e.getMessage(), e);
+            throw e;
+        }
     }
 
 
