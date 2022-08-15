@@ -11,7 +11,7 @@ public class ControllerRenderPlugin {
     public static ControllerRenderPlugin load() throws LoadException {
         try {
             var v = new ViewLoader();
-            Map<MediaType, RendererRouter> routers = v.x();
+            Map<MediaType, RendererRouter> routers = v.loadViews();
             return new ControllerRenderPlugin(routers);
         } catch (Exception e) {
             throw new LoadException("Could not load render plugin: " + e.getMessage(), e);

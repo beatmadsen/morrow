@@ -10,78 +10,84 @@ import morrow.yaml.YamlLoader;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ViewLoader {
 
-    private record ViewTuple(String type, String subtype, String useCase, String model, String renderer) {
+
+    private record ViewTuple(String useCase, Class<?> modelClass, Class<? extends Renderer<?, ?>> rendererClass) {
     }
 
-    ;
+    public record KeyTuple(String useCase, Class<?> modelClass) {
+    }
 
-    public Map<MediaType, RendererRouter> x() {
+    private record RendererTuple(MediaType mediaType, RendererRouter rendererRouter) {
+    }
+
+    public Map<MediaType, RendererRouter> loadViews() {
         try {
-            var map = new YamlLoader<>(new TypeReference<Map<String, Map<String, Map<String, List<RenderSpec>>>>>() {
-            }).loadResource("views.yml");
+            var loader = new YamlLoader<Map<String, Map<String, Map<String, List<RenderSpec>>>>>(new TypeReference<Map<String, Map<String, Map<String, List<RenderSpec>>>>>() {
+            });
 
-            var viewConfigStream = map.entrySet().stream().flatMap(subtypes -> {
-                var type = subtypes.getKey();
-                return subtypes.getValue().entrySet().stream().flatMap(useCases -> {
-                    var subtype = useCases.getKey();
-                    return useCases.getValue().entrySet().stream().flatMap(renderers -> {
-                        var useCase = renderers.getKey();
-                        return renderers.getValue().stream().map(u -> new ViewTuple(type, subtype, useCase, u.model, u.renderer));
-                    });
-                });
-            }).map(t -> {
-                try {
-                    Class<?> x = new LoadHelper(Object.class).loadClass(t.model);
-                    Class<? extends Renderer<?, ?>> y = new LoadHelper(Renderer.class).loadClass(t.renderer);
-                    var mediaType = MediaType.freeHand(t.type, t.subtype, Map.of());
-                    return new ViewConfig(mediaType, t.useCase, x, y);
-                } catch (LoadHelper.ClassLoadException e) {
-                    throw new RuntimeException(e);
-                }
-            }).peek(this::validate).map(c -> new ViewDescriptor(c.mediaType, c.useCase, c.model, c.renderer));
-
-            return map;
+            return loader.loadResource("views.yml")
+                    .entrySet()
+                    .stream()
+                    .flatMap(subtypes -> streamRenderTuples(subtypes.getKey(), subtypes.getValue()))
+                    .collect(Collectors.toMap(RendererTuple::mediaType, RendererTuple::rendererRouter));
+//
         } catch (LoadingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public class ViewDescriptor {
+    private Stream<RendererTuple> streamRenderTuples(String type, Map<String, Map<String, List<RenderSpec>>> renderSpecsBySubtype) {
+        return renderSpecsBySubtype
+                .entrySet()
+                .stream()
+                .flatMap(useCases -> {
+                    var mediaType = MediaType.freeHand(type, useCases.getKey(), Map.of());
+                    return streamRenderTuples(useCases.getValue(), mediaType);
+                });
+    }
 
-        private final MediaType mediaType;
-        private final String useCase;
-        private final Class<?> modelClass;
-        private final Class<? extends Renderer<?, ?>> renderer;
+    private Stream<RendererTuple> streamRenderTuples(Map<String, List<RenderSpec>> renderSpecsByUseCase, MediaType mediaType) {
+        return renderSpecsByUseCase
+                .entrySet()
+                .stream()
+                .map(renderers -> renderTuple(mediaType, renderers.getKey(), renderers.getValue()));
+    }
 
-        public ViewDescriptor(MediaType mediaType, String useCase, Class<?> modelClass, Class<? extends Renderer<?, ?>> renderer) {
-            this.mediaType = mediaType;
-            this.useCase = useCase;
-            this.modelClass = modelClass;
-            this.renderer = renderer;
-        }
+    private RendererTuple renderTuple(MediaType mediaType, String useCase, List<RenderSpec> renderSpecs) {
+        var renderersByKey = renderSpecs
+                .stream()
+                .map(t -> map(useCase, t))
+                .peek(this::validate)
+                .collect(Collectors.toMap(ViewLoader::asKey, ViewTuple::rendererClass));
 
-        public boolean matches(MediaType mediaType, String useCase) {
-            return false; // TODO
-        }
+        return new RendererTuple(mediaType, new RendererRouter(renderersByKey));
+    }
 
-        public <I, O> Renderer<I, O> renderer(RendererRouter router) {
-            return null; // TODO
+    private static KeyTuple asKey(ViewTuple t) {
+        return new KeyTuple(t.useCase(), t.modelClass());
+    }
+
+    private static ViewTuple map(String useCase, RenderSpec t) {
+        try {
+            Class<?> modelClass = new LoadHelper(Object.class).loadClass(t.model);
+            Class<? extends Renderer<?, ?>> rendererClass = new LoadHelper(Renderer.class).loadClass(t.renderer);
+            return new ViewTuple(useCase, modelClass, rendererClass);
+        } catch (LoadHelper.ClassLoadException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void validate(ViewConfig viewConfig) {
+    private void validate(ViewTuple viewTuple) {
         // TODO
     }
 
+
     public record RenderSpec(String model, String renderer) {
-    }
-
-    public record ViewConfig(MediaType mediaType, String useCase, Class<?> model,
-                             Class<? extends Renderer<?, ?>> renderer) {
-
     }
 
 
