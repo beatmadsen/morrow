@@ -1,5 +1,6 @@
 package morrow.web.endpoint.loader.config;
 
+import morrow.config.LoadHelper;
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
 import morrow.web.Controller;
@@ -48,18 +49,14 @@ public class ConfigMapper {
         }).toList();
     }
 
-    @SuppressWarnings("unchecked")
     private Class<? extends Controller> mapController(String controller) {
         try {
-            Class<?> aClass = Class.forName(controller);
-            if (!Controller.class.isAssignableFrom(aClass)) {
-                throw new ConfigException("Found invalid controller implementation in class '" + controller + "'");
-            }
-            return (Class<? extends Controller>) aClass;
-        } catch (ClassNotFoundException e) {
-            throw new ConfigException("Could not find controller class '" + controller + "'", e);
+            return new LoadHelper(Controller.class).loadClass(controller);
+        } catch (Exception e) {
+            throw new ConfigException("Could not load controller class %s: %s".formatted(controller, e.getMessage()), e);
         }
     }
+
 
     private Set<Action> mapActions(Set<String> actions) {
         return actions.stream().map(this::mapAction).collect(Collectors.toSet());
