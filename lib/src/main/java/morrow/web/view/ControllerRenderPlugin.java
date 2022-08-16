@@ -1,15 +1,15 @@
 package morrow.web.view;
 
+import morrow.config.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.loader.ViewLoader;
-import morrow.web.view.routing.MediaTypeSpecificRendererResolver;
 
 import java.util.Map;
 
 public class ControllerRenderPlugin {
 
-    public static ControllerRenderPlugin load() throws ViewException {
-        var v = new ViewLoader();
+    public static ControllerRenderPlugin load(Validation validation) throws ViewException {
+        var v = new ViewLoader(validation);
         return new ControllerRenderPlugin(v.loadViews());
     }
 

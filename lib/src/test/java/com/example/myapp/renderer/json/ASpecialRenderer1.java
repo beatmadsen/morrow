@@ -3,7 +3,7 @@ package com.example.myapp.renderer.json;
 import com.example.myapp.model.A;
 import com.example.myapp.view.json.ASpecialView1;
 import morrow.web.view.Renderer;
-import morrow.web.view.routing.MediaTypeSpecificRendererResolver;
+import morrow.web.view.MediaTypeSpecificRendererResolver;
 
 public class ASpecialRenderer1 extends Renderer<A, ASpecialView1> {
     public ASpecialRenderer1(MediaTypeSpecificRendererResolver router) {

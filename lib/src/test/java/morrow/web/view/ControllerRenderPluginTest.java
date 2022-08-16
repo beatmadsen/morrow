@@ -2,6 +2,7 @@ package morrow.web.view;
 
 import com.example.myapp.model.B;
 import com.example.myapp.model.C;
+import morrow.config.Validation;
 import morrow.web.protocol.mime.CommonMediaType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ class ControllerRenderPluginTest {
 
     @BeforeEach
     void setUp() throws ViewException {
-        renderPlugin = ControllerRenderPlugin.load();
+        renderPlugin = ControllerRenderPlugin.load(new Validation(null));
     }
 
     @Test

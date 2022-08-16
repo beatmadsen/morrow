@@ -1,7 +1,4 @@
-package morrow.web.view.routing;
-
-import morrow.web.view.KeyTuple;
-import morrow.web.view.Renderer;
+package morrow.web.view;
 
 import java.util.Map;
 

@@ -3,7 +3,7 @@ package com.example.myapp.renderer.html;
 import com.example.myapp.model.B;
 import com.example.myapp.view.html.BDefaultView;
 import morrow.web.view.Renderer;
-import morrow.web.view.routing.MediaTypeSpecificRendererResolver;
+import morrow.web.view.MediaTypeSpecificRendererResolver;
 
 public class BDefaultRenderer extends Renderer<B, BDefaultView> {
     public BDefaultRenderer(MediaTypeSpecificRendererResolver router) {

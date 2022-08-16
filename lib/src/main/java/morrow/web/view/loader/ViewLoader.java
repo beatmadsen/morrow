@@ -1,12 +1,14 @@
 package morrow.web.view.loader;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import morrow.config.LoadHelper;
+import morrow.config.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.KeyTuple;
 import morrow.web.view.Renderer;
 import morrow.web.view.ViewException;
-import morrow.web.view.routing.MediaTypeSpecificRendererResolver;
+import morrow.web.view.loader.spec.RenderSpec;
+import morrow.web.view.loader.spec.SpecLoader;
+import morrow.web.view.MediaTypeSpecificRendererResolver;
 import morrow.yaml.YamlLoader;
 
 import java.util.List;
@@ -16,8 +18,10 @@ import java.util.stream.Stream;
 
 public class ViewLoader {
 
+    private final Validation validation;
 
-    private record ViewTuple(Class<?> modelClass, Class<? extends Renderer<?, ?>> rendererClass) {
+    public ViewLoader(Validation validation) {
+        this.validation = validation;
     }
 
 
@@ -29,14 +33,14 @@ public class ViewLoader {
             return loader.loadResource("views.yml")
                     .entrySet()
                     .stream()
-                    .flatMap(subtypes -> streamRenderTuples(subtypes.getKey(), subtypes.getValue()))
-                    .collect(Collectors.toMap(rendererTuple -> rendererTuple.mediaType().key(), RendererTuple::router));
+                    .flatMap(subtypes -> streamRendererTuples(subtypes.getKey(), subtypes.getValue()))
+                    .collect(Collectors.toMap(rendererTuple -> rendererTuple.mediaType().key(), RendererTuple::resolver));
         } catch (Exception e) {
             throw new LoaderException(e);
         }
     }
 
-    private Stream<RendererTuple> streamRenderTuples(String type, Map<String, Map<String, List<RenderSpec>>> renderSpecsBySubtype) {
+    private Stream<RendererTuple> streamRendererTuples(String type, Map<String, Map<String, List<RenderSpec>>> renderSpecsBySubtype) {
 
         return renderSpecsBySubtype
                 .entrySet()
@@ -44,59 +48,40 @@ public class ViewLoader {
                 .map(useCasesBySubtype -> {
                     var subtype = useCasesBySubtype.getKey();
                     var mediaType = MediaType.freeHand(type, subtype, Map.of());
-                    var rendererRouter = streamRenderTuples(useCasesBySubtype.getValue(), mediaType);
-                    return new RendererTuple(mediaType, rendererRouter);
+                    var resolver = createResolver(useCasesBySubtype.getValue());
+                    return new RendererTuple(mediaType, resolver);
                 });
     }
 
-    private record RendererTuple(MediaType mediaType, MediaTypeSpecificRendererResolver router) {}
+    private record RendererTuple(MediaType mediaType, MediaTypeSpecificRendererResolver resolver) {
+    }
+
+    
 
 
-    private MediaTypeSpecificRendererResolver streamRenderTuples(Map<String, List<RenderSpec>> renderSpecsByUseCase, MediaType mediaType) {
+    private MediaTypeSpecificRendererResolver createResolver(Map<String, List<RenderSpec>> renderSpecsByUseCase) {
         var renderersByKey = renderSpecsByUseCase
                 .entrySet()
                 .stream()
                 .flatMap(renderers -> {
                     var useCase = renderers.getKey();
-                    return routerEntries(useCase, renderers.getValue());
-                }).collect(Collectors.toMap(Y::keyTuple, Y::rendererClass));
+                    return resolverEntries(useCase, renderers.getValue());
+                }).collect(Collectors.toMap(ResolverEntry::keyTuple, ResolverEntry::rendererClass));
 
         return new MediaTypeSpecificRendererResolver(renderersByKey);
     }
 
-    private record Y(KeyTuple keyTuple, Class<? extends Renderer<?, ?>> rendererClass) {
+    private record ResolverEntry(KeyTuple keyTuple, Class<? extends Renderer<?, ?>> rendererClass) {
 
     }
 
 
-
-
-    private Stream<Y> routerEntries(String useCase, List<RenderSpec> renderSpecs) {
-        return renderSpecs
-                .stream()
-                .map(ViewLoader::loadClasses)
-                .peek(this::validate).
-                map(vt -> new Y(new KeyTuple(useCase, vt.modelClass), vt.rendererClass));
-    }
-
-
-
-    private static ViewTuple loadClasses(RenderSpec t) {
-        try {
-            Class<?> modelClass = new LoadHelper(Object.class).loadClass(t.model);
-            Class<? extends Renderer<?, ?>> rendererClass = new LoadHelper(Renderer.class).loadClass(t.renderer);
-            return new ViewTuple(modelClass, rendererClass);
-        } catch (LoadHelper.ClassLoadException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void validate(ViewTuple viewTuple) {
-        // TODO
-    }
-
-
-    private record RenderSpec(String model, String renderer) {
+    private Stream<ResolverEntry> resolverEntries(String useCase, List<RenderSpec> renderSpecs) {
+        return renderSpecs.stream()
+                .map(renderSpec -> new SpecLoader(validation, renderSpec))
+                .peek(SpecLoader::validate)
+                .map(SpecLoader::loadClasses)
+                .map(vt -> new ResolverEntry(new KeyTuple(useCase, vt.modelClass()), vt.rendererClass()));
     }
 
 
