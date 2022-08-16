@@ -1,27 +1,32 @@
-package morrow;
+package morrow.application;
 
 import morrow.config.singleton.SingletonStore;
 import morrow.config.validation.Validation;
 import morrow.web.Server;
-import morrow.web.endpoint.EndpointException;
 import morrow.web.endpoint.Router;
 import morrow.web.request.Request;
 import morrow.web.response.Response;
+import morrow.web.view.ControllerRenderPlugin;
 
 public class MorrowApplication {
     private final SingletonStore singletonStore;
     private final Server server;
 
 
-    public MorrowApplication() throws EndpointException {
+    public MorrowApplication() throws ApplicationException {
         singletonStore = new SingletonStore();
         loadSingletons();
-
-        server = new Server(singletonStore, Router.load(singletonStore));
+        server = new Server(singletonStore);
     }
 
-    private void loadSingletons() {
-        singletonStore.put(new Validation(singletonStore));
+    private void loadSingletons() throws ApplicationException {
+        try {
+            singletonStore.put(new Validation(singletonStore));
+            singletonStore.put(ControllerRenderPlugin.load(singletonStore));
+            singletonStore.put(Router.load(singletonStore));
+        } catch (Exception e) {
+            throw new SingletonLoadException(e);
+        }
     }
 
 

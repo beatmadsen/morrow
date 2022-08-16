@@ -9,6 +9,7 @@ import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
 import morrow.web.response.rendering.BodyRenderer;
 import morrow.web.response.status.CommonStatusCode;
+import morrow.web.view.ControllerRenderPlugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +20,11 @@ public abstract class Controller {
 
     protected final State state;
     protected final Map<String, Object> renderState;
+    private final ControllerRenderPlugin controllerRenderPlugin;
 
     public Controller(State state) {
         this.state = state;
+        controllerRenderPlugin = state.singletonStore.get(ControllerRenderPlugin.class);
         renderState = new HashMap<>();
     }
 
@@ -62,6 +65,14 @@ public abstract class Controller {
     */
     protected Response render() {
         MediaType mediaType = mimeNegotiation(state.accepts());
+        /*
+        TODO:
+          1. render view model based on mediaType
+          2. serialize view model to body based on mediaType
+          3. set output headers, status code
+         */
+
+
         var body = BodyRenderer.forMediaType(mediaType).body(state.action(), renderState);
         // TODO: more dynamic. Some actions should return 201 or 301 by default
         return new Response(mediaType, CommonStatusCode.OK, body);

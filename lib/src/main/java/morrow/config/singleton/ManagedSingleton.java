@@ -7,4 +7,9 @@ public abstract class ManagedSingleton implements AutoCloseable {
 
         this.singletonStore = singletonStore;
     }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }

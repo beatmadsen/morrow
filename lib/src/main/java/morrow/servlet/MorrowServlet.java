@@ -5,8 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import morrow.MorrowApplication;
-import morrow.web.endpoint.EndpointException;
+import morrow.application.ApplicationException;
+import morrow.application.MorrowApplication;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.request.Method;
@@ -25,7 +25,7 @@ public class MorrowServlet extends HttpServlet {
 
     private final MorrowApplication application;
 
-    public MorrowServlet() throws EndpointException {
+    public MorrowServlet() throws ApplicationException {
         application = new MorrowApplication();
     }
 

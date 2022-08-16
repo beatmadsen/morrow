@@ -1,5 +1,6 @@
 package morrow.web.endpoint;
 
+import morrow.config.singleton.ManagedSingleton;
 import morrow.config.singleton.SingletonStore;
 import morrow.web.Controller;
 import morrow.web.endpoint.loader.EndpointDescriptor;
@@ -10,11 +11,12 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-public class Router {
+public class Router extends ManagedSingleton {
 
     private final List<EndpointDescriptor> descriptors;
 
-    private Router(List<EndpointDescriptor> descriptors) {
+    private Router(List<EndpointDescriptor> descriptors, SingletonStore singletonStore) {
+        super(singletonStore);
         this.descriptors = descriptors;
     }
 
@@ -24,7 +26,8 @@ public class Router {
     }
 
     public static Router load(SingletonStore singletonStore) throws EndpointException {
-        return new Router(loadEndpoints(singletonStore));
+        var eds = loadEndpoints(singletonStore);
+        return new Router(eds, singletonStore);
     }
 
     private static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws EndpointException {

@@ -2,6 +2,7 @@ package morrow.web.view;
 
 import com.example.myapp.model.B;
 import com.example.myapp.model.C;
+import morrow.config.singleton.SingletonStore;
 import morrow.config.validation.Validation;
 import morrow.web.protocol.mime.CommonMediaType;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,9 @@ class ControllerRenderPluginTest {
 
     @BeforeEach
     void setUp() throws ViewException {
-        renderPlugin = ControllerRenderPlugin.load(new Validation(null));
+        var singletonStore = new SingletonStore();
+        singletonStore.put(new Validation(null));
+        renderPlugin = ControllerRenderPlugin.load(singletonStore);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package morrow.web.view;
 
+import morrow.config.singleton.ManagedSingleton;
+import morrow.config.singleton.SingletonStore;
 import morrow.config.validation.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.loader.ViewMappingsLoader;
@@ -7,17 +9,18 @@ import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 
 import java.util.Map;
 
-public class ControllerRenderPlugin {
+public class ControllerRenderPlugin extends ManagedSingleton {
 
     private final Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers;
 
-    private ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers) {
+    private ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers, SingletonStore singletonStore) {
+        super(singletonStore);
         this.resolvers = resolvers;
     }
 
-    public static ControllerRenderPlugin load(Validation validation) throws ViewException {
-        var v = new ViewMappingsLoader(validation);
-        return new ControllerRenderPlugin(v.loadViewMappings());
+    public static ControllerRenderPlugin load(SingletonStore singletonStore) throws ViewException {
+        var v = new ViewMappingsLoader(singletonStore.get(Validation.class));
+        return new ControllerRenderPlugin(v.loadViewMappings(), singletonStore);
     }
 
     public <I, O> O render(I model, MediaType mediaType) {
@@ -38,5 +41,4 @@ public class ControllerRenderPlugin {
         }
         return resolver;
     }
-
 }

@@ -14,8 +14,8 @@ public class Server {
     private final Router router;
     private final Validation validation;
 
-    public Server(SingletonStore singletonStore, Router router) {
-        this.router = router;
+    public Server(SingletonStore singletonStore) {
+        router = singletonStore.get(Router.class);
         validation = singletonStore.get(Validation.class);
     }
 
