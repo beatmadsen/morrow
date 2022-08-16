@@ -5,31 +5,31 @@ application:
     # Use case
     default:
       - # input model
-        model: com.example.model.A
+        model: com.example.myapp.model.A
         # how to render the view model;
         # view models can be any type, for JSON it would probably be an annotated pojo
         # whereas for html it could be a record pointing to a template and some fields to be injected in that template.
         # View models are rendered using these configurations before they're ultimately serialized to instances of Body
-        renderer: com.example.renderer.a.DefaultRenderer
-      - model: com.example.model.B
-        renderer: com.example.renderer.b.json.DefaultRenderer
+        renderer: com.example.myapp.renderer.ADefaultRenderer
+      - model: com.example.myapp.model.B
+        renderer: com.example.myapp.renderer.json.BDefaultRenderer
     # Fallback to default if no special renderer defined for class in given use case
     special-case-one:
-      - model: com.example.model.A
-        renderer: com.example.renderer.json.SpecialARenderer1
+      - model: com.example.myapp.model.A
+        renderer: com.example.myapp.renderer.json.ASpecialRenderer1
     verbosity-1:
-      - model: com.example.model.C
-        renderer: com.example.renderer.c.json.LowVerbosityRenderer
+      - model: com.example.myapp.model.C
+        renderer: com.example.myapp.renderer.json.CLowVerbosityRenderer
     verbosity-2:
-      - model: com.example.model.C
-        renderer: com.example.renderer.c.json.MediumVerbosityRenderer
+      - model: com.example.myapp.model.C
+        renderer: com.example.myapp.renderer.json.CMediumVerbosityRenderer
 
 text:
   plain:
     default:
-      - model: com.example.model.C
-        renderer: com.example.renderer.c.plain.DefaultRenderer
+      - model: com.example.myapp.model.C
+        renderer: com.example.myapp.renderer.c.plain.DefaultRenderer
   html:
     default:
-      - model: com.example.model.B
-        renderer: com.example.renderer.b.html.DefaultRenderer
+      - model: com.example.myapp.model.B
+        renderer: com.example.myapp.renderer.b.html.DefaultRenderer

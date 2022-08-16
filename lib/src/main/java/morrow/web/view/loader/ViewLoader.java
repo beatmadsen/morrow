@@ -16,14 +16,12 @@ import java.util.stream.Stream;
 public class ViewLoader {
 
 
-    private record ViewTuple(String useCase, Class<?> modelClass, Class<? extends Renderer<?, ?>> rendererClass) {
+    private record ViewTuple(Class<?> modelClass, Class<? extends Renderer<?, ?>> rendererClass) {
     }
 
     public record KeyTuple(String useCase, Class<?> modelClass) {
     }
 
-    private record RendererTuple(MediaType mediaType, RendererRouter rendererRouter) {
-    }
 
     public Map<MediaType, RendererRouter> loadViews() {
         try {
@@ -34,49 +32,62 @@ public class ViewLoader {
                     .entrySet()
                     .stream()
                     .flatMap(subtypes -> streamRenderTuples(subtypes.getKey(), subtypes.getValue()))
-                    .collect(Collectors.toMap(RendererTuple::mediaType, RendererTuple::rendererRouter));
-//
+                    .collect(Collectors.toMap(RendererTuple::mediaType, RendererTuple::router));
         } catch (LoadingException e) {
             throw new RuntimeException(e);
         }
     }
 
     private Stream<RendererTuple> streamRenderTuples(String type, Map<String, Map<String, List<RenderSpec>>> renderSpecsBySubtype) {
+
         return renderSpecsBySubtype
                 .entrySet()
                 .stream()
-                .flatMap(useCases -> {
-                    var mediaType = MediaType.freeHand(type, useCases.getKey(), Map.of());
-                    return streamRenderTuples(useCases.getValue(), mediaType);
+                .map(useCasesBySubtype -> {
+                    var subtype = useCasesBySubtype.getKey();
+                    var mediaType = MediaType.freeHand(type, subtype, Map.of());
+                    var rendererRouter = streamRenderTuples(useCasesBySubtype.getValue(), mediaType);
+                    return new RendererTuple(mediaType, rendererRouter);
                 });
     }
 
-    private Stream<RendererTuple> streamRenderTuples(Map<String, List<RenderSpec>> renderSpecsByUseCase, MediaType mediaType) {
-        return renderSpecsByUseCase
+    private record RendererTuple(MediaType mediaType, RendererRouter router) {}
+
+
+    private RendererRouter streamRenderTuples(Map<String, List<RenderSpec>> renderSpecsByUseCase, MediaType mediaType) {
+        var renderersByKey = renderSpecsByUseCase
                 .entrySet()
                 .stream()
-                .map(renderers -> renderTuple(mediaType, renderers.getKey(), renderers.getValue()));
+                .flatMap(renderers -> {
+                    var useCase = renderers.getKey();
+                    return routerEntries(useCase, renderers.getValue());
+                }).collect(Collectors.toMap(Y::keyTuple, Y::rendererClass));
+
+        return new RendererRouter(renderersByKey);
     }
 
-    private RendererTuple renderTuple(MediaType mediaType, String useCase, List<RenderSpec> renderSpecs) {
-        var renderersByKey = renderSpecs
+    private record Y(KeyTuple keyTuple, Class<? extends Renderer<?, ?>> rendererClass) {
+
+    }
+
+
+
+
+    private Stream<Y> routerEntries(String useCase, List<RenderSpec> renderSpecs) {
+        return renderSpecs
                 .stream()
-                .map(t -> map(useCase, t))
-                .peek(this::validate)
-                .collect(Collectors.toMap(ViewLoader::asKey, ViewTuple::rendererClass));
-
-        return new RendererTuple(mediaType, new RendererRouter(renderersByKey));
+                .map(ViewLoader::loadClasses)
+                .peek(this::validate).
+                map(vt -> new Y(new KeyTuple(useCase, vt.modelClass), vt.rendererClass));
     }
 
-    private static KeyTuple asKey(ViewTuple t) {
-        return new KeyTuple(t.useCase(), t.modelClass());
-    }
 
-    private static ViewTuple map(String useCase, RenderSpec t) {
+
+    private static ViewTuple loadClasses(RenderSpec t) {
         try {
             Class<?> modelClass = new LoadHelper(Object.class).loadClass(t.model);
             Class<? extends Renderer<?, ?>> rendererClass = new LoadHelper(Renderer.class).loadClass(t.renderer);
-            return new ViewTuple(useCase, modelClass, rendererClass);
+            return new ViewTuple(modelClass, rendererClass);
         } catch (LoadHelper.ClassLoadException e) {
             throw new RuntimeException(e);
         }
