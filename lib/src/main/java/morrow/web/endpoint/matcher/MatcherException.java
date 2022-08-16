@@ -1,14 +1,8 @@
 package morrow.web.endpoint.matcher;
 
-import morrow.web.endpoint.loader.LoaderException;
+class MatcherException extends RuntimeException {
 
-public class MatcherException extends LoaderException {
-
-    public MatcherException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MatcherException(String message) {
+    MatcherException(String message) {
         super(message);
     }
 }

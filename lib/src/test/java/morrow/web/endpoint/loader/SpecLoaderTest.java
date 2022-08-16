@@ -3,8 +3,8 @@ package morrow.web.endpoint.loader;
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
 import morrow.web.endpoint.EndpointDescriptor;
-import morrow.web.endpoint.loader.config.ConfigMapper;
-import morrow.web.endpoint.loader.config.EndpointConfig;
+import morrow.web.endpoint.loader.config.EndpointSpec;
+import morrow.web.endpoint.loader.config.SpecLoader;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.request.Method;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,22 +15,22 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConfigMapperTest {
+class SpecLoaderTest {
 
-    private ConfigMapper configMapper;
+    private SpecLoader specLoader;
 
     @BeforeEach
     void setUp() {
         SingletonStore singletonStore = new SingletonStore();
         singletonStore.put(new Validation(null));
-        configMapper = new ConfigMapper(singletonStore);
+        specLoader = new SpecLoader(singletonStore);
     }
 
     @Test
     void shouldMapMainResource() {
-        var endpointConfig = new EndpointConfig("my-prefix/my_resource", "org.other.controller.EggsController", Set.of("getById", "create"), null);
+        var endpointConfig = new EndpointSpec("my-prefix/my_resource", "org.other.controller.EggsController", Set.of("getById", "create"), null);
 
-        List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
+        List<EndpointDescriptor> eds = specLoader.map(endpointConfig);
         var e = eds.get(0);
         assertTrue(e.isMethodAllowed(Method.GET));
         assertTrue(e.isMethodAllowed(Method.POST));
@@ -42,34 +42,34 @@ class ConfigMapperTest {
 
     @Test
     void shouldFailToMapIncompleteResource() {
-        var endpointConfig = new EndpointConfig(null, "org.other.controller.EggsController", Set.of("getById"), null);
-        assertThrows(LoaderException.class, () -> configMapper.map(endpointConfig));
+        var endpointConfig = new EndpointSpec(null, "org.other.controller.EggsController", Set.of("getById"), null);
+        assertThrows(RuntimeException.class, () -> specLoader.map(endpointConfig));
     }
 
     @Test
     void shouldFailToMapIncorrectResource() {
-        var endpointConfig = new EndpointConfig("/56$/", "org.other.controller.EggsController", Set.of("getById"), null);
-        assertThrows(LoaderException.class, () -> configMapper.map(endpointConfig));
+        var endpointConfig = new EndpointSpec("/56$/", "org.other.controller.EggsController", Set.of("getById"), null);
+        assertThrows(RuntimeException.class, () -> specLoader.map(endpointConfig));
     }
 
     @Test
     void shouldMapSubResource() {
 
-        var subResource = new EndpointConfig(
+        var subResource = new EndpointSpec(
                 "ns2/child",
                 "org.other.controller.YokesController",
                 Set.of("updateById", "findMany"),
                 null
         );
 
-        var endpointConfig = new EndpointConfig(
+        var endpointConfig = new EndpointSpec(
                 "ns1/parent",
                 "org.other.controller.EggsController",
                 Set.of("getById", "create"),
                 List.of(subResource)
         );
 
-        List<EndpointDescriptor> eds = configMapper.map(endpointConfig);
+        List<EndpointDescriptor> eds = specLoader.map(endpointConfig);
         assertEquals(2, eds.size());
         var e = eds.get(1);
 

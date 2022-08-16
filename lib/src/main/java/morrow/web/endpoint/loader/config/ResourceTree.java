@@ -16,18 +16,18 @@ public class ResourceTree {
         return new Segmenter().asSegments(path);
     }
 
-    private static Stream<IndexedConfig> traverseTree(ResourceNode node, List<PathSegment> routePrefix) {
+    private static Stream<IndexedSpec> traverseTree(ResourceNode node, List<PathSegment> routePrefix) {
         var newPrefix = Stream.concat(routePrefix.stream(), node.relativeRouteFromParent().stream()).toList();
 
-        var ds = Stream.of(new IndexedConfig(newPrefix, node.config()));
+        var ds = Stream.of(new IndexedSpec(newPrefix, node.config()));
         var cs = node.children().stream().flatMap(c -> traverseTree(c, newPrefix));
 
         return Stream.concat(ds, cs);
     }
 
-    private static ResourceNode map(EndpointConfig config) {
+    private static ResourceNode map(EndpointSpec config) {
         var subResources = config.subResources();
-        Stream<EndpointConfig> configs = subResources == null ? Stream.of() : subResources.stream();
+        Stream<EndpointSpec> configs = subResources == null ? Stream.of() : subResources.stream();
         var children = configs.map(ResourceTree::map).toList();
         return new ResourceNode(asSegments(config.path()), children, config);
     }
@@ -36,18 +36,18 @@ public class ResourceTree {
      * Build resource tree from input.
      * Assumes valid input.
      */
-    public static ResourceTree from(EndpointConfig config) {
+    public static ResourceTree from(EndpointSpec config) {
         return new ResourceTree(map(config));
     }
 
-    public List<IndexedConfig> traverseTree() {
+    public List<IndexedSpec> traverseTree() {
         return traverseTree(root, List.of()).toList();
     }
 
     private record ResourceNode(
             List<PathSegment> relativeRouteFromParent,
             List<ResourceNode> children,
-            EndpointConfig config
+            EndpointSpec config
     ) {
 
     }

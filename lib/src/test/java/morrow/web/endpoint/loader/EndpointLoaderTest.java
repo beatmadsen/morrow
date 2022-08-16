@@ -2,6 +2,7 @@ package morrow.web.endpoint.loader;
 
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
+import morrow.web.endpoint.EndpointException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class EndpointLoaderTest {
     }
 
     @Test
-    void loadEndpoints() throws InvalidConfigurationException {
+    void loadEndpoints() throws EndpointException {
         var descriptors = EndpointLoader.loadEndpoints(singletonStore);
         assertEquals(5, descriptors.size());
     }

@@ -2,36 +2,37 @@ package morrow.web.endpoint.loader;
 
 import morrow.config.SingletonStore;
 import morrow.web.endpoint.EndpointDescriptor;
-import morrow.web.endpoint.loader.config.ConfigLoader;
-import morrow.web.endpoint.loader.config.ConfigMapper;
-import morrow.web.endpoint.loader.config.EndpointConfig;
+import morrow.web.endpoint.EndpointException;
+import morrow.web.endpoint.loader.file.ConfigFileLoader;
+import morrow.web.endpoint.loader.config.SpecLoader;
+import morrow.web.endpoint.loader.config.EndpointSpec;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 public class EndpointLoader {
-    private final ConfigLoader configLoader;
-    private final ConfigMapper configMapper;
+    private final ConfigFileLoader configFileLoader;
+    private final SpecLoader specLoader;
 
     private EndpointLoader(SingletonStore singletonStore) {
-        configLoader = new ConfigLoader();
-        configMapper = new ConfigMapper(singletonStore);
+        configFileLoader = new ConfigFileLoader();
+        specLoader = new SpecLoader(singletonStore);
     }
 
-    public static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws InvalidConfigurationException {
+    public static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws EndpointException {
         return new EndpointLoader(singletonStore).loadEndpoints();
     }
 
 
-    public List<EndpointDescriptor> loadEndpoints() throws InvalidConfigurationException {
+    public List<EndpointDescriptor> loadEndpoints() throws EndpointException {
         try {
-            return configLoader.loadEndpointFile().stream().flatMap(this::streamDescriptors).toList();
-        } catch (LoaderException e) {
-            throw new InvalidConfigurationException("Could not load endpoints from endpoints.yml", e);
+            return configFileLoader.loadEndpointsFile().stream().flatMap(this::streamDescriptors).toList();
+        } catch (Exception e) {
+            throw new LoaderException("Could not load endpoints from endpoints.yml", e);
         }
     }
 
-    private Stream<EndpointDescriptor> streamDescriptors(EndpointConfig c) {
-        return configMapper.map(c).stream();
+    private Stream<EndpointDescriptor> streamDescriptors(EndpointSpec c) {
+        return specLoader.map(c).stream();
     }
 }

@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import morrow.MorrowApplication;
-import morrow.web.endpoint.loader.InvalidConfigurationException;
+import morrow.web.endpoint.EndpointException;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.request.Method;
@@ -25,7 +25,7 @@ public class MorrowServlet extends HttpServlet {
 
     private final MorrowApplication application;
 
-    public MorrowServlet() throws InvalidConfigurationException {
+    public MorrowServlet() throws EndpointException {
         application = new MorrowApplication();
     }
 

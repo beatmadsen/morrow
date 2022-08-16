@@ -4,5 +4,5 @@ import morrow.web.path.PathSegment;
 
 import java.util.List;
 
-public record IndexedConfig(List<PathSegment> index, EndpointConfig config) {
+public record IndexedSpec(List<PathSegment> index, EndpointSpec config) {
 }

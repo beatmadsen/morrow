@@ -1,7 +1,6 @@
-package morrow.web.endpoint.loader;
+package morrow.web.endpoint.loader.file;
 
-import morrow.web.endpoint.loader.config.ConfigLoader;
-import morrow.web.endpoint.loader.config.EndpointConfig;
+import morrow.web.endpoint.loader.config.EndpointSpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,25 +8,25 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ConfigLoaderTest {
+class ConfigFileLoaderTest {
 
-    private ConfigLoader configLoader;
+    private ConfigFileLoader configFileLoader;
 
     @BeforeEach
     void setUp() {
-        configLoader = new ConfigLoader();
+        configFileLoader = new ConfigFileLoader();
     }
 
     @Test
     void shouldBeAbleToDeserialize() {
-        List<EndpointConfig> ed = configLoader.loadEndpointFile();
+        List<EndpointSpec> ed = configFileLoader.loadEndpointsFile();
         assertEquals(2, ed.size());
     }
 
 
     @Test
     void shouldFindController() {
-        List<EndpointConfig> eds = configLoader.loadEndpointFile();
+        List<EndpointSpec> eds = configFileLoader.loadEndpointsFile();
         assertEquals("com.example.myapp.controller.CarsController", eds.get(0).controller());
     }
 }

@@ -4,6 +4,8 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
+import java.util.stream.Collectors;
+
 public class Validation extends ManagedSingleton {
 
     private final ValidatorFactory factory;
@@ -20,6 +22,18 @@ public class Validation extends ManagedSingleton {
     public Validator validator() {
         return factory.getValidator();
     }
+
+    public void validateConfig(Object o) throws ConfigurationValidationException {
+        var violations = validator().validate(o);
+        if (!violations.isEmpty()) {
+            var message = "Invalid configuration: " +
+                    violations.stream()
+                            .map(Object::toString)
+                            .collect(Collectors.joining(", "));
+            throw new ConfigurationValidationException(message);
+        }
+    }
+
 
     @Override
     public void close() throws Exception {

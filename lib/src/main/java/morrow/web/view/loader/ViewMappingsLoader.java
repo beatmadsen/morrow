@@ -1,13 +1,12 @@
 package morrow.web.view.loader;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import morrow.config.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.ViewException;
+import morrow.web.view.loader.file.ConfigFileLoader;
 import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 import morrow.web.view.loader.resolver.ResolverLoader;
 import morrow.web.view.loader.resolver.spec.RenderSpec;
-import morrow.yaml.YamlLoader;
 
 import java.util.List;
 import java.util.Map;
@@ -28,10 +27,7 @@ public class ViewMappingsLoader {
 
     public Map<MediaType.Key, MediaTypeSpecificRendererResolver> loadViewMappings() throws ViewException {
         try {
-            var loader = new YamlLoader<Map<String, Map<String, Map<String, List<RenderSpec>>>>>(new TypeReference<Map<String, Map<String, Map<String, List<RenderSpec>>>>>() {
-            });
-
-            return loader.loadResource("views.yml")
+            return new ConfigFileLoader().loadViewsFile()
                     .entrySet()
                     .stream()
                     .flatMap(subtypes -> streamRendererTuples(subtypes.getKey(), subtypes.getValue()))

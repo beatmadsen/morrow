@@ -5,7 +5,7 @@ import morrow.config.Validation;
 import morrow.web.Server;
 import morrow.web.endpoint.EndpointDescriptor;
 import morrow.web.endpoint.loader.EndpointLoader;
-import morrow.web.endpoint.loader.InvalidConfigurationException;
+import morrow.web.endpoint.EndpointException;
 import morrow.web.request.Request;
 import morrow.web.response.Response;
 import org.tinylog.Logger;
@@ -17,7 +17,7 @@ public class MorrowApplication {
     private final Server server;
 
 
-    public MorrowApplication() throws InvalidConfigurationException {
+    public MorrowApplication() throws EndpointException {
         singletonStore = new SingletonStore();
         loadSingletons();
         var endpointDescriptors = loadEndpoints();
@@ -30,7 +30,7 @@ public class MorrowApplication {
         singletonStore.put(new Validation(singletonStore));
     }
 
-    private List<EndpointDescriptor> loadEndpoints() throws InvalidConfigurationException {
+    private List<EndpointDescriptor> loadEndpoints() throws EndpointException {
         try {
             return EndpointLoader.loadEndpoints(singletonStore);
         } catch (Exception e) {
