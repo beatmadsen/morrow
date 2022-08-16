@@ -1,7 +1,9 @@
-package morrow.config;
+package morrow.config.validation;
 
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import morrow.config.singleton.ManagedSingleton;
+import morrow.config.singleton.SingletonStore;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.stream.Collectors;

@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader;
 
-import morrow.config.SingletonStore;
+import morrow.config.singleton.SingletonStore;
 import morrow.web.Controller;
 import morrow.web.endpoint.Action;
 import morrow.web.endpoint.loader.matcher.RouteMatcher;

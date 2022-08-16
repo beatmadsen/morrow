@@ -1,6 +1,6 @@
 package morrow.web.view;
 
-import morrow.config.Validation;
+import morrow.config.validation.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.loader.ViewMappingsLoader;
 import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;

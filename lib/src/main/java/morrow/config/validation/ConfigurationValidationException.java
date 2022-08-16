@@ -1,4 +1,4 @@
-package morrow.config;
+package morrow.config.validation;
 
 public class ConfigurationValidationException extends Exception {
     public ConfigurationValidationException(String message) {

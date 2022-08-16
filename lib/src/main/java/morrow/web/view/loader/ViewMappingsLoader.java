@@ -1,6 +1,6 @@
 package morrow.web.view.loader;
 
-import morrow.config.Validation;
+import morrow.config.validation.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.ViewException;
 import morrow.web.view.loader.file.ConfigFileLoader;

@@ -1,7 +1,7 @@
 package morrow.web;
 
 import morrow.Tracker;
-import morrow.config.SingletonStore;
+import morrow.config.singleton.SingletonStore;
 import morrow.web.endpoint.Action;
 import morrow.web.exception.ClientException;
 import morrow.web.protocol.mime.CommonMediaType;

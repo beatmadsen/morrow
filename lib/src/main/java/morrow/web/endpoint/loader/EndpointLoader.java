@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader;
 
-import morrow.config.SingletonStore;
+import morrow.config.singleton.SingletonStore;
 import morrow.web.endpoint.EndpointException;
 import morrow.web.endpoint.loader.file.ConfigFileLoader;
 import morrow.web.endpoint.loader.spec.EndpointSpec;

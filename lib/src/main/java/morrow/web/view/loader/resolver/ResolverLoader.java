@@ -1,6 +1,6 @@
 package morrow.web.view.loader.resolver;
 
-import morrow.config.Validation;
+import morrow.config.validation.Validation;
 import morrow.web.view.loader.resolver.spec.RenderSpec;
 import morrow.web.view.loader.resolver.spec.SpecLoader;
 

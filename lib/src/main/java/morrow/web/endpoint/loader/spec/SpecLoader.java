@@ -1,9 +1,9 @@
 package morrow.web.endpoint.loader.spec;
 
-import morrow.config.ConfigurationValidationException;
 import morrow.config.LoadHelper;
-import morrow.config.SingletonStore;
-import morrow.config.Validation;
+import morrow.config.singleton.SingletonStore;
+import morrow.config.validation.ConfigurationValidationException;
+import morrow.config.validation.Validation;
 import morrow.web.Controller;
 import morrow.web.endpoint.Action;
 import morrow.web.endpoint.loader.EndpointDescriptor;

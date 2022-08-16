@@ -1,7 +1,7 @@
 package morrow.web.view.loader.resolver.spec;
 
 import morrow.config.LoadHelper;
-import morrow.config.Validation;
+import morrow.config.validation.Validation;
 import morrow.web.view.Renderer;
 
 public class SpecLoader {

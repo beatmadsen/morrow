@@ -1,4 +1,4 @@
-package morrow.config;
+package morrow.config.singleton;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,25 +30,6 @@ public class SingletonStore implements AutoCloseable {
     public void close() throws Exception {
         for (var s : store.values()) {
             s.close();
-        }
-    }
-
-    public static class IncorrectTypeException extends ConfigException {
-
-        public IncorrectTypeException(Class<?> type, ManagedSingleton singleton, ClassCastException e) {
-            super(message(type, singleton), e);
-        }
-
-        private static String message(Class<?> type, ManagedSingleton singleton) {
-            return "Singleton lookup by type %s found instance of wrong type %s".formatted(
-                    type.getCanonicalName(), singleton.getClass().getCanonicalName());
-        }
-    }
-
-    public static class LookupException extends ConfigException {
-
-        public LookupException(Class<?> key) {
-            super("Did not find singleton of type %s".formatted(key));
         }
     }
 

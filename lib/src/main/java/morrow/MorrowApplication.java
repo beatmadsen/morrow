@@ -1,7 +1,7 @@
 package morrow;
 
-import morrow.config.SingletonStore;
-import morrow.config.Validation;
+import morrow.config.singleton.SingletonStore;
+import morrow.config.validation.Validation;
 import morrow.web.Server;
 import morrow.web.endpoint.EndpointException;
 import morrow.web.endpoint.Router;

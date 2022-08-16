@@ -2,7 +2,7 @@ package morrow.web.view;
 
 import com.example.myapp.model.B;
 import com.example.myapp.model.C;
-import morrow.config.Validation;
+import morrow.config.validation.Validation;
 import morrow.web.protocol.mime.CommonMediaType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

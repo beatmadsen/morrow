@@ -1,7 +1,7 @@
 package morrow.web.endpoint.loader.spec;
 
-import morrow.config.SingletonStore;
-import morrow.config.Validation;
+import morrow.config.singleton.SingletonStore;
+import morrow.config.validation.Validation;
 import morrow.web.endpoint.loader.EndpointDescriptor;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.request.Method;

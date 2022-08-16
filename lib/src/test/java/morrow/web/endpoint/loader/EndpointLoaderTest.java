@@ -1,7 +1,7 @@
 package morrow.web.endpoint.loader;
 
-import morrow.config.SingletonStore;
-import morrow.config.Validation;
+import morrow.config.singleton.SingletonStore;
+import morrow.config.validation.Validation;
 import morrow.web.endpoint.EndpointException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

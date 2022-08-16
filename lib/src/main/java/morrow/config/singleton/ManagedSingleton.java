@@ -1,4 +1,4 @@
-package morrow.config;
+package morrow.config.singleton;
 
 public abstract class ManagedSingleton implements AutoCloseable {
     protected final SingletonStore singletonStore;
