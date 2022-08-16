@@ -1,7 +1,6 @@
 package org.other.controller;
 
 import morrow.web.Controller;
-import morrow.web.exception.ClientException;
 import morrow.web.response.Response;
 
 public class YokesController extends Controller {

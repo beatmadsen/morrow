@@ -8,10 +8,10 @@ public interface MediaType {
     static MediaType freeHand(String type, String subtype, Map<String, String> parameters) {
         return new FreeHandMediaType(type, subtype, parameters);
     }
+
     static MediaType freeHand(String type, String subtype) {
         return new FreeHandMediaType(type, subtype, Map.of());
     }
-
 
 
     String contentTypeHeaderValue();
@@ -24,8 +24,6 @@ public interface MediaType {
         var hash = Objects.hash(type(), subtype());
         return new Key(hash);
     }
-
-    record Key(int key) {}
 
     enum Type {
         APPLICATION, TEXT;
@@ -45,6 +43,9 @@ public interface MediaType {
             return name().toLowerCase();
         }
 
+    }
+
+    record Key(int key) {
     }
 
 }

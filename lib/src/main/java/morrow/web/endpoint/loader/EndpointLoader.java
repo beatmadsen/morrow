@@ -22,6 +22,9 @@ public class EndpointLoader {
         return new EndpointLoader(singletonStore).loadEndpoints();
     }
 
+    private static Stream<EndpointDescriptor> streamClasses(SpecLoader l) {
+        return l.loadClasses().stream();
+    }
 
     public List<EndpointDescriptor> loadEndpoints() throws EndpointException {
         try {
@@ -34,10 +37,6 @@ public class EndpointLoader {
         } catch (Exception e) {
             throw new LoaderException("Could not load endpoints from endpoints.yml", e);
         }
-    }
-
-    private static Stream<EndpointDescriptor> streamClasses(SpecLoader l) {
-        return l.loadClasses().stream();
     }
 
     private SpecLoader specLoader(EndpointSpec spec) {

@@ -9,15 +9,15 @@ import java.util.Map;
 
 public class ControllerRenderPlugin {
 
-    public static ControllerRenderPlugin load(Validation validation) throws ViewException {
-        var v = new ViewMappingsLoader(validation);
-        return new ControllerRenderPlugin(v.loadViewMappings());
-    }
-
     private final Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers;
 
     private ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers) {
         this.resolvers = resolvers;
+    }
+
+    public static ControllerRenderPlugin load(Validation validation) throws ViewException {
+        var v = new ViewMappingsLoader(validation);
+        return new ControllerRenderPlugin(v.loadViewMappings());
     }
 
     public <I, O> O render(I model, MediaType mediaType) {

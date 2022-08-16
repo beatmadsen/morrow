@@ -7,9 +7,9 @@ import morrow.config.Validation;
 import morrow.web.Controller;
 import morrow.web.endpoint.Action;
 import morrow.web.endpoint.loader.EndpointDescriptor;
+import morrow.web.endpoint.loader.matcher.EndpointMatcher;
 import morrow.web.endpoint.loader.spec.tree.IndexedSpec;
 import morrow.web.endpoint.loader.spec.tree.ResourceTree;
-import morrow.web.endpoint.loader.matcher.EndpointMatcher;
 
 import java.util.List;
 import java.util.Set;

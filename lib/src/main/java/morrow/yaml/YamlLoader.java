@@ -7,8 +7,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.InputStream;
 
 public class YamlLoader<T> {
-
-
     private final TypeReference<T> outputType;
     private final ObjectMapper mapper;
 

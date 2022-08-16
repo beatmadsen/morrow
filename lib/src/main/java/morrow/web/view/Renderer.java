@@ -5,9 +5,8 @@ import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 import java.util.List;
 
 /**
- *
  * @param <I> single instance of input model (necessary because of format of views.yml).
- *           If a list/aggregate input is needed it should be wrapped in an instance of a wrapper class.
+ *            If a list/aggregate input is needed it should be wrapped in an instance of a wrapper class.
  * @param <O> single instance or aggregate of output models as translated by renderer
  */
 public abstract class Renderer<I, O> {
@@ -17,6 +16,7 @@ public abstract class Renderer<I, O> {
     public Renderer(MediaTypeSpecificRendererResolver router) {
         this.router = router;
     }
+
     public abstract O render(I model);
 
     /**
