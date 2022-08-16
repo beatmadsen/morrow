@@ -13,7 +13,7 @@ class ControllerRenderPluginTest {
     private ControllerRenderPlugin renderPlugin;
 
     @BeforeEach
-    void setUp() throws ControllerRenderPlugin.LoadException {
+    void setUp() throws ViewException {
         renderPlugin = ControllerRenderPlugin.load();
     }
 

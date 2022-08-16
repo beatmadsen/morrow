@@ -5,8 +5,8 @@ import morrow.config.LoadHelper;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.KeyTuple;
 import morrow.web.view.Renderer;
-import morrow.web.view.routing.RendererRouter;
-import morrow.yaml.LoadingException;
+import morrow.web.view.ViewException;
+import morrow.web.view.routing.MediaTypeSpecificRendererResolver;
 import morrow.yaml.YamlLoader;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class ViewLoader {
     }
 
 
-    public Map<MediaType.Key, RendererRouter> loadViews() {
+    public Map<MediaType.Key, MediaTypeSpecificRendererResolver> loadViews() throws ViewException {
         try {
             var loader = new YamlLoader<Map<String, Map<String, Map<String, List<RenderSpec>>>>>(new TypeReference<Map<String, Map<String, Map<String, List<RenderSpec>>>>>() {
             });
@@ -31,8 +31,8 @@ public class ViewLoader {
                     .stream()
                     .flatMap(subtypes -> streamRenderTuples(subtypes.getKey(), subtypes.getValue()))
                     .collect(Collectors.toMap(rendererTuple -> rendererTuple.mediaType().key(), RendererTuple::router));
-        } catch (LoadingException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new LoaderException(e);
         }
     }
 
@@ -49,10 +49,10 @@ public class ViewLoader {
                 });
     }
 
-    private record RendererTuple(MediaType mediaType, RendererRouter router) {}
+    private record RendererTuple(MediaType mediaType, MediaTypeSpecificRendererResolver router) {}
 
 
-    private RendererRouter streamRenderTuples(Map<String, List<RenderSpec>> renderSpecsByUseCase, MediaType mediaType) {
+    private MediaTypeSpecificRendererResolver streamRenderTuples(Map<String, List<RenderSpec>> renderSpecsByUseCase, MediaType mediaType) {
         var renderersByKey = renderSpecsByUseCase
                 .entrySet()
                 .stream()
@@ -61,7 +61,7 @@ public class ViewLoader {
                     return routerEntries(useCase, renderers.getValue());
                 }).collect(Collectors.toMap(Y::keyTuple, Y::rendererClass));
 
-        return new RendererRouter(renderersByKey);
+        return new MediaTypeSpecificRendererResolver(renderersByKey);
     }
 
     private record Y(KeyTuple keyTuple, Class<? extends Renderer<?, ?>> rendererClass) {
@@ -96,7 +96,7 @@ public class ViewLoader {
     }
 
 
-    public record RenderSpec(String model, String renderer) {
+    private record RenderSpec(String model, String renderer) {
     }
 
 

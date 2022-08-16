@@ -1,6 +1,6 @@
 package morrow.web.view;
 
-import morrow.web.view.routing.RendererRouter;
+import morrow.web.view.routing.MediaTypeSpecificRendererResolver;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import java.util.List;
  */
 public abstract class Renderer<I, O> {
 
-    private final RendererRouter router;
+    private final MediaTypeSpecificRendererResolver router;
 
-    public Renderer(RendererRouter router) {
+    public Renderer(MediaTypeSpecificRendererResolver router) {
         this.router = router;
     }
     public abstract O render(I model);
