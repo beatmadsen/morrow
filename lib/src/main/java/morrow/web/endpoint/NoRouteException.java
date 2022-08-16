@@ -1,4 +1,4 @@
-package morrow.web.endpoint.routing;
+package morrow.web.endpoint;
 
 import morrow.web.exception.ClientException;
 import morrow.web.protocol.mime.CommonMediaType;

@@ -1,4 +1,4 @@
-package morrow.web.endpoint.matcher;
+package morrow.web.endpoint.loader.matcher;
 
 class MatcherException extends RuntimeException {
 

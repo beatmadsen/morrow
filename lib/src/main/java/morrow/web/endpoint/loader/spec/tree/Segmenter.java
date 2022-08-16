@@ -1,4 +1,4 @@
-package morrow.web.endpoint.loader.spec;
+package morrow.web.endpoint.loader.spec.tree;
 
 import morrow.web.path.NamespaceSegment;
 import morrow.web.path.PathSegment;

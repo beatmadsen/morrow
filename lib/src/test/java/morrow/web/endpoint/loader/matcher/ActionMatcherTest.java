@@ -1,7 +1,6 @@
 package morrow.web.endpoint.loader.matcher;
 
 import morrow.web.endpoint.Action;
-import morrow.web.endpoint.matcher.ActionMatcher;
 import morrow.web.path.NamespaceSegment;
 import morrow.web.path.ResourceSegment;
 import morrow.web.path.UncategorisedSegment;

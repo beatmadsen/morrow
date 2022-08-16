@@ -1,8 +1,9 @@
-package morrow.web.endpoint;
+package morrow.web.endpoint.loader;
 
 import morrow.config.SingletonStore;
 import morrow.web.Controller;
-import morrow.web.endpoint.matcher.RouteMatcher;
+import morrow.web.endpoint.Action;
+import morrow.web.endpoint.loader.matcher.RouteMatcher;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.request.Method;
 import morrow.web.request.Request;

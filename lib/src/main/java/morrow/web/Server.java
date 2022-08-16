@@ -2,23 +2,20 @@ package morrow.web;
 
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
-import morrow.web.endpoint.EndpointDescriptor;
-import morrow.web.endpoint.routing.Router;
+import morrow.web.endpoint.Router;
 import morrow.web.exception.ClientException;
 import morrow.web.exception.InternalServerException;
 import morrow.web.exception.ServerException;
 import morrow.web.request.Request;
 import morrow.web.response.Response;
 
-import java.util.List;
-
 public class Server {
 
     private final Router router;
     private final Validation validation;
 
-    public Server(List<EndpointDescriptor> endpointDescriptors, SingletonStore singletonStore) {
-        router = new Router(endpointDescriptors);
+    public Server(SingletonStore singletonStore, Router router) {
+        this.router = router;
         validation = singletonStore.get(Validation.class);
     }
 

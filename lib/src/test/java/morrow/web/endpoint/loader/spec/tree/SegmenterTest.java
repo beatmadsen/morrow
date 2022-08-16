@@ -1,4 +1,4 @@
-package morrow.web.endpoint.loader.spec;
+package morrow.web.endpoint.loader.spec.tree;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

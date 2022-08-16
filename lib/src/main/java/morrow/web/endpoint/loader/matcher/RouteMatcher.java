@@ -1,4 +1,4 @@
-package morrow.web.endpoint.matcher;
+package morrow.web.endpoint.loader.matcher;
 
 import morrow.web.endpoint.Action;
 import morrow.web.path.UncategorisedSegment;
