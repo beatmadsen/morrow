@@ -1,10 +1,8 @@
-package morrow.web.endpoint.loader;
+package morrow.web.endpoint.loader.spec;
 
 import morrow.config.SingletonStore;
 import morrow.config.Validation;
 import morrow.web.endpoint.EndpointDescriptor;
-import morrow.web.endpoint.loader.config.EndpointSpec;
-import morrow.web.endpoint.loader.config.SpecLoader;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.request.Method;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,20 +15,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SpecLoaderTest {
 
-    private SpecLoader specLoader;
+
+    private SingletonStore singletonStore;
 
     @BeforeEach
     void setUp() {
-        SingletonStore singletonStore = new SingletonStore();
+        singletonStore = new SingletonStore();
         singletonStore.put(new Validation(null));
-        specLoader = new SpecLoader(singletonStore);
     }
 
     @Test
     void shouldMapMainResource() {
-        var endpointConfig = new EndpointSpec("my-prefix/my_resource", "org.other.controller.EggsController", Set.of("getById", "create"), null);
+        var endpointSpec = new EndpointSpec("my-prefix/my_resource", "org.other.controller.EggsController", Set.of("getById", "create"), null);
 
-        List<EndpointDescriptor> eds = specLoader.map(endpointConfig);
+        List<EndpointDescriptor> eds = load(endpointSpec);
         var e = eds.get(0);
         assertTrue(e.isMethodAllowed(Method.GET));
         assertTrue(e.isMethodAllowed(Method.POST));
@@ -42,14 +40,18 @@ class SpecLoaderTest {
 
     @Test
     void shouldFailToMapIncompleteResource() {
-        var endpointConfig = new EndpointSpec(null, "org.other.controller.EggsController", Set.of("getById"), null);
-        assertThrows(RuntimeException.class, () -> specLoader.map(endpointConfig));
+        var endpointSpec = new EndpointSpec(null, "org.other.controller.EggsController", Set.of("getById"), null);
+        assertThrows(RuntimeException.class, () -> load(endpointSpec));
+    }
+
+    private List<EndpointDescriptor> load(EndpointSpec endpointSpec) {
+        return new SpecLoader(singletonStore, endpointSpec).loadClasses();
     }
 
     @Test
     void shouldFailToMapIncorrectResource() {
-        var endpointConfig = new EndpointSpec("/56$/", "org.other.controller.EggsController", Set.of("getById"), null);
-        assertThrows(RuntimeException.class, () -> specLoader.map(endpointConfig));
+        var endpointSpec = new EndpointSpec("/56$/", "org.other.controller.EggsController", Set.of("getById"), null);
+        assertThrows(RuntimeException.class, () -> new SpecLoader(singletonStore, endpointSpec).validate());
     }
 
     @Test
@@ -62,14 +64,14 @@ class SpecLoaderTest {
                 null
         );
 
-        var endpointConfig = new EndpointSpec(
+        var endpointSpec = new EndpointSpec(
                 "ns1/parent",
                 "org.other.controller.EggsController",
                 Set.of("getById", "create"),
                 List.of(subResource)
         );
 
-        List<EndpointDescriptor> eds = specLoader.map(endpointConfig);
+        List<EndpointDescriptor> eds = load(endpointSpec);
         assertEquals(2, eds.size());
         var e = eds.get(1);
 

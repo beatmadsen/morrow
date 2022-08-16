@@ -1,4 +1,4 @@
-package morrow.web.endpoint.loader.config;
+package morrow.web.endpoint.loader.spec;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

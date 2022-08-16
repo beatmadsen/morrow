@@ -4,19 +4,19 @@ import morrow.config.SingletonStore;
 import morrow.web.endpoint.EndpointDescriptor;
 import morrow.web.endpoint.EndpointException;
 import morrow.web.endpoint.loader.file.ConfigFileLoader;
-import morrow.web.endpoint.loader.config.SpecLoader;
-import morrow.web.endpoint.loader.config.EndpointSpec;
+import morrow.web.endpoint.loader.spec.EndpointSpec;
+import morrow.web.endpoint.loader.spec.SpecLoader;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 public class EndpointLoader {
     private final ConfigFileLoader configFileLoader;
-    private final SpecLoader specLoader;
+    private final SingletonStore singletonStore;
 
     private EndpointLoader(SingletonStore singletonStore) {
+        this.singletonStore = singletonStore;
         configFileLoader = new ConfigFileLoader();
-        specLoader = new SpecLoader(singletonStore);
     }
 
     public static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws EndpointException {
@@ -26,13 +26,23 @@ public class EndpointLoader {
 
     public List<EndpointDescriptor> loadEndpoints() throws EndpointException {
         try {
-            return configFileLoader.loadEndpointsFile().stream().flatMap(this::streamDescriptors).toList();
+            return configFileLoader.loadEndpointsFile()
+                    .stream()
+                    .map(this::specLoader)
+                    .peek(SpecLoader::validate)
+                    .flatMap(EndpointLoader::streamClasses)
+                    .toList();
         } catch (Exception e) {
             throw new LoaderException("Could not load endpoints from endpoints.yml", e);
         }
     }
 
-    private Stream<EndpointDescriptor> streamDescriptors(EndpointSpec c) {
-        return specLoader.map(c).stream();
+    private static Stream<EndpointDescriptor> streamClasses(SpecLoader l) {
+        return l.loadClasses().stream();
     }
+
+    private SpecLoader specLoader(EndpointSpec spec) {
+        return new SpecLoader(singletonStore, spec);
+    }
+
 }

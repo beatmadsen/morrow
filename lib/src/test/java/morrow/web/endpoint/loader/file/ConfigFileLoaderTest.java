@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader.file;
 
-import morrow.web.endpoint.loader.config.EndpointSpec;
+import morrow.web.endpoint.loader.spec.EndpointSpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

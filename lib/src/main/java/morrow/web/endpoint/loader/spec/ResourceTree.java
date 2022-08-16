@@ -1,11 +1,11 @@
-package morrow.web.endpoint.loader.config;
+package morrow.web.endpoint.loader.spec;
 
 import morrow.web.path.PathSegment;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ResourceTree {
+class ResourceTree {
     private final ResourceNode root;
 
     private ResourceTree(ResourceNode root) {
@@ -36,11 +36,11 @@ public class ResourceTree {
      * Build resource tree from input.
      * Assumes valid input.
      */
-    public static ResourceTree from(EndpointSpec config) {
+    static ResourceTree from(EndpointSpec config) {
         return new ResourceTree(map(config));
     }
 
-    public List<IndexedSpec> traverseTree() {
+    List<IndexedSpec> traverseTree() {
         return traverseTree(root, List.of()).toList();
     }
 

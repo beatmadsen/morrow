@@ -1,4 +1,6 @@
-package morrow.web.endpoint.loader.config;
+package morrow.web.endpoint.loader.spec;
+
+import morrow.web.endpoint.loader.spec.EndpointSpec;
 
 class InvalidEndpointSpecException extends RuntimeException {
     InvalidEndpointSpecException(EndpointSpec endpointSpec, Exception e) {

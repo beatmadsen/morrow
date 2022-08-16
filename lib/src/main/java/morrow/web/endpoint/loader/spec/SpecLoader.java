@@ -1,4 +1,4 @@
-package morrow.web.endpoint.loader.config;
+package morrow.web.endpoint.loader.spec;
 
 import morrow.config.ConfigurationValidationException;
 import morrow.config.LoadHelper;
@@ -16,20 +16,20 @@ import java.util.stream.Collectors;
 public class SpecLoader {
 
     private final SingletonStore singletonStore;
+    private final EndpointSpec endpointSpec;
 
-    public SpecLoader(SingletonStore singletonStore) {
+    public SpecLoader(SingletonStore singletonStore, EndpointSpec endpointSpec) {
         this.singletonStore = singletonStore;
+        this.endpointSpec = endpointSpec;
     }
 
-    public List<EndpointDescriptor> map(EndpointSpec endpointSpec) {
-        validate(endpointSpec);
+    public List<EndpointDescriptor> loadClasses() {
         var tree = ResourceTree.from(endpointSpec);
         return traverseTree(tree);
-
-
     }
 
-    private void validate(EndpointSpec endpointSpec) {
+
+    public void validate() {
         try {
             singletonStore.get(Validation.class).validateConfig(endpointSpec);
         } catch (ConfigurationValidationException e) {
@@ -40,10 +40,10 @@ public class SpecLoader {
     }
 
     private List<EndpointDescriptor> traverseTree(ResourceTree tree) {
-        return map(tree.traverseTree());
+        return load(tree.traverseTree());
     }
 
-    private List<EndpointDescriptor> map(List<IndexedSpec> configs) {
+    private List<EndpointDescriptor> load(List<IndexedSpec> configs) {
         return configs.stream().map(c -> {
             var actions = mapActions(c.config().actions());
             EndpointMatcher m = EndpointMatcher.from(c.index(), actions);

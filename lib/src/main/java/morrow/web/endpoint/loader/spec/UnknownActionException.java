@@ -1,4 +1,4 @@
-package morrow.web.endpoint.loader.config;
+package morrow.web.endpoint.loader.spec;
 
 class UnknownActionException extends RuntimeException {
     UnknownActionException(String action) {
