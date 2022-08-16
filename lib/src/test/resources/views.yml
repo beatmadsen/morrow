@@ -28,8 +28,8 @@ text:
   plain:
     default:
       - model: com.example.myapp.model.C
-        renderer: com.example.myapp.renderer.c.plain.DefaultRenderer
+        renderer: com.example.myapp.renderer.plain.CDefaultRenderer
   html:
     default:
       - model: com.example.myapp.model.B
-        renderer: com.example.myapp.renderer.b.html.DefaultRenderer
+        renderer: com.example.myapp.renderer.html.BDefaultRenderer
