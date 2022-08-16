@@ -12,6 +12,6 @@ public class CLowVerbosityRenderer extends Renderer<C, CLowVerbosityView> {
 
     @Override
     public CLowVerbosityView render(C model) {
-        return null;
+        return new CLowVerbosityView();
     }
 }

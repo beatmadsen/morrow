@@ -7,6 +7,7 @@ class FreeHandMediaType implements MediaType {
     private final String subtype;
     private final Map<String, String> parameters;
 
+
     FreeHandMediaType(String type, String subtype, Map<String, String> parameters) {
         this.type = type;
         this.subtype = subtype;

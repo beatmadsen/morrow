@@ -4,7 +4,8 @@ import java.util.Map;
 
 public enum CommonMediaType implements MediaType {
     JSON_UTF8(Type.APPLICATION, Subtype.JSON, Map.of("charset", "UTF-8")),
-    PLAIN_TEXT_UTF8(Type.TEXT, Subtype.PLAIN, Map.of("charset", "UTF-8"));
+    PLAIN_TEXT_UTF8(Type.TEXT, Subtype.PLAIN, Map.of("charset", "UTF-8")),
+    HTML_UTF8(Type.TEXT, Subtype.HTML, Map.of("charset", "UTF-8"));
 
 
     private final Type type;
@@ -31,5 +32,4 @@ public enum CommonMediaType implements MediaType {
     public Subtype subtype() {
         return subtype;
     }
-
 }

@@ -1,18 +1,27 @@
 package morrow.web.view.routing;
 
+import morrow.web.view.KeyTuple;
 import morrow.web.view.Renderer;
-import morrow.web.view.loader.ViewLoader;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public class RendererRouter {
 
 
-    public RendererRouter(Map<ViewLoader.KeyTuple, ? extends Class<? extends Renderer<?, ?>>> renderersByKey) {
+    private final Map<KeyTuple, ? extends Class<? extends Renderer<?, ?>>> renderersByKey;
 
+    public RendererRouter(Map<KeyTuple, ? extends Class<? extends Renderer<?, ?>>> renderersByKey) {
+
+        this.renderersByKey = renderersByKey;
     }
 
     public <I, O> Renderer<I, O> renderer(Class<? extends I> modelClass, String useCase) {
-        return null; // TODO
+        try {
+            Class<? extends Renderer<?, ?>> aClass = renderersByKey.get(new KeyTuple(useCase, modelClass));
+            return (Renderer<I, O>) aClass.getDeclaredConstructor(RendererRouter.class).newInstance(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

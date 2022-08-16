@@ -11,8 +11,7 @@ public class ControllerRenderPlugin {
     public static ControllerRenderPlugin load() throws LoadException {
         try {
             var v = new ViewLoader();
-            Map<MediaType, RendererRouter> routers = v.loadViews();
-            return new ControllerRenderPlugin(routers);
+            return new ControllerRenderPlugin(v.loadViews());
         } catch (Exception e) {
             throw new LoadException("Could not load render plugin: " + e.getMessage(), e);
         }
@@ -24,9 +23,9 @@ public class ControllerRenderPlugin {
         }
     }
 
-    private final Map<MediaType, RendererRouter> routers;
+    private final Map<MediaType.Key, RendererRouter> routers;
 
-    ControllerRenderPlugin(Map<MediaType, RendererRouter> routers) {
+    ControllerRenderPlugin(Map<MediaType.Key, RendererRouter> routers) {
         this.routers = routers;
     }
 
@@ -37,7 +36,8 @@ public class ControllerRenderPlugin {
     public <I, O> O render(I model, MediaType mediaType, String useCase) {
 
         Class<? extends I> aClass = (Class<? extends I>) model.getClass();
-        Renderer<I, O> renderer = routers.get(mediaType).renderer(aClass, useCase);
+        var router = routers.get(mediaType.key());
+        Renderer<I, O> renderer = router.renderer(aClass, useCase);
         return renderer.render(model);
     }
 }

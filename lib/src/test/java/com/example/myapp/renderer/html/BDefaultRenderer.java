@@ -12,6 +12,6 @@ public class BDefaultRenderer extends Renderer<B, BDefaultView> {
 
     @Override
     public BDefaultView render(B model) {
-        return null;
+        return new BDefaultView();
     }
 }

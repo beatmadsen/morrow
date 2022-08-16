@@ -3,6 +3,7 @@ package morrow.web.view.loader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import morrow.config.LoadHelper;
 import morrow.web.protocol.mime.MediaType;
+import morrow.web.view.KeyTuple;
 import morrow.web.view.Renderer;
 import morrow.web.view.routing.RendererRouter;
 import morrow.yaml.LoadingException;
@@ -19,11 +20,8 @@ public class ViewLoader {
     private record ViewTuple(Class<?> modelClass, Class<? extends Renderer<?, ?>> rendererClass) {
     }
 
-    public record KeyTuple(String useCase, Class<?> modelClass) {
-    }
 
-
-    public Map<MediaType, RendererRouter> loadViews() {
+    public Map<MediaType.Key, RendererRouter> loadViews() {
         try {
             var loader = new YamlLoader<Map<String, Map<String, Map<String, List<RenderSpec>>>>>(new TypeReference<Map<String, Map<String, Map<String, List<RenderSpec>>>>>() {
             });
@@ -32,7 +30,7 @@ public class ViewLoader {
                     .entrySet()
                     .stream()
                     .flatMap(subtypes -> streamRenderTuples(subtypes.getKey(), subtypes.getValue()))
-                    .collect(Collectors.toMap(RendererTuple::mediaType, RendererTuple::router));
+                    .collect(Collectors.toMap(rendererTuple -> rendererTuple.mediaType().key(), RendererTuple::router));
         } catch (LoadingException e) {
             throw new RuntimeException(e);
         }
