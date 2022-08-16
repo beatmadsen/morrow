@@ -1,9 +1,8 @@
 package morrow.web.view.loader.resolver;
 
 import morrow.config.Validation;
-import morrow.web.view.KeyTuple;
-import morrow.web.view.loader.spec.RenderSpec;
-import morrow.web.view.loader.spec.SpecLoader;
+import morrow.web.view.loader.resolver.spec.RenderSpec;
+import morrow.web.view.loader.resolver.spec.SpecLoader;
 
 import java.util.List;
 import java.util.Map;

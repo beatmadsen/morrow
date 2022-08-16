@@ -1,4 +1,4 @@
-package morrow.web.view.loader.spec;
+package morrow.web.view.loader.resolver.spec;
 
 class ClassLoadException extends RuntimeException {
     ClassLoadException(RenderSpec renderSpec, Exception e) {

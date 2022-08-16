@@ -2,7 +2,7 @@ package morrow.web.view;
 
 import morrow.config.Validation;
 import morrow.web.protocol.mime.MediaType;
-import morrow.web.view.loader.ViewLoader;
+import morrow.web.view.loader.ViewMappingsLoader;
 import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 
 import java.util.Map;
@@ -10,8 +10,8 @@ import java.util.Map;
 public class ControllerRenderPlugin {
 
     public static ControllerRenderPlugin load(Validation validation) throws ViewException {
-        var v = new ViewLoader(validation);
-        return new ControllerRenderPlugin(v.loadViews());
+        var v = new ViewMappingsLoader(validation);
+        return new ControllerRenderPlugin(v.loadViewMappings());
     }
 
     private final Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers;
@@ -24,12 +24,19 @@ public class ControllerRenderPlugin {
         return render(model, mediaType, "default");
     }
 
+    @SuppressWarnings("unchecked")
     public <I, O> O render(I model, MediaType mediaType, String useCase) {
-
         Class<? extends I> aClass = (Class<? extends I>) model.getClass();
-        var router = resolvers.get(mediaType.key());
-        Renderer<I, O> renderer = router.renderer(aClass, useCase);
+        Renderer<I, O> renderer = lookupMappings(mediaType).renderer(aClass, useCase);
         return renderer.render(model);
+    }
+
+    private MediaTypeSpecificRendererResolver lookupMappings(MediaType mediaType) {
+        var resolver = resolvers.get(mediaType.key());
+        if (resolver == null) {
+            throw new MissingMappingsException(mediaType);
+        }
+        return resolver;
     }
 
 }

@@ -1,9 +1,8 @@
-package morrow.web.view.loader.spec;
+package morrow.web.view.loader.resolver.spec;
 
 import morrow.config.LoadHelper;
 import morrow.config.Validation;
 import morrow.web.view.Renderer;
-import morrow.web.view.loader.ViewTuple;
 
 public class SpecLoader {
 

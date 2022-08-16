@@ -1,4 +1,4 @@
-package morrow.web.view.loader;
+package morrow.web.view.loader.resolver.spec;
 
 import morrow.web.view.Renderer;
 
