@@ -3,6 +3,7 @@ package morrow.web.view;
 import morrow.config.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.loader.ViewLoader;
+import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class ControllerRenderPlugin {
 
     private final Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers;
 
-    ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers) {
+    private ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers) {
         this.resolvers = resolvers;
     }
 

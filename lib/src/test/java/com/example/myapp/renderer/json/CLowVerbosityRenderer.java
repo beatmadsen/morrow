@@ -3,7 +3,7 @@ package com.example.myapp.renderer.json;
 import com.example.myapp.model.C;
 import com.example.myapp.view.json.CLowVerbosityView;
 import morrow.web.view.Renderer;
-import morrow.web.view.MediaTypeSpecificRendererResolver;
+import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 
 public class CLowVerbosityRenderer extends Renderer<C, CLowVerbosityView> {
     public CLowVerbosityRenderer(MediaTypeSpecificRendererResolver router) {

@@ -1,5 +1,7 @@
 package morrow.web.view;
 
+import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
+
 import java.util.List;
 
 /**

@@ -3,7 +3,7 @@ package com.example.myapp.renderer.plain;
 import com.example.myapp.model.C;
 import com.example.myapp.view.plain.CDefaultView;
 import morrow.web.view.Renderer;
-import morrow.web.view.MediaTypeSpecificRendererResolver;
+import morrow.web.view.loader.resolver.MediaTypeSpecificRendererResolver;
 
 public class CDefaultRenderer extends Renderer<C, CDefaultView> {
     public CDefaultRenderer(MediaTypeSpecificRendererResolver router) {
