@@ -12,6 +12,7 @@ public class CMediumVerbosityRenderer extends Renderer<C, CMediumVerbosityView> 
 
     @Override
     public CMediumVerbosityView render(C model) {
-        return null;
+        return new CMediumVerbosityView(model.length());
     }
+
 }

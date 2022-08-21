@@ -2,20 +2,20 @@ package morrow.web.response.serialization.action;
 
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
-import morrow.web.view.ControllerRenderPlugin;
+
+import java.util.function.Function;
 
 public class ModelResult implements ActionResult {
-    private final Object model;
-    private final ControllerRenderPlugin renderPlugin;
+    private final Function<MediaType, Object> renderFunction;
 
-    public ModelResult(Object model, ControllerRenderPlugin renderPlugin) {
-        this.model = model;
-        this.renderPlugin = renderPlugin;
+    public ModelResult(Function<MediaType, Object> renderFunction) {
+        this.renderFunction = renderFunction;
     }
+
 
     @Override
     public Response serialize(MediaType mediaType) {
-        var view = renderPlugin.render(model, mediaType);
+        var view = renderFunction.apply(mediaType);
         return new ViewResult(view).serialize(mediaType);
     }
 }

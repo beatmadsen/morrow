@@ -8,9 +8,11 @@ import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
 import morrow.web.response.serialization.action.ActionResult;
 import morrow.web.response.serialization.action.DefaultResult;
+import morrow.web.response.serialization.action.ModelResult;
 import morrow.web.view.ControllerRenderPlugin;
 
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class Controller {
 
@@ -89,6 +91,11 @@ public abstract class Controller {
     // destroy - DELETE /path/id
     protected ActionResult deleteById() {
         return ActionResult.empty();
+    }
+
+    protected ActionResult modelResult(Object model, String useCase) {
+        Function<MediaType, Object> renderFn = (mediaType -> controllerRenderPlugin.render(model, mediaType, useCase));
+        return new ModelResult(renderFn);
     }
 
     public record State(Action action, SingletonStore singletonStore, List<MediaType> accepts) {

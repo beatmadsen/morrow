@@ -1,7 +1,10 @@
 package com.example.myapp.controller;
 
+import com.example.myapp.model.B;
+import com.example.myapp.model.C;
 import morrow.web.Controller;
 import morrow.web.response.serialization.action.ActionResult;
+import morrow.web.response.serialization.action.ModelResult;
 import morrow.web.response.serialization.action.ViewResult;
 
 import java.util.Map;
@@ -22,5 +25,8 @@ public class CarsController extends Controller {
         return new ViewResult(Map.of("status", "ok"));
     }
 
-
+    @Override
+    protected ActionResult getById() {
+        return super.modelResult(new C(100), "verbosity-2");
+    }
 }

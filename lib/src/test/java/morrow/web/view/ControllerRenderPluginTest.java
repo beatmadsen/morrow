@@ -35,7 +35,7 @@ class ControllerRenderPluginTest {
 
     @Test
     void renderLowVerbosityJsonViewOfC() {
-        var result = renderPlugin.render(new C(), CommonMediaType.JSON_UTF8, "verbosity-1");
+        var result = renderPlugin.render(new C(12), CommonMediaType.JSON_UTF8, "verbosity-1");
         assertTrue(result instanceof com.example.myapp.view.json.CLowVerbosityView);
     }
 }

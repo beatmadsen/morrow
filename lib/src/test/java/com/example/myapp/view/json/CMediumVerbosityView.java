@@ -1,4 +1,4 @@
 package com.example.myapp.view.json;
 
-public class CMediumVerbosityView {
+public record CMediumVerbosityView(int size) {
 }

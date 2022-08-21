@@ -18,11 +18,7 @@ class MorrowServletTest {
     @Test
     void visitMissingEndpoint() throws Exception {
         var port = 62117;
-        Server server = new Server(port);
-        ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
-        server.setHandler(servletHandler);
-        server.start();
+        runServlet(port);
 
         HttpClient client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder()
@@ -37,13 +33,9 @@ class MorrowServletTest {
     }
 
     @Test
-    void visitExistingEndpoint() throws Exception {
+    void visitEndpointWithHardwiredView() throws Exception {
         var port = 62118;
-        Server server = new Server(port);
-        ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
-        server.setHandler(servletHandler);
-        server.start();
+        runServlet(port);
 
         HttpClient client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder()
@@ -55,6 +47,30 @@ class MorrowServletTest {
         assertEquals("{\"status\":\"ok\"}", httpResponse.body());
 
 
+    }
+    @Test
+    void visitEndpointWithViewMappedFromModel() throws Exception {
+        var port = 62119;
+        runServlet(port);
+
+        HttpClient client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:%d/vehicles/cars/32".formatted(port)))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals("{\"size\":100}", httpResponse.body());
+
+
+    }
+
+    private static void runServlet(int port) throws Exception {
+        Server server = new Server(port);
+        ServletHandler servletHandler = new ServletHandler();
+        servletHandler.addServletWithMapping(MorrowServlet.class, "/*");
+        server.setHandler(servletHandler);
+        server.start();
     }
 
 }
