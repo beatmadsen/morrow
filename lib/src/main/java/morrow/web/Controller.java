@@ -2,30 +2,24 @@ package morrow.web;
 
 import morrow.Tracker;
 import morrow.config.singleton.SingletonStore;
-import morrow.web.endpoint.Action;
 import morrow.web.exception.ClientException;
 import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
-import morrow.web.response.rendering.BodyRenderer;
-import morrow.web.response.status.CommonStatusCode;
+import morrow.web.response.serialization.action.ActionResult;
+import morrow.web.response.serialization.action.DefaultResult;
 import morrow.web.view.ControllerRenderPlugin;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public abstract class Controller {
 
     protected final State state;
-    protected final Map<String, Object> renderState;
     private final ControllerRenderPlugin controllerRenderPlugin;
 
     public Controller(State state) {
         this.state = state;
         controllerRenderPlugin = state.singletonStore.get(ControllerRenderPlugin.class);
-        renderState = new HashMap<>();
     }
 
     /**
@@ -35,70 +29,67 @@ public abstract class Controller {
      * Should be overridden for steps that ought to be taken before business logic is triggered
      * and which may prevent it from happening
      *
-     * @return a populated early response if bypassing business logic is appropriate
+     * @return a populated early result if bypassing business logic is appropriate
      * @throws ClientException if input from client is invalid
      */
-    public Optional<Response> beforeAction() throws ClientException {
-        return Optional.empty();
+    protected ActionResult beforeAction() throws ClientException {
+        return ActionResult.empty();
     }
 
-    ;
 
-    public Response action() {
-        var response = switch (state.action()) {
+    public Response run() throws ClientException {
+        ActionResult result = actionResult();
+        Tracker.actionComplete(new Tracker.MetaData());
+        return result.serialize(mimeNegotiation(state.accepts()));
+    }
+
+    private ActionResult actionResult() throws ClientException {
+        // TODO: default result should be smarter than just empty body
+        return beforeAction().or(this::action).or(() -> new DefaultResult(state.action()));
+    }
+
+    private ActionResult action() {
+        return switch (state.action()) {
             case GET_BY_ID -> getById();
             case FIND_MANY -> findMany();
             case CREATE -> create();
             case UPDATE_BY_ID -> updateById();
             case DELETE_BY_ID -> deleteById();
         };
-        // TODO - route to correct action implementation
-        Tracker.actionComplete(new Tracker.MetaData());
-        return response;
     }
 
-    /*
-     TODO:
-      Should this be called implicitly by the end of an action?
-      Action callbacks could return Optional<Response> as well
-      falling back to a default rendering/empty body
-    */
-    protected Response render() {
-        MediaType mediaType = mimeNegotiation(state.accepts());
-        /*
-        TODO:
-          1. render view model based on mediaType
-          2. serialize view model to body based on mediaType
-          3. set output headers, status code
-         */
-
-
-        var body = BodyRenderer.forMediaType(mediaType).body(state.action(), renderState);
-        // TODO: more dynamic. Some actions should return 201 or 301 by default
-        return new Response(mediaType, CommonStatusCode.OK, body);
-    }
 
     private MediaType mimeNegotiation(List<MediaType> accepts) {
         // TODO, see https://github.com/rails/rails/issues/9940
         return CommonMediaType.JSON_UTF8;
     }
 
-    // show - GET /path/id
-    protected abstract Response getById();
 
-    // path and query params etc available as controller state
+    // show - GET /path/id
+    protected ActionResult getById() {
+        return ActionResult.empty();
+    }
+
 
     // list - GET /path?x=42&y=hat
-    protected abstract Response findMany();
+    protected ActionResult findMany() {
+        return ActionResult.empty();
+    }
 
     // create - POST /path including body
-    protected abstract Response create();
+    protected ActionResult create() {
+        return ActionResult.empty();
+    }
 
     // update - PUT or PATCH /path/id
-    protected abstract Response updateById();
+    protected ActionResult updateById() {
+        return ActionResult.empty();
+    }
 
     // destroy - DELETE /path/id
-    protected abstract Response deleteById();
+    protected ActionResult deleteById() {
+        return ActionResult.empty();
+    }
 
     public record State(Action action, SingletonStore singletonStore, List<MediaType> accepts) {
     }

@@ -1,18 +1,15 @@
-package morrow.web.response.rendering;
+package morrow.web.response.serialization;
 
-import morrow.web.endpoint.Action;
 import morrow.web.protocol.body.Body;
 import morrow.web.protocol.mime.MediaType;
 
-import java.util.Map;
-
-public interface BodyRenderer {
-    static BodyRenderer forMediaType(MediaType mediaType) {
+public interface BodySerializer {
+    static BodySerializer forMediaType(MediaType mediaType) {
         if (mediaType.type() == MediaType.Type.APPLICATION && mediaType.subtype() == MediaType.Subtype.JSON) {
-            return new JsonBodyRenderer();
+            return new JsonBodySerializer();
         }
         throw new RuntimeException("Cannot render " + mediaType.contentTypeHeaderValue());
     }
 
-    Body body(Action action, Map<String, Object> renderState);
+    Body body(Object view);
 }

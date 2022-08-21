@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader.matcher;
 
-import morrow.web.endpoint.Action;
+import morrow.web.Action;
 import morrow.web.path.UncategorisedSegment;
 import morrow.web.request.Method;
 import morrow.web.request.Request;

@@ -12,5 +12,9 @@ public interface Body {
         return new StreamBody(stream);
     }
 
+    static Body empty() {
+        return Body.of("");
+    }
+
     InputStream stream();
 }

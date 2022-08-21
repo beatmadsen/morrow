@@ -52,52 +52,9 @@ class MorrowServletTest {
                 .GET()
                 .build();
         HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals("{\"status\": \"ok\"}", httpResponse.body());
+        assertEquals("{\"status\":\"ok\"}", httpResponse.body());
 
 
     }
 
-
-//
-//
-//    public static void main(String[] args) {
-//        try {
-//            var mapper = new ObjectMapper(new YAMLFactory());
-//
-//            var is = ViewLoader.class.getClassLoader().getResourceAsStream("views.yml");
-//            var value = mapper.readValue(is, new TypeReference<Map<String, Map<String, Map<String, List<UseCase2>>>>>() {
-////            var value = mapper.readValue(is, new TypeReference<UseCase2>() {
-//            });
-//            System.out.println(value);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//
-//    public record UseCase2(@JsonProperty("model-class") String modelClass, String renderer) {}
-//
-//    @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-//    public static class UseCase {
-//        String modelClass;
-//        String renderer;
-//
-//
-//        public String getModelClass() {
-//            return modelClass;
-//        }
-//
-//        public void setModelClass(String modelClass) {
-//            this.modelClass = modelClass;
-//        }
-//
-//        public String getRenderer() {
-//            return renderer;
-//        }
-//
-//        public void setRenderer(String renderer) {
-//            this.renderer = renderer;
-//        }
-//    }
 }

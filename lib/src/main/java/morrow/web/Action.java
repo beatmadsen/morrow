@@ -1,4 +1,4 @@
-package morrow.web.endpoint;
+package morrow.web;
 
 import morrow.web.request.Method;
 
