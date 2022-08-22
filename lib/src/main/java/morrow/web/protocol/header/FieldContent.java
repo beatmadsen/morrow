@@ -1,4 +1,10 @@
 package morrow.web.protocol.header;
 
-public interface FieldContent {
+public abstract class FieldContent {
+
+    protected final String value;
+
+    public FieldContent(String value) {
+        this.value = value;
+    }
 }

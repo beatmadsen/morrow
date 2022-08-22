@@ -14,26 +14,26 @@ class RequestHeaderMapTest {
 
     @Test
     void getAcceptContent() {
-        var content = new AcceptContent();
-        var map = new RequestHeaderMap(Map.of(ACCEPT.key(), List.of(content)));
+        var map = new RequestHeaderMap(Map.of(ACCEPT.key(), List.of("application/json")));
 
         List<AcceptContent> values = map.get(ACCEPT);
 
-        assertSame(content, values.get(0));
+        assertSame(AcceptContent.class, values.get(0).getClass());
     }
 
     @Test
     void getCacheControlContent() {
-        var content = new StringContent("abc");
-        var map = new RequestHeaderMap(Map.of(CommonFieldName.CACHE_CONTROL.key(), List.of(content)));
+        var headerValue = "abc";
+        var map = new RequestHeaderMap(Map.of(CommonFieldName.CACHE_CONTROL.key(), List.of(headerValue)));
 
         List<StringContent> values = map.get(CommonFieldName.CACHE_CONTROL);
 
-        assertSame(content, values.get(0));
+        assertSame(headerValue, values.get(0).value());
     }
 
     @Test
     void buildMap() {
-        
+        // TODO: user needs to be able to register own FieldName -> FieldContent type mappings
+        var y = Map.of("accept", List.of("application/json+xml", "text/*;q=0.5"), "xa-size", List.of("100"));
     }
 }

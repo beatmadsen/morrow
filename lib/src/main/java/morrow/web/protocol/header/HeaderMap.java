@@ -1,5 +1,6 @@
 package morrow.web.protocol.header;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,20 +16,23 @@ public abstract class HeaderMap {
 
      */
 
-    private final Map<FieldName.Key, List<? extends FieldContent>> map;
+    private final Map<FieldName.Key, List<String>> map;
 
-    public HeaderMap(Map<FieldName.Key, List<? extends FieldContent>> map) {
+    public HeaderMap(Map<FieldName.Key, List<String>> map) {
         this.map = map;
     }
 
     protected <T extends FieldContent> List<T> get(FieldName name) {
         var key = name.key();
-        List<? extends FieldContent> values = map.get(key);
+        List<String> values = map.get(key);
         return values.stream().map(v -> this.<T>getCast(key, v)).toList();
     }
 
-    protected <T extends FieldContent> T getCast(FieldName.Key key, FieldContent v) {
-
-        return (T) key.contentType().cast(v);
+    private  <T extends FieldContent> T getCast(FieldName.Key key, String v) {
+        try {
+            return (T) key.contentType().getDeclaredConstructor(String.class).newInstance(v);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

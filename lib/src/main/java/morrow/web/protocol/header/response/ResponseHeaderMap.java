@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ResponseHeaderMap extends HeaderMap {
-    public ResponseHeaderMap(Map<FieldName.Key, List<? extends FieldContent>> map) {
+
+    public ResponseHeaderMap(Map<FieldName.Key, List<String>> map) {
         super(map);
     }
 
