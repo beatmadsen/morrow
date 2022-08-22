@@ -45,7 +45,7 @@ public class MorrowServlet extends HttpServlet {
 
     private static List<MediaType> mapAcceptHeaders(Enumeration<String> headerValues) {
         Iterable<String> vs = headerValues::asIterator;
-        // TODO: handle special values like "*/*, type/*, subtype/type1+type2"
+        // TODO: handle special values like "*/*;q=0.8, type/*, subtype/type1+type2"
 
         return StreamSupport.stream(vs.spliterator(), false).map(s -> {
             var split1 = s.split(";");
