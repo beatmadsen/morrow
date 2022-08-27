@@ -26,7 +26,7 @@ public class MorrowApplication {
             singletonStore.put(ControllerRenderPlugin.load(singletonStore));
             singletonStore.put(Router.load(singletonStore));
 
-            new CustomSingletonLoader("morrow.config.singleton.custom").loadSingletons().forEach(singletonStore::put);
+            new CustomSingletonLoader(singletonStore, "morrow.config.singleton.custom").loadSingletons().forEach(singletonStore::put);
         } catch (Exception e) {
             throw new SingletonLoadException(e);
         }

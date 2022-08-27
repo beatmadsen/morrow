@@ -12,9 +12,14 @@ import java.util.stream.Collectors;
 public class CustomSingletonLoader {
 
     private final String packageName;
+    private final LoadHelper loadHelper;
 
-    public CustomSingletonLoader(String packageName) {
+    private final Lookup singletonLookup;
+
+    public CustomSingletonLoader(Lookup singletonLookup, String packageName) {
+        this.singletonLookup = singletonLookup;
         this.packageName = packageName;
+        loadHelper = new LoadHelper(ManagedSingleton.class);
     }
 
     public static class MyEx extends Exception {
@@ -23,35 +28,64 @@ public class CustomSingletonLoader {
         public MyEx(String message, Throwable cause) {
             super(message, cause);
         }
+
+        public MyEx(String message) {
+            super(message);
+        }
     }
 
     public List<ManagedSingleton> loadSingletons() throws MyEx {
         var classes = findAllClassesUsingClassLoader(packageName);
+        return instantiate(classes);
 
-        return List.of();
+    }
+
+    private List<ManagedSingleton> instantiate(Set<Class<ManagedSingleton>> classes) throws MyEx {
+        try {
+            return classes.stream().map(this::instantiate).toList();
+        } catch (Exception e) {
+            throw new MyEx("Failed to instantiate loaded singletons: " + e.getMessage(), e);
+        }
+    }
+
+    private ManagedSingleton instantiate(Class<ManagedSingleton> c) {
+        try {
+            return c.getDeclaredConstructor(Lookup.class).newInstance(singletonLookup);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
-    private Set<Class<?>> findAllClassesUsingClassLoader(String packageName) throws MyEx {
+    private Set<Class<ManagedSingleton>> findAllClassesUsingClassLoader(String packageName) throws MyEx {
 
+        var systemResource = ClassLoader.getSystemResource(packageName.replaceAll("[.]", "/"));
+        if (systemResource == null) {
+            throw new MyEx("empty or not found");
+        }
         try {
-            InputStream stream = ClassLoader.getSystemResource(packageName.replaceAll("[.]", "/")).openStream();
+            InputStream stream = systemResource.openStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             return reader.lines()
                     .filter(line -> line.endsWith(".class"))
-                    .map(line -> getClass(line, packageName))
+                    .map(line -> className(line, packageName))
+                    .map(this::loadClass)
                     .collect(Collectors.toSet());
         } catch (Exception e) {
             throw new MyEx("mum", e);
         }
     }
 
-    private Class<?> getClass(String className, String packageName) {
+    private Class<ManagedSingleton> loadClass(String className) {
         try {
-            return Class.forName(packageName + "."
-                    + className.substring(0, className.lastIndexOf('.')));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e); //TODO use LoadHelper
+            return loadHelper.loadClass(className);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private static String className(String classFileName, String packageName) {
+        return packageName + "."
+                + classFileName.substring(0, classFileName.lastIndexOf('.'));
     }
 }
