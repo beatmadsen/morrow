@@ -1,10 +1,16 @@
-package morrow.config.singleton;
+package morrow.config.singleton.loader;
 
+import morrow.config.singleton.Lookup;
+import morrow.config.singleton.ManagedSingleton;
 import morrow.config.singleton.custom.X;
+import morrow.config.singleton.custom.Y;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CustomSingletonLoaderTest {
@@ -26,28 +32,31 @@ class CustomSingletonLoaderTest {
     void loadingMissingPackage() {
         var packageName = "morrow.config.singleton.custom.does.not.exist";
         var loader = new CustomSingletonLoader(singletonLookup, packageName);
-        assertThrows(CustomSingletonLoader.MyEx.class, loader::loadSingletons);
+        assertThrows(LoaderException.class, loader::loadSingletons);
     }
 
     @Test
     void loadingEmptyPackage() {
         var packageName = "morrow.config.singleton.custom.is.empty";
         var loader = new CustomSingletonLoader(singletonLookup, packageName);
-        assertThrows(CustomSingletonLoader.MyEx.class, loader::loadSingletons);
+        assertThrows(LoaderException.class, loader::loadSingletons);
     }
 
     @Test
     void loadingPackageWithWrongClasses() {
         var packageName = "morrow.config.singleton.custom.is.wrong";
         var loader = new CustomSingletonLoader(singletonLookup, packageName);
-        assertThrows(CustomSingletonLoader.MyEx.class, loader::loadSingletons);
+        assertThrows(LoaderException.class, loader::loadSingletons);
     }
 
     @Test
-    void loadingPackageWithCorrectClasses() throws CustomSingletonLoader.MyEx {
+    void loadingPackageWithCorrectClasses() throws LoaderException {
         var packageName = "morrow.config.singleton.custom";
         var loader = new CustomSingletonLoader(singletonLookup, packageName);
-        var list = loader.loadSingletons();
-        assertSame(X.class, list.get(0).getClass());
+        var singletons = loader.loadSingletons();
+        var classes = singletons.stream()
+                .map(ManagedSingleton::getClass)
+                .collect(Collectors.toSet());
+        assertEquals(Set.of(X.class, Y.class), classes);
     }
 }

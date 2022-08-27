@@ -1,7 +1,7 @@
 package morrow.application;
 
-import morrow.config.singleton.CustomSingletonLoader;
 import morrow.config.singleton.Store;
+import morrow.config.singleton.loader.CustomSingletonLoader;
 import morrow.config.validation.Validation;
 import morrow.web.Server;
 import morrow.web.endpoint.Router;
@@ -25,8 +25,7 @@ public class MorrowApplication {
             singletonStore.put(new Validation(singletonStore));
             singletonStore.put(ControllerRenderPlugin.load(singletonStore));
             singletonStore.put(Router.load(singletonStore));
-
-            new CustomSingletonLoader(singletonStore, "morrow.config.singleton.custom").loadSingletons().forEach(singletonStore::put);
+            CustomSingletonLoader.loadAll(singletonStore).forEach(singletonStore::put);
         } catch (Exception e) {
             throw new SingletonLoadException(e);
         }

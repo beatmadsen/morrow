@@ -37,8 +37,6 @@ public class SpecLoader {
         } catch (ConfigurationValidationException e) {
             throw new InvalidEndpointSpecException(endpointSpec, e);
         }
-
-
     }
 
     private List<EndpointDescriptor> traverseTree(ResourceTree tree) {
