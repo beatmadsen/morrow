@@ -4,6 +4,7 @@ import morrow.web.protocol.header.CommonFieldName;
 import morrow.web.protocol.header.StringContent;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +32,4 @@ class RequestHeaderMapTest {
         assertSame(headerValue, values.get(0).value());
     }
 
-    @Test
-    void buildMap() {
-        // TODO: user needs to be able to register own FieldName -> FieldContent type mappings
-        var y = Map.of("accept", List.of("application/json+xml", "text/*;q=0.5"), "xa-size", List.of("100"));
-    }
 }
