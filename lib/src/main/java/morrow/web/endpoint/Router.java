@@ -1,7 +1,7 @@
 package morrow.web.endpoint;
 
 import morrow.config.singleton.ManagedSingleton;
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.web.Controller;
 import morrow.web.endpoint.loader.EndpointDescriptor;
 import morrow.web.endpoint.loader.EndpointLoader;
@@ -15,8 +15,8 @@ public class Router extends ManagedSingleton {
 
     private final List<EndpointDescriptor> descriptors;
 
-    private Router(List<EndpointDescriptor> descriptors, SingletonStore singletonStore) {
-        super(singletonStore);
+    private Router(List<EndpointDescriptor> descriptors, Lookup singletonLookup) {
+        super(singletonLookup);
         this.descriptors = descriptors;
     }
 
@@ -25,14 +25,14 @@ public class Router extends ManagedSingleton {
                 descriptor.matchesRoute(request.path().segments(), request.method());
     }
 
-    public static Router load(SingletonStore singletonStore) throws EndpointException {
-        var eds = loadEndpoints(singletonStore);
-        return new Router(eds, singletonStore);
+    public static Router load(Lookup singletonLookup) throws EndpointException {
+        var eds = loadEndpoints(singletonLookup);
+        return new Router(eds, singletonLookup);
     }
 
-    private static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws EndpointException {
+    private static List<EndpointDescriptor> loadEndpoints(Lookup singletonLookup) throws EndpointException {
         try {
-            return EndpointLoader.loadEndpoints(singletonStore);
+            return EndpointLoader.loadEndpoints(singletonLookup);
         } catch (Exception e) {
             Logger.error("Failed to load endpoints: " + e.getMessage(), e);
             throw e;

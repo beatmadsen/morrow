@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader.spec;
 
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Store;
 import morrow.config.validation.Validation;
 import morrow.web.endpoint.loader.EndpointDescriptor;
 import morrow.web.path.UncategorisedSegment;
@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class SpecLoaderTest {
 
 
-    private SingletonStore singletonStore;
+    private Store singletonStore;
 
     @BeforeEach
     void setUp() {
-        singletonStore = new SingletonStore();
+        singletonStore = new Store();
         singletonStore.put(new Validation(null));
     }
 

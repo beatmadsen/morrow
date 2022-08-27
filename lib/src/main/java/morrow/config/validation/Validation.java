@@ -3,7 +3,7 @@ package morrow.config.validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import morrow.config.singleton.ManagedSingleton;
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.stream.Collectors;
@@ -12,8 +12,8 @@ public class Validation extends ManagedSingleton {
 
     private final ValidatorFactory factory;
 
-    public Validation(SingletonStore singletonStore) {
-        super(singletonStore);
+    public Validation(Lookup singletonLookup) {
+        super(singletonLookup);
         factory = jakarta.validation.Validation.byDefaultProvider()
                 .configure()
                 .messageInterpolator(new ParameterMessageInterpolator())

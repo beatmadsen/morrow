@@ -1,7 +1,7 @@
 package morrow.web.view;
 
 import morrow.config.singleton.ManagedSingleton;
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.config.validation.Validation;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.view.loader.ViewMappingsLoader;
@@ -13,14 +13,14 @@ public class ControllerRenderPlugin extends ManagedSingleton {
 
     private final Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers;
 
-    private ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers, SingletonStore singletonStore) {
-        super(singletonStore);
+    private ControllerRenderPlugin(Map<MediaType.Key, MediaTypeSpecificRendererResolver> resolvers, Lookup singletonLookup) {
+        super(singletonLookup);
         this.resolvers = resolvers;
     }
 
-    public static ControllerRenderPlugin load(SingletonStore singletonStore) throws ViewException {
-        var v = new ViewMappingsLoader(singletonStore.get(Validation.class));
-        return new ControllerRenderPlugin(v.loadViewMappings(), singletonStore);
+    public static ControllerRenderPlugin load(Lookup singletonLookup) throws ViewException {
+        var v = new ViewMappingsLoader(singletonLookup.get(Validation.class));
+        return new ControllerRenderPlugin(v.loadViewMappings(), singletonLookup);
     }
 
     public <I, O> O render(I model, MediaType mediaType) {

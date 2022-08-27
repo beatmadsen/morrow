@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader;
 
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.web.endpoint.EndpointException;
 import morrow.web.endpoint.loader.file.ConfigFileLoader;
 import morrow.web.endpoint.loader.spec.EndpointSpec;
@@ -11,15 +11,15 @@ import java.util.stream.Stream;
 
 public class EndpointLoader {
     private final ConfigFileLoader configFileLoader;
-    private final SingletonStore singletonStore;
+    private final Lookup singletonLookup;
 
-    private EndpointLoader(SingletonStore singletonStore) {
-        this.singletonStore = singletonStore;
+    private EndpointLoader(Lookup singletonLookup) {
+        this.singletonLookup = singletonLookup;
         configFileLoader = new ConfigFileLoader();
     }
 
-    public static List<EndpointDescriptor> loadEndpoints(SingletonStore singletonStore) throws EndpointException {
-        return new EndpointLoader(singletonStore).loadEndpoints();
+    public static List<EndpointDescriptor> loadEndpoints(Lookup singletonLookup) throws EndpointException {
+        return new EndpointLoader(singletonLookup).loadEndpoints();
     }
 
     private static Stream<EndpointDescriptor> streamClasses(SpecLoader l) {
@@ -40,7 +40,7 @@ public class EndpointLoader {
     }
 
     private SpecLoader specLoader(EndpointSpec spec) {
-        return new SpecLoader(singletonStore, spec);
+        return new SpecLoader(singletonLookup, spec);
     }
 
 }

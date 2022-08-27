@@ -1,11 +1,11 @@
 package morrow.config.singleton;
 
 public abstract class ManagedSingleton implements AutoCloseable {
-    protected final SingletonStore singletonStore;
+    protected final Lookup singletonStore;
 
-    public ManagedSingleton(SingletonStore singletonStore) {
+    public ManagedSingleton(Lookup singletonLookup) {
 
-        this.singletonStore = singletonStore;
+        this.singletonStore = singletonLookup;
     }
 
     @Override

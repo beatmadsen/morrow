@@ -1,7 +1,7 @@
 package morrow.web.endpoint.loader.spec;
 
 import morrow.config.LoadHelper;
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.config.validation.ConfigurationValidationException;
 import morrow.config.validation.Validation;
 import morrow.web.Action;
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 
 public class SpecLoader {
 
-    private final SingletonStore singletonStore;
+    private final Lookup singletonLookup;
     private final EndpointSpec endpointSpec;
 
-    public SpecLoader(SingletonStore singletonStore, EndpointSpec endpointSpec) {
-        this.singletonStore = singletonStore;
+    public SpecLoader(Lookup singletonLookup, EndpointSpec endpointSpec) {
+        this.singletonLookup = singletonLookup;
         this.endpointSpec = endpointSpec;
     }
 
@@ -33,7 +33,7 @@ public class SpecLoader {
 
     public void validate() {
         try {
-            singletonStore.get(Validation.class).validateConfig(endpointSpec);
+            singletonLookup.get(Validation.class).validateConfig(endpointSpec);
         } catch (ConfigurationValidationException e) {
             throw new InvalidEndpointSpecException(endpointSpec, e);
         }
@@ -49,7 +49,7 @@ public class SpecLoader {
         return configs.stream().map(c -> {
             var actions = mapActions(c.config().actions());
             EndpointMatcher m = EndpointMatcher.from(c.index(), actions);
-            return new EndpointDescriptor(singletonStore, m, loadClass(c.config().controller()), actions);
+            return new EndpointDescriptor(singletonLookup, m, loadClass(c.config().controller()), actions);
         }).toList();
     }
 

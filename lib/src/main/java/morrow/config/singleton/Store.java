@@ -2,7 +2,7 @@ package morrow.config.singleton;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SingletonStore implements AutoCloseable {
+public class Store implements AutoCloseable, Lookup {
 
     private final ConcurrentHashMap<Class<?>, ManagedSingleton> store = new ConcurrentHashMap<>();
 
@@ -14,6 +14,7 @@ public class SingletonStore implements AutoCloseable {
         }
     }
 
+    @Override
     public <T extends ManagedSingleton> T get(Class<T> type) {
         var s = store.get(type);
         if (s == null) {

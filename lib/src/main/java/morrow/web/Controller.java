@@ -1,7 +1,7 @@
 package morrow.web;
 
 import morrow.Tracker;
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.web.exception.ClientException;
 import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.mime.MediaType;
@@ -21,7 +21,7 @@ public abstract class Controller {
 
     public Controller(State state) {
         this.state = state;
-        controllerRenderPlugin = state.singletonStore.get(ControllerRenderPlugin.class);
+        controllerRenderPlugin = state.singletonLookup.get(ControllerRenderPlugin.class);
     }
 
     /**
@@ -98,6 +98,6 @@ public abstract class Controller {
         return new ModelResult(renderFn);
     }
 
-    public record State(Action action, SingletonStore singletonStore, List<MediaType> accepts) {
+    public record State(Action action, Lookup singletonLookup, List<MediaType> accepts) {
     }
 }

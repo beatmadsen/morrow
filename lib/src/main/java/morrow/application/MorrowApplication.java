@@ -1,6 +1,6 @@
 package morrow.application;
 
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Store;
 import morrow.config.validation.Validation;
 import morrow.web.Server;
 import morrow.web.endpoint.Router;
@@ -9,12 +9,12 @@ import morrow.web.response.Response;
 import morrow.web.view.ControllerRenderPlugin;
 
 public class MorrowApplication {
-    private final SingletonStore singletonStore;
+    private final Store singletonStore;
     private final Server server;
 
 
     public MorrowApplication() throws ApplicationException {
-        singletonStore = new SingletonStore();
+        singletonStore = new Store();
         loadSingletons();
         server = new Server(singletonStore);
     }

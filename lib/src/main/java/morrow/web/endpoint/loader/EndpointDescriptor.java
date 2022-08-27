@@ -1,6 +1,6 @@
 package morrow.web.endpoint.loader;
 
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.web.Action;
 import morrow.web.Controller;
 import morrow.web.endpoint.loader.matcher.RouteMatcher;
@@ -15,10 +15,10 @@ public class EndpointDescriptor {
     private final RouteMatcher routeMatcher;
     private final Class<? extends Controller> controllerClass;
     private final Set<Action> allowedActions;
-    private final SingletonStore singletonStore;
+    private final Lookup singletonLookup;
 
-    public EndpointDescriptor(SingletonStore singletonStore, RouteMatcher routeMatcher, Class<? extends Controller> controllerClass, Set<Action> allowedActions) {
-        this.singletonStore = singletonStore;
+    public EndpointDescriptor(Lookup singletonLookup, RouteMatcher routeMatcher, Class<? extends Controller> controllerClass, Set<Action> allowedActions) {
+        this.singletonLookup = singletonLookup;
         this.routeMatcher = routeMatcher;
         this.controllerClass = controllerClass;
         this.allowedActions = allowedActions;
@@ -43,7 +43,7 @@ public class EndpointDescriptor {
 
     private Controller.State state(Request request) {
         var action = routeMatcher.inferAction(request).orElseThrow();
-        return new Controller.State(action, singletonStore, request.accepts());
+        return new Controller.State(action, singletonLookup, request.accepts());
     }
 
 }

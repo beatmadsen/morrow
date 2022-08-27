@@ -1,6 +1,6 @@
 package morrow.web;
 
-import morrow.config.singleton.SingletonStore;
+import morrow.config.singleton.Lookup;
 import morrow.config.validation.Validation;
 import morrow.web.endpoint.Router;
 import morrow.web.exception.ClientException;
@@ -14,7 +14,7 @@ public class Server {
     private final Router router;
     private final Validation validation;
 
-    public Server(SingletonStore singletonStore) {
+    public Server(Lookup singletonStore) {
         router = singletonStore.get(Router.class);
         validation = singletonStore.get(Validation.class);
     }
