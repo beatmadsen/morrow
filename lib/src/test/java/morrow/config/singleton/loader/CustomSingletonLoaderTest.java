@@ -7,6 +7,7 @@ import morrow.config.singleton.custom.Y;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,9 +21,10 @@ class CustomSingletonLoaderTest {
     @BeforeEach
     void setUp() {
         singletonLookup = new Lookup() {
+
             @Override
-            public <T extends ManagedSingleton> T get(Class<T> type) {
-                return null;
+            public <T extends ManagedSingleton> Optional<T> find(Class<T> type) {
+                return Optional.empty();
             }
         };
 

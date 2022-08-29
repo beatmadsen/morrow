@@ -5,6 +5,7 @@ import morrow.web.path.NamespaceSegment;
 import morrow.web.path.PathSegment;
 import morrow.web.path.ResourceSegment;
 import morrow.web.path.UncategorisedSegment;
+import morrow.web.protocol.header.request.RequestHeaderMap;
 import morrow.web.request.Method;
 import morrow.web.request.Path;
 import morrow.web.request.Request;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,7 @@ class EndpointMatcherTest {
 
     @Test
     void shouldInferFindManyActionFromGetRequest() {
-        var request = new Request(new Path(List.of(new UncategorisedSegment("cars"))), Method.GET, List.of());
+        var request = new Request(new Path(List.of(new UncategorisedSegment("cars"))), Method.GET, new RequestHeaderMap(Map.of()));
         List<PathSegment> routePrefix = List.of(new ResourceSegment("cars"));
         var matcher = EndpointMatcher.from(routePrefix, Set.of(Action.CREATE, Action.FIND_MANY));
         var action = matcher.inferAction(request).orElseThrow();
@@ -48,7 +50,7 @@ class EndpointMatcherTest {
 
     @Test
     void shouldInferUpdateByIdActionFromPatchRequest() {
-        var request = new Request(new Path(List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("ships"), new UncategorisedSegment("46"))), Method.PATCH, List.of());
+        var request = new Request(new Path(List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("ships"), new UncategorisedSegment("46"))), Method.PATCH, new RequestHeaderMap(Map.of()));
         List<PathSegment> routePrefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("ships"));
         var allActions = Arrays.stream(Action.values()).collect(Collectors.toSet());
         var matcher = EndpointMatcher.from(routePrefix, allActions);
@@ -58,7 +60,7 @@ class EndpointMatcherTest {
 
     @Test
     void shouldFailToInferUpdateByIdActionFromPatchRequestWithMissingParameter() {
-        var request = new Request(new Path(List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("ships"))), Method.PATCH, List.of());
+        var request = new Request(new Path(List.of(new UncategorisedSegment("namespace"), new UncategorisedSegment("ships"))), Method.PATCH, new RequestHeaderMap(Map.of()));
         List<PathSegment> routePrefix = List.of(new NamespaceSegment("namespace"), new ResourceSegment("ships"));
         var allActions = Arrays.stream(Action.values()).collect(Collectors.toSet());
         var matcher = EndpointMatcher.from(routePrefix, allActions);

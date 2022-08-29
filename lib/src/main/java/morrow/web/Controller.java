@@ -3,6 +3,10 @@ package morrow.web;
 import morrow.Tracker;
 import morrow.config.singleton.Lookup;
 import morrow.web.exception.ClientException;
+import morrow.web.protocol.header.FieldContent;
+import morrow.web.protocol.header.request.AcceptContent;
+import morrow.web.protocol.header.request.RequestHeaderCommonFieldName;
+import morrow.web.protocol.header.request.RequestHeaderMap;
 import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
@@ -42,7 +46,7 @@ public abstract class Controller {
     public Response run() throws ClientException {
         ActionResult result = actionResult();
         Tracker.actionComplete(new Tracker.MetaData());
-        return result.serialize(mimeNegotiation(state.accepts()));
+        return result.serialize(mimeNegotiation());
     }
 
     private ActionResult actionResult() throws ClientException {
@@ -61,7 +65,11 @@ public abstract class Controller {
     }
 
 
-    private MediaType mimeNegotiation(List<MediaType> accepts) {
+    private MediaType mimeNegotiation() {
+        List<AcceptContent> contents = state.headers().get(RequestHeaderCommonFieldName.ACCEPT);
+
+
+
         // TODO, see https://github.com/rails/rails/issues/9940
         return CommonMediaType.JSON_UTF8;
     }
@@ -98,6 +106,6 @@ public abstract class Controller {
         return new ModelResult(renderFn);
     }
 
-    public record State(Action action, Lookup singletonLookup, List<MediaType> accepts) {
+    public record State(Action action, Lookup singletonLookup, RequestHeaderMap headers) {
     }
 }

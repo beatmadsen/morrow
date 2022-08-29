@@ -1,9 +1,7 @@
 package morrow.web.request;
 
-import morrow.web.protocol.mime.MediaType;
+import morrow.web.protocol.header.request.RequestHeaderMap;
 
-import java.util.List;
-
-public record Request(Path path, Method method, List<MediaType> accepts) {
+public record Request(Path path, Method method, RequestHeaderMap headers) {
 
 }

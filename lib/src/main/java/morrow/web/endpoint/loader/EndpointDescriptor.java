@@ -43,7 +43,7 @@ public class EndpointDescriptor {
 
     private Controller.State state(Request request) {
         var action = routeMatcher.inferAction(request).orElseThrow();
-        return new Controller.State(action, singletonLookup, request.accepts());
+        return new Controller.State(action, singletonLookup, request.headers());
     }
 
 }

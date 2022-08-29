@@ -13,7 +13,7 @@ public class FieldNameResolver {
 
     private final Map<String, RequestHeaderFieldName> encodings;
 
-    public FieldNameResolver(Map<String, RequestHeaderFieldName> encodings) {
+    private FieldNameResolver(Map<String, RequestHeaderFieldName> encodings) {
         this.encodings = encodings;
     }
 
@@ -43,6 +43,11 @@ public class FieldNameResolver {
 
         public Builder encode(String rawFieldName, RequestHeaderFieldName matchingField) {
             encodings.put(rawFieldName, matchingField);
+            return this;
+        }
+
+        public Builder encode(Map<String, RequestHeaderFieldName> additionalEncodings) {
+            encodings.putAll(additionalEncodings);
             return this;
         }
 

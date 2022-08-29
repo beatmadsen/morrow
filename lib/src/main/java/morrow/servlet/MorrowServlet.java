@@ -7,17 +7,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import morrow.application.ApplicationException;
 import morrow.application.MorrowApplication;
-import morrow.web.path.UncategorisedSegment;
 import morrow.web.protocol.mime.MediaType;
-import morrow.web.request.Method;
-import morrow.web.request.Path;
-import morrow.web.request.Request;
+import morrow.web.request.RawRequest;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @WebServlet(urlPatterns = "")
@@ -29,18 +29,21 @@ public class MorrowServlet extends HttpServlet {
         application = new MorrowApplication();
     }
 
-    private static Request map(HttpServletRequest req) {
+    private static <T> Stream<T> stream(Iterator<T> iter) {
+        Iterable<T> i = () -> iter;
+        return StreamSupport.stream(i.spliterator(), false);
+    }
 
-        var method = Method.valueOf(req.getMethod().toUpperCase());
+    private static RawRequest map(HttpServletRequest req) {
 
-        var segments = Arrays.stream(req.getPathInfo().split("/"))
-                .filter(s -> !s.isEmpty())
-                .map(UncategorisedSegment::new)
-                .toList();
+        var headers = stream(req.getHeaderNames().asIterator()).collect(
+                Collectors.toMap(
+                        Function.identity(),
+                        h -> stream(req.getHeaders(h).asIterator()).toList()
+                )
+        );
 
-        List<MediaType> accepts = mapAcceptHeaders(req.getHeaders("Accept"));
-
-        return new Request(new Path(segments), method, accepts);
+        return new RawRequest(req.getMethod().toUpperCase(), req.getPathInfo(), headers);
     }
 
     private static List<MediaType> mapAcceptHeaders(Enumeration<String> headerValues) {

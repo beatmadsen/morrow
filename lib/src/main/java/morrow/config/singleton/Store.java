@@ -1,5 +1,7 @@
 package morrow.config.singleton;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Store implements AutoCloseable, Lookup {
@@ -15,12 +17,8 @@ public class Store implements AutoCloseable, Lookup {
     }
 
     @Override
-    public <T extends ManagedSingleton> T get(Class<T> type) {
-        var s = store.get(type);
-        if (s == null) {
-            throw new LookupException(type);
-        }
-        return downcast(type, s);
+    public <T extends ManagedSingleton> Optional<T> find(Class<T> type) {
+        return Optional.ofNullable(store.get(type)).map(s -> downcast(type, s));
     }
 
     public void put(ManagedSingleton value) {
