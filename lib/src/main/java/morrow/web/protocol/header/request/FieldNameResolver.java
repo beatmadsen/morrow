@@ -1,9 +1,11 @@
 package morrow.web.protocol.header.request;
 
-import morrow.web.protocol.header.CommonFieldName;
+import morrow.web.protocol.header.FieldContent;
+import morrow.web.protocol.header.general.GeneralFieldName;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class FieldNameResolver {
 
@@ -11,13 +13,13 @@ public class FieldNameResolver {
         return new Builder();
     }
 
-    private final Map<String, RequestHeaderFieldName> encodings;
+    private final Map<String, RequestHeaderFieldName<?>> encodings;
 
-    private FieldNameResolver(Map<String, RequestHeaderFieldName> encodings) {
+    private FieldNameResolver(Map<String, RequestHeaderFieldName<?>> encodings) {
         this.encodings = encodings;
     }
 
-    public RequestHeaderFieldName resolve(String rawFieldName) {
+    public RequestHeaderFieldName<?> resolve(String rawFieldName) {
         var result = encodings.get(rawFieldName.toLowerCase());
         return result == null ? new UnknownFieldName(rawFieldName) : result;
     }
@@ -25,28 +27,23 @@ public class FieldNameResolver {
 
     public static class Builder {
 
-        private final Map<String, RequestHeaderFieldName> encodings;
+        private final Map<String, RequestHeaderFieldName<?>> encodings;
 
         public Builder() {
             encodings = new HashMap<>();
-            for (CommonFieldName fieldName : CommonFieldName.values()) {
-                encodings.put(asHeaderName(fieldName.name()), fieldName);
-            }
-            for (RequestHeaderCommonFieldName fieldName : RequestHeaderCommonFieldName.values()) {
-                encodings.put(asHeaderName(fieldName.name()), fieldName);
-            }
+            knownFieldNames().forEach(f -> encodings.put(f.toString(), f));
         }
 
-        private static String asHeaderName(String s) {
-            return s.toLowerCase().replace("_", "-");
+        private static Stream<RequestHeaderFieldName<?>> knownFieldNames() {
+            return Stream.concat(GeneralFieldName.known().stream(), RequestHeaderFieldName.known().stream());
         }
 
-        public Builder encode(String rawFieldName, RequestHeaderFieldName matchingField) {
+        public Builder encode(String rawFieldName, RequestHeaderFieldName<?> matchingField) {
             encodings.put(rawFieldName, matchingField);
             return this;
         }
 
-        public Builder encode(Map<String, RequestHeaderFieldName> additionalEncodings) {
+        public Builder encode(Map<String, RequestHeaderFieldName<?>> additionalEncodings) {
             encodings.putAll(additionalEncodings);
             return this;
         }

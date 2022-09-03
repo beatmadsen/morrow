@@ -1,9 +1,9 @@
 package morrow.web.protocol.header.request;
 
-import morrow.web.protocol.header.CommonFieldName;
 import morrow.web.protocol.header.FieldContent;
 import morrow.web.protocol.header.FieldName;
 import morrow.web.protocol.header.StringContent;
+import morrow.web.protocol.header.general.GeneralFieldName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,8 +24,8 @@ class FieldNameResolverTest {
     @BeforeEach
     void setUp() {
         resolver = FieldNameResolver.builder()
-                .encode("x-fish", () -> new FieldName.Key(42, DemoContentType.class))
-                .encode("y-mesh", () -> new FieldName.Key(43, StringContent.class))
+                .encode("x-fish", (RequestHeaderFieldName<DemoContentType>) () -> new FieldName.Key<>(42, DemoContentType.class))
+                .encode("y-mesh", (RequestHeaderFieldName<StringContent>) () -> new FieldName.Key<>(43, StringContent.class))
                 .build();
     }
 
@@ -50,12 +50,12 @@ class FieldNameResolverTest {
     @Test
     void resolveCacheControl() {
         var fieldName = resolver.resolve("cache-control");
-        assertEquals(CommonFieldName.CACHE_CONTROL.key(), fieldName.key());
+        assertEquals(GeneralFieldName.cacheControl().key(), fieldName.key());
     }
 
     @Test
     void resolveAccept() {
         var fieldName = resolver.resolve("ACCEPT");
-        assertEquals(RequestHeaderCommonFieldName.ACCEPT.key(), fieldName.key());
+        assertEquals(RequestHeaderFieldName.accept().key(), fieldName.key());
     }
 }

@@ -10,5 +10,5 @@ public abstract class AdditionalEncodingsLoader extends ManagedSingleton {
         super(singletonLookup);
     }
 
-    public abstract Map<String, RequestHeaderFieldName> additionalEncodings();
+    public abstract Map<String, RequestHeaderFieldName<?>> additionalEncodings();
 }

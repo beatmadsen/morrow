@@ -3,10 +3,9 @@ package morrow.web;
 import morrow.Tracker;
 import morrow.config.singleton.Lookup;
 import morrow.web.exception.ClientException;
-import morrow.web.protocol.header.FieldContent;
 import morrow.web.protocol.header.request.AcceptContent;
-import morrow.web.protocol.header.request.RequestHeaderCommonFieldName;
-import morrow.web.protocol.header.request.RequestHeaderMap;
+import morrow.web.protocol.header.request.Map;
+import morrow.web.protocol.header.request.RequestHeaderFieldName;
 import morrow.web.protocol.mime.CommonMediaType;
 import morrow.web.protocol.mime.MediaType;
 import morrow.web.response.Response;
@@ -66,8 +65,7 @@ public abstract class Controller {
 
 
     private MediaType mimeNegotiation() {
-        List<AcceptContent> contents = state.headers().get(RequestHeaderCommonFieldName.ACCEPT);
-
+        List<AcceptContent> contents = state.headers().get(RequestHeaderFieldName.accept());
 
 
         // TODO, see https://github.com/rails/rails/issues/9940
@@ -106,6 +104,6 @@ public abstract class Controller {
         return new ModelResult(renderFn);
     }
 
-    public record State(Action action, Lookup singletonLookup, RequestHeaderMap headers) {
+    public record State(Action action, Lookup singletonLookup, Map headers) {
     }
 }

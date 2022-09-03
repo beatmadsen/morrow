@@ -6,9 +6,11 @@ import morrow.config.validation.Validation;
 import morrow.web.Server;
 import morrow.web.endpoint.Router;
 import morrow.web.path.UncategorisedSegment;
+import morrow.web.protocol.header.FieldName;
 import morrow.web.protocol.header.request.AdditionalEncodingsLoader;
 import morrow.web.protocol.header.request.FieldNameResolver;
-import morrow.web.protocol.header.request.RequestHeaderMap;
+import morrow.web.protocol.header.request.RequestHeaderFieldName;
+import morrow.web.protocol.header.request.Map;
 import morrow.web.request.Method;
 import morrow.web.request.Path;
 import morrow.web.request.RawRequest;
@@ -17,7 +19,6 @@ import morrow.web.response.Response;
 import morrow.web.view.ControllerRenderPlugin;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MorrowApplication {
@@ -35,7 +36,7 @@ public class MorrowApplication {
     private FieldNameResolver loadHeaderFieldNameResolver() {
         var additionalEncodings = singletonStore.find(AdditionalEncodingsLoader.class)
                 .map(AdditionalEncodingsLoader::additionalEncodings)
-                .orElse(Map.of());
+                .orElse(java.util.Map.of());
         return FieldNameResolver.builder().encode(additionalEncodings).build();
     }
 
@@ -71,9 +72,14 @@ public class MorrowApplication {
         var headersWithEncodedKeys = rawRequest.headers()
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(e -> fieldNameResolver.resolve(e.getKey()).key(), Map.Entry::getValue));
+                .collect(Collectors.toMap(e -> {
+                    var rawFieldName = e.getKey();
+                    RequestHeaderFieldName<?> fieldName = fieldNameResolver.resolve(rawFieldName);
+                    FieldName.Key<?> key = fieldName.key();
+                    return key;
+                }, java.util.Map.Entry::getValue));
 
-        return new Request(new Path(segments), method, new RequestHeaderMap(headersWithEncodedKeys));
+        return new Request(new Path(segments), method, new Map(headersWithEncodedKeys));
     }
 
     public void onShutdown() {

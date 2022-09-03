@@ -1,9 +1,9 @@
 package morrow.web.protocol.header;
 
-public interface FieldName {
-    Key key();
+public interface FieldName<T extends FieldContent> {
 
-    record Key(int key, Class<? extends FieldContent> contentType) {
+    Key<T> key();
+
+    record Key<U>(int key, Class<U> contentType) {
     }
-
 }

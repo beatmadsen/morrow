@@ -5,15 +5,14 @@ import morrow.web.protocol.header.FieldName;
 import morrow.web.protocol.header.HeaderMap;
 
 import java.util.List;
-import java.util.Map;
 
-public class RequestHeaderMap extends HeaderMap {
+public class Map extends HeaderMap {
 
-    public RequestHeaderMap(Map<FieldName.Key, List<String>> map) {
+    public Map(java.util.Map<? extends FieldName.Key<?>, List<String>> map) {
         super(map);
     }
 
-    public <T extends FieldContent> List<T> get(RequestHeaderFieldName name) {
+    public <T extends FieldContent> List<T> get(RequestHeaderFieldName<T> name) {
         return super.get(name);
     }
 }
