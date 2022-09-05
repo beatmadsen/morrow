@@ -14,7 +14,7 @@ public abstract class HeaderMap {
         this.map = map;
     }
 
-    public <T extends FieldContent> List<T> get(FieldName<T> name) {
+    protected <T extends FieldContent> List<T> get(FieldName<T> name) {
         var key = name.key();
         var list = map.get(key);
         return list.stream().map(v -> init(key.contentType(), v)).toList();

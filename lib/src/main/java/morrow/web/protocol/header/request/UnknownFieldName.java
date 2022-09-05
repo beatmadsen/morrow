@@ -4,7 +4,7 @@ import morrow.web.protocol.header.StringContent;
 
 import java.util.Objects;
 
-public class UnknownFieldName implements RequestHeaderFieldName {
+public class UnknownFieldName implements FieldName {
 
     private final String name;
 

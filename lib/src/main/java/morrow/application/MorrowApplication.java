@@ -6,10 +6,9 @@ import morrow.config.validation.Validation;
 import morrow.web.Server;
 import morrow.web.endpoint.Router;
 import morrow.web.path.UncategorisedSegment;
-import morrow.web.protocol.header.FieldName;
 import morrow.web.protocol.header.request.AdditionalEncodingsLoader;
 import morrow.web.protocol.header.request.FieldNameResolver;
-import morrow.web.protocol.header.request.RequestHeaderFieldName;
+import morrow.web.protocol.header.request.FieldName;
 import morrow.web.protocol.header.request.Map;
 import morrow.web.request.Method;
 import morrow.web.request.Path;
@@ -74,8 +73,8 @@ public class MorrowApplication {
                 .stream()
                 .collect(Collectors.toMap(e -> {
                     var rawFieldName = e.getKey();
-                    RequestHeaderFieldName<?> fieldName = fieldNameResolver.resolve(rawFieldName);
-                    FieldName.Key<?> key = fieldName.key();
+                    FieldName<?> fieldName = fieldNameResolver.resolve(rawFieldName);
+                    morrow.web.protocol.header.FieldName.Key<?> key = fieldName.key();
                     return key;
                 }, java.util.Map.Entry::getValue));
 

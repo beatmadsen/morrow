@@ -1,7 +1,7 @@
 package morrow.web.protocol.header.request;
 
 import morrow.web.protocol.header.StringContent;
-import morrow.web.protocol.header.general.GeneralFieldName;
+import morrow.web.protocol.header.GeneralFieldName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,9 +12,9 @@ class MapTest {
 
     @Test
     void getAcceptContent() {
-        var map = new Map(java.util.Map.of(RequestHeaderFieldName.accept().key(), List.of("application/json")));
+        var map = new Map(java.util.Map.of(FieldName.accept().key(), List.of("application/json")));
 
-        List<AcceptContent> values = map.get(RequestHeaderFieldName.accept());
+        List<AcceptContent> values = map.get(FieldName.accept());
 
         assertSame(AcceptContent.class, values.get(0).getClass());
     }

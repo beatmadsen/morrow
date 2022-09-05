@@ -1,9 +1,8 @@
 package morrow.web.protocol.header.request;
 
 import morrow.web.protocol.header.FieldContent;
-import morrow.web.protocol.header.FieldName;
 import morrow.web.protocol.header.StringContent;
-import morrow.web.protocol.header.general.GeneralFieldName;
+import morrow.web.protocol.header.GeneralFieldName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,8 +23,8 @@ class FieldNameResolverTest {
     @BeforeEach
     void setUp() {
         resolver = FieldNameResolver.builder()
-                .encode("x-fish", (RequestHeaderFieldName<DemoContentType>) () -> new FieldName.Key<>(42, DemoContentType.class))
-                .encode("y-mesh", (RequestHeaderFieldName<StringContent>) () -> new FieldName.Key<>(43, StringContent.class))
+                .encode("x-fish", (FieldName<DemoContentType>) () -> new morrow.web.protocol.header.FieldName.Key<>(42, DemoContentType.class))
+                .encode("y-mesh", (FieldName<StringContent>) () -> new morrow.web.protocol.header.FieldName.Key<>(43, StringContent.class))
                 .build();
     }
 
@@ -56,6 +55,6 @@ class FieldNameResolverTest {
     @Test
     void resolveAccept() {
         var fieldName = resolver.resolve("ACCEPT");
-        assertEquals(RequestHeaderFieldName.accept().key(), fieldName.key());
+        assertEquals(FieldName.accept().key(), fieldName.key());
     }
 }

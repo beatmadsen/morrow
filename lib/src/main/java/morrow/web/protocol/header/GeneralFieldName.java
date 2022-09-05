@@ -1,13 +1,10 @@
-package morrow.web.protocol.header.general;
-
-import morrow.web.protocol.header.FieldContent;
-import morrow.web.protocol.header.StringContent;
-import morrow.web.protocol.header.request.RequestHeaderFieldName;
-import morrow.web.protocol.header.response.ResponseHeaderFieldName;
+package morrow.web.protocol.header;
 
 import java.util.List;
 
-public interface GeneralFieldName<T extends FieldContent> extends RequestHeaderFieldName<T>, ResponseHeaderFieldName<T> {
+public interface GeneralFieldName<T extends FieldContent> extends
+        morrow.web.protocol.header.request.FieldName<T>,
+        morrow.web.protocol.header.response.FieldName<T> {
 
     static GeneralFieldName<StringContent> cacheControl() {
         return new CacheControl();

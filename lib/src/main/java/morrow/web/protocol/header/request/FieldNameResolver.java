@@ -1,11 +1,7 @@
 package morrow.web.protocol.header.request;
 
-import morrow.web.protocol.header.FieldContent;
-import morrow.web.protocol.header.general.GeneralFieldName;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class FieldNameResolver {
 
@@ -13,13 +9,13 @@ public class FieldNameResolver {
         return new Builder();
     }
 
-    private final Map<String, RequestHeaderFieldName<?>> encodings;
+    private final Map<String, FieldName<?>> encodings;
 
-    private FieldNameResolver(Map<String, RequestHeaderFieldName<?>> encodings) {
+    private FieldNameResolver(Map<String, FieldName<?>> encodings) {
         this.encodings = encodings;
     }
 
-    public RequestHeaderFieldName<?> resolve(String rawFieldName) {
+    public FieldName<?> resolve(String rawFieldName) {
         var result = encodings.get(rawFieldName.toLowerCase());
         return result == null ? new UnknownFieldName(rawFieldName) : result;
     }
@@ -27,23 +23,21 @@ public class FieldNameResolver {
 
     public static class Builder {
 
-        private final Map<String, RequestHeaderFieldName<?>> encodings;
+        private final Map<String, FieldName<?>> encodings;
 
         public Builder() {
             encodings = new HashMap<>();
-            knownFieldNames().forEach(f -> encodings.put(f.toString(), f));
+            for (FieldName<?> f : FieldName.known()) {
+                encodings.put(f.toString(), f);
+            }
         }
 
-        private static Stream<RequestHeaderFieldName<?>> knownFieldNames() {
-            return Stream.concat(GeneralFieldName.known().stream(), RequestHeaderFieldName.known().stream());
-        }
-
-        public Builder encode(String rawFieldName, RequestHeaderFieldName<?> matchingField) {
+        public Builder encode(String rawFieldName, FieldName<?> matchingField) {
             encodings.put(rawFieldName, matchingField);
             return this;
         }
 
-        public Builder encode(Map<String, RequestHeaderFieldName<?>> additionalEncodings) {
+        public Builder encode(Map<String, FieldName<?>> additionalEncodings) {
             encodings.putAll(additionalEncodings);
             return this;
         }
