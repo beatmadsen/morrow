@@ -1,19 +1,24 @@
 package morrow.web.protocol.header.request;
 
 import morrow.web.protocol.header.FieldContent;
-import morrow.web.protocol.header.GeneralFieldName;
+import morrow.web.protocol.header.StringContent;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-public interface FieldName<T extends FieldContent> extends morrow.web.protocol.header.FieldName<T> {
-    static List<FieldName<?>> known() {
-        var knownRequestFieldNames = Stream.of(accept());
-        return Stream.concat(GeneralFieldName.known().stream(), knownRequestFieldNames).toList();
+public class FieldName<T extends FieldContent> extends morrow.web.protocol.header.FieldName<T> {
+    public FieldName(String name, Class<T> type) {
+        super(name, type);
     }
 
-    static FieldName<AcceptContent> accept() {
-        return new BaseFieldName<>("accept", AcceptContent.class);
+    public static List<FieldName<?>> known() {
+        return List.of(accept(), cacheControl());
     }
 
+    public static FieldName<AcceptContent> accept() {
+        return new FieldName<>("accept", AcceptContent.class);
+    }
+
+    public static FieldName<StringContent> cacheControl() {
+        return new FieldName<>("cache-control", StringContent.class);
+    }
 }

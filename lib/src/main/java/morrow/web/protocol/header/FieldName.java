@@ -1,9 +1,24 @@
 package morrow.web.protocol.header;
 
-public interface FieldName<T extends FieldContent> {
+public abstract class FieldName<T extends FieldContent> {
+    private final String name;
+    private final Class<T> type;
 
-    Key<T> key();
+    public FieldName(String name, Class<T> type) {
+        this.name = name;
+        this.type = type;
+    }
 
-    record Key<U>(int key, Class<U> contentType) {
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public Key<T> key() {
+        return new Key<>(name.hashCode(), type);
+    }
+
+
+    public record Key<U>(int key, Class<U> contentType) {
     }
 }

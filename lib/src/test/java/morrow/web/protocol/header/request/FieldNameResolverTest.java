@@ -2,7 +2,6 @@ package morrow.web.protocol.header.request;
 
 import morrow.web.protocol.header.FieldContent;
 import morrow.web.protocol.header.StringContent;
-import morrow.web.protocol.header.GeneralFieldName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +22,8 @@ class FieldNameResolverTest {
     @BeforeEach
     void setUp() {
         resolver = FieldNameResolver.builder()
-                .encode("x-fish", (FieldName<DemoContentType>) () -> new morrow.web.protocol.header.FieldName.Key<>(42, DemoContentType.class))
-                .encode("y-mesh", (FieldName<StringContent>) () -> new morrow.web.protocol.header.FieldName.Key<>(43, StringContent.class))
+                .encode("x-fish", new FieldName<>("x-fish", DemoContentType.class))
+                .encode("y-mesh", new FieldName<>("y-mesh", StringContent.class))
                 .build();
     }
 
@@ -49,7 +48,7 @@ class FieldNameResolverTest {
     @Test
     void resolveCacheControl() {
         var fieldName = resolver.resolve("cache-control");
-        assertEquals(GeneralFieldName.cacheControl().key(), fieldName.key());
+        assertEquals(FieldName.cacheControl().key(), fieldName.key());
     }
 
     @Test

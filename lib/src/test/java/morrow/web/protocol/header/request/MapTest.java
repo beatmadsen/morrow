@@ -1,7 +1,6 @@
 package morrow.web.protocol.header.request;
 
 import morrow.web.protocol.header.StringContent;
-import morrow.web.protocol.header.GeneralFieldName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,9 +21,9 @@ class MapTest {
     @Test
     void getCacheControlContent() {
         var headerValue = "abc";
-        var map = new Map(java.util.Map.of(GeneralFieldName.cacheControl().key(), List.of(headerValue)));
+        var map = new Map(java.util.Map.of(FieldName.cacheControl().key(), List.of(headerValue)));
 
-        List<StringContent> values = map.get(GeneralFieldName.cacheControl());
+        List<StringContent> values = map.get(FieldName.cacheControl());
 
         assertSame(headerValue, values.get(0).value());
     }
