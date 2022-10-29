@@ -1,5 +1,7 @@
 package morrow.web.protocol.header;
 
+import java.util.Objects;
+
 public abstract class FieldName<T extends FieldContent> {
     private final String name;
     private final Class<T> type;
@@ -14,11 +16,23 @@ public abstract class FieldName<T extends FieldContent> {
         return name;
     }
 
-    public Key<T> key() {
-        return new Key<>(name.hashCode(), type);
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FieldName<?> fieldName)) return false;
+        return name.equals(fieldName.name) && type.equals(fieldName.type);
+    }
 
-    public record Key<U>(int key, Class<U> contentType) {
+    public T initContent(String value) {
+        try {
+            return type.getDeclaredConstructor(String.class).newInstance(value);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e); // TODO
+        }
     }
 }

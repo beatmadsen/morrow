@@ -7,7 +7,8 @@ import java.util.List;
 
 public class Map extends HeaderMap {
 
-    public Map(java.util.Map<morrow.web.protocol.header.FieldName.Key<?>, List<String>> map) {
+
+    protected Map(java.util.Map<? extends morrow.web.protocol.header.FieldName<?>, List<String>> map) {
         super(map);
     }
 

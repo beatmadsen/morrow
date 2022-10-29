@@ -73,9 +73,7 @@ public class MorrowApplication {
                 .stream()
                 .collect(Collectors.toMap(e -> {
                     var rawFieldName = e.getKey();
-                    FieldName<?> fieldName = fieldNameResolver.resolve(rawFieldName);
-                    morrow.web.protocol.header.FieldName.Key<?> key = fieldName.key();
-                    return key;
+                    return fieldNameResolver.resolve(rawFieldName);
                 }, java.util.Map.Entry::getValue));
 
         return new Request(new Path(segments), method, new Map(headersWithEncodedKeys));

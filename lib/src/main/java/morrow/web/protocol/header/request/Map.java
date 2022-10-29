@@ -1,14 +1,14 @@
 package morrow.web.protocol.header.request;
 
 import morrow.web.protocol.header.FieldContent;
-import morrow.web.protocol.header.FieldName.Key;
 import morrow.web.protocol.header.HeaderMap;
 
 import java.util.List;
 
 public class Map extends HeaderMap {
 
-    public Map(java.util.Map<? extends Key<?>, List<String>> map) {
+
+    protected Map(java.util.Map<? extends morrow.web.protocol.header.FieldName<?>, List<String>> map) {
         super(map);
     }
 
